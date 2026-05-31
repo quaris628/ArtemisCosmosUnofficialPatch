@@ -130,6 +130,7 @@ grid_control_grid_button_5              | KEY_5 KEY_CONTROL         | clicks thi
 grid_control_grid_button_6              | KEY_6 KEY_CONTROL         | clicks this grid button
 grid_control_grid_button_7              | KEY_7 KEY_CONTROL         | clicks this grid button
 grid_control_grid_button_8              | KEY_8 KEY_CONTROL         | clicks this grid button
+grid_control_grid_button_9              | KEY_9 KEY_CONTROL         | clicks this grid button
 helm_free_3d_roll_left                  | KEY_Q                     | rolls the ship left
 helm_free_3d_roll_right                 | KEY_E                     | rolls the ship right
 helm_free_3d_steer_down                 | KEY_DOWN                  | turns the ship down
