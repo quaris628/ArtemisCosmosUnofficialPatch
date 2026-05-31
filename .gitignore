@@ -10,3 +10,7 @@
 **/README.md
 !.gitignore
 **/.gitignore
+!LICENSE
+# For a reason I don't understand, this **/LICENSE pattern includes the LICENSE file in the top-level directory.
+# That needs to be included though, so I just added it to the repo despite this .gitignore file specifying that it should be ignored.
+**/LICENSE
