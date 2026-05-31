@@ -1,0 +1,12 @@
+# Ignore everything
+/**
+# But descend into directories
+# (Explanation and credit: https://jasonstitt.com/gitignore-whitelisting-patterns )
+!**/
+
+# Whitelist everything else
+
+!README.md
+**/README.md
+!.gitignore
+**/.gitignore
