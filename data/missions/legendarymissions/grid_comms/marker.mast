@@ -21,19 +21,19 @@
 
 # Special options for modifying beam arcs/width on certain TSN ships
 
-//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 12) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and COMMS_SELECTED_ID is not None and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 12) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
     + "rotate firing arc"  rotate_beam_arc1
 
-//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 3) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and COMMS_SELECTED_ID is not None and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 3) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
     + "rotate firing arc"  rotate_beam_arc2
 
-//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 16) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and COMMS_SELECTED_ID is not None and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 16) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
     + "rotate firing arc"  rotate_beam_arc1
 
-//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 1) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and COMMS_SELECTED_ID is not None and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 1) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
     + "rotate firing arc"  rotate_beam_arc2
 
-//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_dreadnought") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 8) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 2)
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_dreadnought") and COMMS_SELECTED_ID is not None and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 8) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 2)
     + "refocus primary beam"  refocus_primary_beam
 
 
