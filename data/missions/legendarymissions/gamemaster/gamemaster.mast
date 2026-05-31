@@ -84,7 +84,18 @@ default shared GAMEMASTER_CONSOLE_ICON_SIZE = GAMEMASTER_CONSOLE.get("menu_icon_
     cambot.side = side
     cambot.data_set.set("ship_base_scan_range", 15000,0)
     
-    await delay_sim(1)
+    # This delay_sim (in the vanilla code) seems pretty bad.
+    # 1) It prevents gamemaster from being opened while the game is paused:
+    #    https://github.com/artemis-sbs/LegendaryMissions/issues/638
+    # 2) It makes opening the gamemaster console much slower
+    # 3) It seems to play a role in preventing switching from the hangar bay
+    #    to the gamemaster console since in that case the code after the
+    #    delay_sim doesn't execute
+    # I don't know why it's here or what other bugs might happen if it's
+    # not here, but I haven't found any bugs so far after commenting it out,
+    # so keeping it commented out for now.
+    #await delay_sim(1)
+    
     #
     # Assign before setting comms up
     #
