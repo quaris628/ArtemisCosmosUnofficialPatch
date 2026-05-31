@@ -1,0 +1,50 @@
+Specifying permissions for using this mod software is complicated by the fact that the original game's software (Artemis Cosmos) does not have a publicly-specified license, at least as far as I am aware (as of 31 May 2026). Therefore, this document is meant to clarify permissions as much as I (the mod's lead author, Quaris) am able to, but if you need to be absolutely certain about something then you may need to ask permission from the lead author of Artemis Cosmos (Thom Robertson).
+To clarify, using this mod software is impossible without also using the original game's software (Artemis Cosmos).
+
+----- Permissions for original Artemis Cosmos software -----
+
+The following section applies to files in their original state (that is, the state in which they were originally released in the Artemis Cosmos Spaceship Bridge Simulator game).
+
+Via private communications, I've gotten these clarifications from the lead author of Artemis Cosmos (Thom Robertson):
+In an email: "Anything written in python, and associated json and yaml data files, are free to distribute to anyone."
+Secondhand, in response to a text message asking permission to release a mod: "...the fame license includes the right to mod. So you are acting within copyright; no further permissions needed."
+
+Until I am informed of anything that supersedes the above statements, I AM INTERPRETING PERMISSIONS FOR THE ORIGINAL GAME FILES LIKE SO: 
+
+Publicly distributing python, json, and yaml game files is clearly allowed.
+
+Publicly distributing an intact copy of the entire game to the public is not allowed, based on the game being behind a paywall.
+
+Publicly distributing files that are already publicly available in artemis spaceship bridge simulator's official github repositories is allowed.
+
+Publicly distributing mast game files is allowed, based on 1) publicly distributing python game files being allowed, and 2) mast code is so similar to python code that it seems unreasonable to me that distributing mast files would be disallowed in any context where distributing python files is allowed.
+Publicly distributing txt files is allowed, based on 1) publicly distributing json and yaml files being allowed, and 2) txt files are so similar to json and yaml files in their general purpose, file format, and type of information contained within that it seems unreasonable to me that distributing txt files would be disallowed in any context where distributing json and yaml files is allowed.
+
+Publicly distributing files of all other types that are necessary for the purpose of modding the game is clearly allowed.
+Publicly distributing files of all other types for purposes besides modding the game (including but not limited to distributing a file as part of a mod when it is not necessary to distribute that file in order for the mod to function as intended) is not allowed, based on 
+
+----- Permissions for this mod software -----
+
+The following section applies to the software modifications to the game files compared to their original state.
+
+MIT License
+
+Copyright (c) 2025-2026 Quaris
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
