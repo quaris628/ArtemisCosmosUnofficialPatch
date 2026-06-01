@@ -114,6 +114,7 @@ default gamemaster_face = random_terran()
     gm_torp_mod_type = gui_get_variable("gm_torp_mod_type", "Homing")
     gui_set_variable("gm_torp_mod_type", gm_torp_mod_type)
     # Seems that we can't use f-strings inside of these multi-quote strings?
+    # TODO pass listbox_container
     p = """
     type: 'gui_drop_down("$text:{gm_torp_mod_type};list:Homing,EMP,Mine,Nuke", var="gm_torp_mod_type")'
     count: 'gui_input("desc:count;",var="gm_torp_mod_count")'
