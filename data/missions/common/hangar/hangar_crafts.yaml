@@ -2,43 +2,31 @@
 terran:
   - key: tsn_fighter
     roles: fighter
-    display_text: Fighter
   - key: tsn_bomber
     roles: bomber
-    display_text: Bomber
   - key: tsn_shuttle
     roles: shuttle
-    display_text: Shuttle
 
 ximni:
   - key: xim_avenger
     roles: fighter
-    display_text: Fighter
   - key: xim_avenger
     roles: bomber
-    display_text: Bomber
   - key: tsn_shuttle
     roles: shuttle
-    display_text: Shuttle
 
 pirate:
   - key: pirate_fighter
     roles: fighter
-    display_text: Fighter
   - key: pirate_fighter
     roles: bomber
-    display_text: Bomber
   - key: tsn_shuttle
     roles: shuttle
-    display_text: Shuttle
 
 arvonian:
   - key: arvonian_fighter
     roles: fighter
-    display_text: Fighter
   - key: arvonian_fighter
     roles: bomber
-    display_text: Bomber
   - key: tsn_shuttle
     roles: shuttle
-    display_text: Shuttle
