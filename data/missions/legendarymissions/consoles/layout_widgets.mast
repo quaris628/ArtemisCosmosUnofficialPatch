@@ -5,6 +5,7 @@ shared COMMS_PROTOTYPE  = SETTINGS.get("COMMS_PROTOTYPE", False)
 
     jump mike_comms if COMMS_PROTOTYPE
 
+    player_ship_id = sbs.get_ship_of_client(client_id)
     
     gui_section(style="area:300px,30+50px, 700px,30+100px;")    
     gui_layout_widget("radar_zoom_ctrl")
@@ -63,10 +64,12 @@ shared COMMS_PROTOTYPE  = SETTINGS.get("COMMS_PROTOTYPE", False)
     with gui_sub_section("col-width:25;"):
         gui_row("row-height:100px;")
         gui_layout_widget("comms_face")
-
+        
         gui_row("row-height:15;")
-        gui_property_list_box("Options")
-
+        options_property_list_box = gui_property_list_box("Options")
+        set_comms_options_property_list_box(options_property_list_box)
+        signal_register(signal_comms_property_list_box_update_ship_to_ship(player_ship_id), _gui_comms_on_property_list_box_update_ship_to_ship, is_temporary=True)
+        
         gui_row()
         gui_layout_widget("comms_control")
 
@@ -87,7 +90,10 @@ shared COMMS_PROTOTYPE  = SETTINGS.get("COMMS_PROTOTYPE", False)
 
     yield idle
 
-
+==== _gui_comms_on_property_list_box_update_ship_to_ship ====
+    options_property_list_box = get_comms_options_property_list_box()
+    gui_properties_set_patched(options_property_list_box, NEW_PROPERTIES)
+    ->END
 
 //gui/normal_sci
     ss = gui_screen_size(client_id)

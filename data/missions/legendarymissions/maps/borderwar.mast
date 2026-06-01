@@ -17,8 +17,8 @@ Properties:
     Friendly Ships: 'gui_drop_down("$text: {FRIENDLY_SELECT};list: none, few, some, lots, max", var="FRIENDLY_SELECT")'
     Monsters: 'gui_drop_down("$text: {MONSTER_SELECT};list: none, few, some, lots, max", var="MONSTER_SELECT")'
     Upgrades: 'gui_drop_down("$text: {UPGRADE_SELECT};list: none, few, some, lots, max", var= "UPGRADE_SELECT")'
-    Minutes to War: 'gui_input("desc: Minutes;", var="WAR_TIME_DELAY")'
-    Time Limit: 'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT")'
+    Minutes to War: 'gui_input("desc: Minutes;", var="WAR_TIME_DELAY", listbox_container=map_options_listbox)'
+    Time Limit: 'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT", listbox_container=map_options_listbox)'
 ```
 
 
