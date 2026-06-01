@@ -745,13 +745,13 @@
           "Homing": 10
         },
         {
-          "Nuke": 0
+          "Nuke": 2
         },
         {
           "EMP": 0
         },
         {
-          "Mine": 0
+          "Mine": 15
         }
       ],
       #     "torpedostart": {"Homing": 10, "Nuke": 0, "EMP": 0, "Mine": 0 },
