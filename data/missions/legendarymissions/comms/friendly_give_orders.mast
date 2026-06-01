@@ -1,0 +1,294 @@
+
+# Example defining a color theme
+# Which is just a list of colors
+=$xmas green,red
+
+
+//enable/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "civ, friendly")
+
+#
+# This is an example of how to create an overridable button, but it is not used
+# By setting the weight to 0
+# 
+# //comms
+#     + !0 "Hail":
+#         comms_receive("Default hail")
+
+
+
+//comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and is_space_object_id(COMMS_SELECTED_ID) and has_roles(COMMS_SELECTED_ID, "civ, friendly")
+    + "Hail":
+        obj_ids = linked_to(COMMS_SELECTED_ID, "OBJECTIVE")
+        yield success if len(obj_ids) == 0
+        msg = "Current objective status\n"
+        for obj_id in obj_ids:
+            obj = to_object(obj_id)
+            continue if obj is None
+            detail = obj.get_inventory_value("desc")
+            continue if detail is None
+            if detail == "":
+                detail = "Receiving new orders"
+            msg += "    {detail}\n"
+        comms_receive(msg)
+
+
+
+//enable/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "prefab_npc_defender")
+
+
+//comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "prefab_npc_defender") 
+    + "Hail":
+        obj_ids = linked_to(COMMS_SELECTED_ID, "OBJECTIVE")
+        yield success if len(obj_ids) == 0
+        msg = "Current objective status\n"
+        for obj_id in obj_ids:
+            obj = to_object(obj_id)
+            continue if obj is None
+            detail = obj.get_inventory_value("desc")
+            continue if detail is None
+            if detail == "":
+                detail = "Receiving new orders"
+            msg += "    {detail}\n"
+        comms_receive(msg)
+
+
+
+//popup/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "prefab_npc_defender") and COMMS_POPUP_ID == COMMS_SELECTED_ID
+    
+    label_type = get_inventory_value(COMMS_SELECTED_ID, "give_orders_type")
+
+    orders = labels_get_type(label_type)
+    for order in orders:
+        valid_for = order.get_inventory_value("valid_for", "any")
+        if "self" != valid_for:
+            continue
+
+        set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_POINT", COMMS_POPUP_POINT)
+        set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_OBJECT", COMMS_POPUP_ID)
+
+        display_name = order.get_inventory_value("display_name", order.name)
+        + "Have {COMMS_SELECTED.name} {display_name}" carry_out_orders {"cur_objective": order}
+     
+
+
+
+//popup/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "prefab_npc_defender") and COMMS_POPUP_ID != COMMS_SELECTED_ID
+    label_type = get_inventory_value(COMMS_SELECTED_ID, "give_orders_type")
+
+    orders = labels_get_type(label_type)
+    ally = side_are_allies(COMMS_SELECTED_ID, COMMS_POPUP_ID)
+    for order in orders:
+        valid_for = order.get_inventory_value("valid_for", "any")
+        if valid_for == "allies" and not ally:
+            continue
+        if valid_for == "hostile" and ally:
+            continue
+        if valid_for == "self":
+            continue
+
+        set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_POINT", COMMS_POPUP_POINT)
+        set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_OBJECT", COMMS_POPUP_ID)
+
+        display_name = order.get_inventory_value("display_name", order.name)
+        + "Have {COMMS_SELECTED.name} {display_name}" carry_out_orders {"cur_objective": order}
+
+
+//popup/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and has_roles(COMMS_SELECTED_ID, "civilian")
+    current = set(linked_to(COMMS_SELECTED_ID, "OBJECTIVE"))
+    original = get_inventory_value(COMMS_SELECTED_ID, "ORIGINAL_OBJECTIVE")
+    if original is None:
+        set_inventory_value(COMMS_SELECTED_ID, "ORIGINAL_OBJECTIVE", current)
+        brain = get_inventory_value(COMMS_SELECTED_ID, "__BRAIN__")
+        set_inventory_value(COMMS_SELECTED_ID, "ORIGINAL_BRAIN", brain)
+        old_target = get_inventory_value(COMMS_SELECTED_ID,"blackboard:target")
+        set_inventory_value(COMMS_SELECTED_ID,"ORIGINAL_TARGET", old_target)
+        original = current
+
+    
+    is_default_objective = current == original
+    popup = COMMS_POPUP.name if COMMS_POPUP is not None else "Location"
+    sel = COMMS_SELECTED.name if COMMS_SELECTED is not None else ""
+    are_same = COMMS_SELECTED_ID == COMMS_POPUP_ID
+    
+
+    + "{sel} head to location" if COMMS_POPUP_ID == 0:
+        objective_clear(COMMS_SELECTED_ID)
+        target_point = Vec3(COMMS_POPUP_POINT)
+        comms_receive("Heading to assigned location", "On our way", color="white", title_color="cyan")
+
+        objective_add(COMMS_SELECTED_ID, objective_goto_location, {"objective_target_point": target_point, "objective_target": None})
+    + "{sel} head to {popup}" if COMMS_POPUP is not None and not are_same:
+        objective_clear(COMMS_SELECTED_ID)
+        ->END if not object_exists(COMMS_POPUP_ID)
+        target_point = Vec3(COMMS_POPUP.pos)
+        objective_add(COMMS_SELECTED_ID, objective_goto_location, {"objective_target_point": target_point, "objective_target": COMMS_POPUP_ID})
+        
+        comms_receive(f"Rendezvousing with {COMMS_POPUP.name}", "On our way", color="white", title_color="cyan")
+
+    + "{sel} return to work"  {"restore": original, "sel_id": COMMS_SELECTED_ID} if not is_default_objective and are_same:
+        # This is a bit complicated 
+        # And not flexible, assumes brain
+        # And what data the brain needs saved
+        # TODO: Add support functions to library
+        og_brain = get_inventory_value(COMMS_SELECTED_ID, "ORIGINAL_BRAIN")
+        set_inventory_value(COMMS_SELECTED_ID, "__BRAIN__", og_brain)
+        old_target = get_inventory_value(COMMS_SELECTED_ID, "ORIGINAL_TARGET")
+        set_inventory_value(COMMS_SELECTED_ID, "blackboard:target", old_target)
+        set_inventory_value(COMMS_SELECTED_ID, "blackboard:target_position", None)
+
+        comms_receive("Getting back to doing to what I do best", "returning to work", color="white", title_color="cyan")
+
+
+   
+        objective_clear(COMMS_SELECTED_ID)
+        for oid in restore:
+            add_role(oid, "OBJECTIVE")
+            add_role(oid, "OBJECTIVE_RUN")
+            link(sel_id, "OBJECTIVE", oid)
+            link(sel_id, "OBJECTIVE_RUN", oid)
+
+    + "{sel} full Stop" if are_same:
+        objective_clear(COMMS_SELECTED_ID)
+        objective_add(COMMS_SELECTED_ID, objective_full_stop)
+        comms_receive("Stopped awaiting new orders", "Full Stop", color="white", title_color="cyan")
+
+
+=== carry_out_orders 
+    ->END if COMMS_SELECTED_ID == 0
+    ->END if to_object(COMMS_SELECTED_ID) is None
+
+    target_point = get_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_POINT", None)
+    target_object = to_object(get_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_OBJECT", None))
+    if target_object is not None:
+        target_point = None
+
+    message = "Your order were unclear {COMMS_ORIGIN.name} - please confirm. I didn't get the area for the order."
+    title = "Orders unclear"
+
+    # Clear things
+    
+    # For now only one order
+    set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_POINT", None)
+    set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_OBJECT", None)
+
+    # set_inventory_value(COMMS_SELECTED_ID, "ORDERS_SELECTED_POINT", None)
+    objective_clear(COMMS_SELECTED_ID)
+    
+    #print("give orders on alt ship {cur_objective}")
+    objective_add(COMMS_SELECTED_ID, cur_objective, {"objective_target_point": target_point, "objective_target": to_id(target_object)})
+    
+    ######## The rest of this should be in the cur_objective
+    ORDER = cur_objective.get_inventory_value("display_name", cur_objective.name)
+    ORDER_COLOR = "#040"
+    if target_point is not None:
+        message = "Heading to designated waypoint to {ORDER}"
+        title = "Orders accepted"
+    elif target_object is not None:
+        message = "Heading to {target_object.name}"
+        title = "Orders accepted"
+    elif ORDER == "Full Stop":
+        message = "awaiting further orders"
+        title = ORDER
+    
+        
+    if message is not None:
+        comms_receive(message, title, color="white", title_color="cyan")
+
+    yield success
+
+
+//focus/comms2d if has_role(COMMS2D_ORIGIN_ID, "__player__")
+    alt_ship = get_inventory_value(EVENT.client_id, "2dview_alt_ship", 0)
+    on_ship =  sbs.get_ship_of_client(EVENT.client_id)
+    #set_inventory_value(on_ship, "2dview_alt_ship", 0)
+    #set_inventory_value(on_ship, "ORDERS_SELECTED_OBJECT", None)
+    do_select = get_inventory_value(EVENT.client_id, "2d_select", False)
+    if do_select and COMMS2D_SELECTED_ID != 0:
+        if alt_ship != COMMS2D_SELECTED_ID:
+            follow_route_select_comms(on_ship, COMMS2D_SELECTED_ID)
+            alt_ship = COMMS2D_SELECTED_ID
+            # Do I need to Follow Selection? Yes for Buttons
+
+    comms_set_2dview_focus(EVENT.client_id, alt_ship, EVENT)
+    ->END
+
+
+
+//focus/comms if not has_role(COMMS_SELECTED_ID, 'admiral')
+    ->END if COMMS_SELECTED is None
+    #
+    #
+    # Something else selected get out of give orders
+    #
+    comms_set_2dview_focus(EVENT.client_id, EVENT.selected_id)
+
+    name = COMMS_ORIGIN.name
+    selected_name = COMMS_SELECTED.name
+    if COMMS_SELECTED.has_role('tsn'):
+        ()[blue] "Unused"
+            % ready
+            % How can I help
+            % Your orders
+            % Yes, sir
+    elif COMMS_SELECTED.has_role('raider') and not science_is_unknown(COMMS_ORIGIN_ID, COMMS_SELECTED_ID):
+        ()[red] "Unused"
+            % Eat my beams
+            % You shall perish
+            % You gonna die
+            % Prepare to be space dust
+            % You're finished
+            % Target locked
+            % No mercy
+            % End of line
+            % You're outmatched
+            % This ends now
+            % Last warning
+            % Time's up
+            % Say goodbye
+            % Not taking calls right now
+            % You again? Hard pass
+            % Go bother someone else
+            % We're done here
+            % New comms policy: Nope
+            % Please hold... forever
+            % Wrong number, captain
+            % Try again never
+            % Unsubscribe
+            % Talk to my lasers
+            % Weapons hot
+            % Shields won't save you
+            % Your surrender is overdue
+            % Running won't help
+            % You're in our sights
+            % This sector is ours
+            % You've crossed the line
+            % You'll regret that call
+            % Final transmission received
+            % You should have stayed silent
+            % Communications terminated
+            % Channel closed
+            % Transmission ended
+            % No further response
+            % Signal lost (on purpose)
+            % We have nothing to discuss
+            % Your message has been rejected
+            % This frequency is restricted
+            % Return to your territory
+            % Stand down or be fired upon
+            % Taste photon torpedo justice
+            % Meet my emp/nuke combo
+            % Eat my plasma
+            % Enjoy a torpedo handshake
+            % Say hello to my beam array
+            % We bring the boom
+            % Prepare for a hull inspection (explosive)
+            % Incoming 'diplomacy'
+            % Negotiations have... ended
+            % Your ship will make a fine debris field
+            % {name}, I'm done talking to you.
+            % {name}, you're exhausting.
+            % {name}, channel closed.
+            % {name}, the next message is a torpedo.
+            % {name}, keep talking and start running. 
+            % If your name is {name}, just no already.
+

@@ -1,0 +1,210 @@
+
+//shared/signal/game_started
+    #CREATE Sides and diplomacy
+    #
+    # These are the side used for LegendaryMissions
+    #
+    # Some examples of different ways to set up a new side.
+
+    #region Spawn TSN side
+    tsn = await prefab_spawn(prefab_side_generic, data={"key":"tsn"}) #Spawn using only the key
+    # Add a display name, description and color programatically
+    side_set_display_name(tsn, "TSN") 
+    side_set_description(tsn, "The Terran Stellar Navy")
+    side_set_icon_color(tsn, "#07F")
+    #endregion
+
+    #region Spawn Raider side
+    # Everything can be set in the prefab data.
+    raider = await prefab_spawn(prefab_side_generic, data={"key":"raider", "name": "Raider", "color": "#F00", "desc":"Hostile Aliens"})
+    #endregion
+
+    #region Spawn Civ side
+    # Some combination of prefab and functions can be nice.
+    civ = await prefab_spawn(prefab_side_generic, data={"key":"civ","name": "Civ"})
+    side_set_description(civ, "Civilians. Protect them from attack.")
+    side_set_icon_color(civ, "white") #NOTE that you can use color names in addition to hexidecimal
+    #endregion
+
+    # Now we set the relationships between the sides.
+    side_set_relations(tsn, raider, sbs.DIPLOMACY.HOSTILE)
+    side_set_relations(raider, civ, sbs.DIPLOMACY.HOSTILE)
+    side_set_relations(civ, tsn, sbs.DIPLOMACY.NEUTRAL)
+
+    #The colors for diplomatic relations can be set via script.
+    sim.set_diplomacy_color(sbs.DIPLOMACY.HOSTILE,"#F00")
+    sim.set_diplomacy_color(sbs.DIPLOMACY.NEUTRAL,"#077")
+
+
+
+
+============ task_end_game ======= 
+
+    await delay_sim(4)
+
+    if is_timer_set(SHARED, "time_limit") and is_timer_finished(SHARED, "time_limit"):
+        left = role("raider")
+        c = len(left)
+        # End attack
+        remove_role(left, "raider")
+        START_TEXT = "Mission time has run out! {c} enemies left."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        #gui_reroute_clients(show_game_results)
+        #gui_reroute_server(show_game_results)
+        signal_emit("show_game_results", None)
+        ->END
+
+    stations = role('tsn') & role('station')
+    if len(stations) ==0:
+        START_TEXT = "Mission is lost!  All yer base are belong to us, dammit."
+        GAME_STARTED = False
+        GAME_ENDED = True
+
+        sbs.play_music_file(0, "music/default/failure")
+        signal_emit("show_game_results", None)
+
+        ->END
+
+    raiders = role('Raider')
+    if len(raiders)==0 and WORLD_SELECT.path !="peacetime":
+        START_TEXT = "Mission is won!  All the enemies have been destroyed."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        signal_emit("show_game_results", None)
+        ->END
+
+    -> task_end_game
+
+
+============ task_deepstrike_end_game ======= 
+
+    await delay_sim(4)
+
+    # Check if time limit has expired.
+
+    if is_timer_set(SHARED, "time_limit") and is_timer_finished(SHARED, "time_limit"):
+        left = role("raider")
+        c = len(left)
+        # End attack
+        remove_role(left, "raider")
+        START_TEXT = "Mission time has run out! {c} enemies left."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        #gui_reroute_clients(show_game_results)
+        #gui_reroute_server(show_game_results)
+        signal_emit("show_game_results", None)
+        ->END
+
+    # Count the remaining enemy stations and raiders
+
+    stations = role('enemy') & role('station')
+    raiders = role('Raider')
+
+    # Check to see if any stations no longer exist. If so, delete the navpoint associated with that station.
+
+#    if len(stations) >= 1:
+#        for i in range(len(enemy_station_dict)):
+#            station_id = enemy_station_list[i]
+#            nav_id = navproxy_list[i]
+#            print(station_id)
+#            print(nav_id)
+#            if not object_exists(station_id) and nav_id in navproxy_list:
+#               sim.delete_navproxy_by_id(nav_id)
+
+    # If all enemies and enemy stations have been destroyed, mission succeeds and game ends.
+
+    if len(stations) == 0 and len(raiders) == 0:
+        START_TEXT = "Mission is won!  All the enemies have been destroyed."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        signal_emit("show_game_results", None)
+        ->END
+
+    -> task_deepstrike_end_game
+
+============ peacetime_ambassador_killed =======
+
+    START_TEXT = "Mission Failed! The ship carrying Ambassador Florbin was destroyed."
+    GAME_STARTED = False
+    GAME_ENDED = True
+    sbs.play_music_file(0, "music/default/failure")
+    signal_emit("show_game_results", None)
+    ->END
+
+============ task_peacetime_end_game ======= 
+
+    await delay_sim(4)
+
+    # Check if time limit has expired.
+
+    if is_timer_set(SHARED, "time_limit") and is_timer_finished(SHARED, "time_limit"):
+        START_TEXT = "Mission time has run out!"
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        signal_emit("show_game_results", None)
+        ->END
+
+    -> task_peacetime_end_game
+
+============ task_borderwar_end_game ======= 
+
+    await delay_sim(4)
+
+    # Check if time limit has expired.
+
+    if is_timer_set(SHARED, "time_limit") and is_timer_finished(SHARED, "time_limit"):
+        left = role("raider")
+        c = len(left)
+        # End attack
+        remove_role(left, "raider")
+        START_TEXT = "Mission time has run out! {c} enemies left."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        #gui_reroute_clients(show_game_results)
+        #gui_reroute_server(show_game_results)
+        signal_emit("show_game_results", None)
+        ->END
+
+    # For Border War, game ends if a player ship enters the Neutral Zone
+    if WORLD_SELECT.path == "border_war" and war_declared == 3:
+        START_TEXT = "Mission Failed! TSN entered Neutral Zone before war declared."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/failure")
+        signal_emit("show_game_results", None)
+        ->END
+
+    # Count the remaining enemy stations and raiders
+
+    stations = role('enemy') & role('station')
+    raiders = role('Raider')
+
+    # Check to see if any enemy stations no longer exist. If so, delete the navpoint associated with that station.
+
+#    if len(stations) >= 1:
+#        for i in range(len(enemy_station_dict)):
+#            station_id = enemy_station_list[i]
+#            nav_id = enemy_station_dict[station_id]
+#            if not object_exists(station_id) and nav_id in navpoint_list:
+#                sim.delete_navpoint_by_id(nav_id)
+#                navpoint_list.remove(nav_id)
+
+    # If all enemy raiders and enemy stations have been destroyed, mission succeeds and game ends.
+
+    if len(stations) == 0 and len(raiders) == 0:
+        START_TEXT = "Mission is won!  All the enemies have been destroyed."
+        GAME_STARTED = False
+        GAME_ENDED = True
+        sbs.play_music_file(0, "music/default/victory")
+        signal_emit("show_game_results", None)
+        ->END
+
+    -> task_borderwar_end_game
+

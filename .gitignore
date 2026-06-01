@@ -14,3 +14,33 @@
 # For a reason I don't understand, this **/LICENSE pattern includes the LICENSE file in the top-level directory.
 # That needs to be included though, so I just added it to the repo despite this .gitignore file specifying that it should be ignored.
 **/LICENSE
+
+!data/GUIBoxData.txt
+!data/GUIBoxDataSafeBackup.txt
+!data/grid_data.json
+!data/grid_theme.json
+!data/hot_key_settings.txt
+!data/preferences.json
+!data/shipData.yaml
+
+# Despite not being modified from their original vanilla state, these files are included for the purpose of patching issues with the process of autogenerating them.
+# See these github issues for more details:
+# https://github.com/artemis-sbs/LegendaryMissions/issues/422
+# https://github.com/artemis-sbs/LegendaryMissions/issues/606
+# https://github.com/artemis-sbs/LegendaryMissions/issues/392
+!data/graphics/**/*.paxmesh
+!data/graphics/**/*.pointcube
+!data/graphics/**/*1024.png
+!data/graphics/**/*256.png
+
+# Despite not being modified from its original vanilla state, this file is included for the purpose of patching potential issues with its data getting corrupted.
+# See this github issue for more details:
+# https://github.com/artemis-sbs/LegendaryMissions/issues/570
+!data/client_string_set.txt
+
+!data/missions/common/**
+data/missions/common/dmx.py
+!data/missions/legendarymissions/**
+!data/missions/remote_mission_pick/**
+!data/missions/secretmeeting/**
+!data/missions/walktheline/**
