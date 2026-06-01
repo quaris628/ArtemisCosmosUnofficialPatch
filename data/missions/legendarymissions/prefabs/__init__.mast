@@ -1,3 +1,4 @@
+import prefab_helpers.py
 import monster.mast
 import basic_civilian.mast
 import basic_enemy.mast
