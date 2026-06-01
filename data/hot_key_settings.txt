@@ -97,7 +97,7 @@ eng_presets_preset_store_9              | KEY_9 KEY_SHIFT           | stores eng
 fighter_control_fighter_boost           | KEY_CONTROL               | makes a player fighter boost
 fighter_control_fighter_dock            | KEY_Z                     | makes a player fighter try to dock
 fighter_control_fighter_eject           | KEY_L                     | makes a player fighter try to eject
-fighter_control_fighter_shld_balance    | KEY_O                     | makes a player fighter switch shield balance setting
+fighter_control_fighter_shld_balance    | KEY_K                     | makes a player fighter switch shield balance setting
 fighter_control_fighter_shoot           | KEY_SPACE                 | hold down, a player fighter shoots at a locked target
 fighter_control_fighter_thrust          | KEY_SHIFT                 | makes a player fighter thrust
 fighter_control_fighter_torp_type       | KEY_P                     | makes a player fighter select next carried torpedo type
