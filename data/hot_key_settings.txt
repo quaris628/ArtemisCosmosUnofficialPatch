@@ -74,26 +74,6 @@ comms_control_comms_button_9            | KEY_9                     | clicks thi
 debug_server_kill_sci_selection         | KEY_P KEY_CONTROL KEY_SHIFT | hotkey works on 3d view, only on server.  If sci selection is valid, the selected object is deleted.
 eng_heat_controls_level_coolant         | KEY_RETURN                | returns all coolant controls to zero
 eng_power_controls_level_power          | KEY_SPACE                 | returns all power control sliders to 100%
-eng_power_controls_preset_retrieve_0    | KEY_0 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #0
-eng_power_controls_preset_retrieve_1    | KEY_1 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #1
-eng_power_controls_preset_retrieve_2    | KEY_2 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #2
-eng_power_controls_preset_retrieve_3    | KEY_3 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #3
-eng_power_controls_preset_retrieve_4    | KEY_4 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #4
-eng_power_controls_preset_retrieve_5    | KEY_5 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #5
-eng_power_controls_preset_retrieve_6    | KEY_6 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #6
-eng_power_controls_preset_retrieve_7    | KEY_7 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #7
-eng_power_controls_preset_retrieve_8    | KEY_8 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #8
-eng_power_controls_preset_retrieve_9    | KEY_9 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #9
-eng_power_controls_preset_store_0       | KEY_0 KEY_SHIFT           | stores engineering preset #0
-eng_power_controls_preset_store_1       | KEY_1 KEY_SHIFT           | stores engineering preset #1
-eng_power_controls_preset_store_2       | KEY_2 KEY_SHIFT           | stores engineering preset #2
-eng_power_controls_preset_store_3       | KEY_3 KEY_SHIFT           | stores engineering preset #3
-eng_power_controls_preset_store_4       | KEY_4 KEY_SHIFT           | stores engineering preset #4
-eng_power_controls_preset_store_5       | KEY_5 KEY_SHIFT           | stores engineering preset #5
-eng_power_controls_preset_store_6       | KEY_6 KEY_SHIFT           | stores engineering preset #6
-eng_power_controls_preset_store_7       | KEY_7 KEY_SHIFT           | stores engineering preset #7
-eng_power_controls_preset_store_8       | KEY_8 KEY_SHIFT           | stores engineering preset #8
-eng_power_controls_preset_store_9       | KEY_9 KEY_SHIFT           | stores engineering preset #9
 eng_presets_preset_retrieve_0           | KEY_0 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #0
 eng_presets_preset_retrieve_1           | KEY_1 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #1
 eng_presets_preset_retrieve_2           | KEY_2 NOT KEY_SHIFT NOT KEY_CONTROL | retrieves engineering preset #2
