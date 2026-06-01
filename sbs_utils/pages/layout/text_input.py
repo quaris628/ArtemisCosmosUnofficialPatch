@@ -3,7 +3,7 @@ from ...helpers import FrameContext
 import re
 
 class TextInput(Column):
-    def __init__(self, tag, props) -> None:
+    def __init__(self, tag, props, listbox_container) -> None:
         super().__init__()
         self._value = ""
         if "text:" in props:
@@ -18,6 +18,7 @@ class TextInput(Column):
             
         self.tag = tag
         self.props = props
+        self.listbox_container = listbox_container
         
     def _present(self, event):
         ctx = FrameContext.context
@@ -30,7 +31,19 @@ class TextInput(Column):
         
     def on_message(self, event):
         if event.sub_tag == self.tag:
-            self.value = event.value_tag
+            sanitized_text = re.sub(r"[^A-Za-z0-9 \-_']", "", event.value_tag)
+            self.value = sanitized_text
+            if sanitized_text != event.value_tag:
+                # Text inputs inside listboxes can't be represented due to this issue:
+                # https://github.com/artemis-sbs/LegendaryMissions/issues/349
+                # If they aren't represented, then old characters persist and overlap
+                # with new text.
+                # So to get around this, set a listbox_container property on any text inputs
+                # inside a listbox, and use that to access and represent that entire listbox.
+                if self.listbox_container is not None:
+                    self.listbox_container.mark_visual_dirty()
+                else:
+                    self.mark_visual_dirty()
         super().on_message(event)
         
     @property
