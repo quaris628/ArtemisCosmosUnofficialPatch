@@ -1,3 +1,5 @@
+import ../../common/library_function_patches.py
+
 import hangar.py
 import hangar.mast
 import missions.mast
