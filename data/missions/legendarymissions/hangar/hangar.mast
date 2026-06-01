@@ -37,9 +37,6 @@ hangar_get_craft_data("terran")
 
     shuttle_count = grid_count_grid_data(SPAWNED.art_id, "shuttle", 0)
     fighter_count = grid_count_grid_data(SPAWNED.art_id, "fighter", 0)
-    if fighter_count == 0:
-        fighter_count = shuttle_count
-
     set_inventory_value(SPAWNED_ID, "MAX_SHUTTLE", shuttle_count)
     set_inventory_value(SPAWNED_ID, "MAX_FIGHTER", fighter_count)
 
