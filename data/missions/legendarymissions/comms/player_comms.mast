@@ -10,11 +10,10 @@
 //comms/ship_to_ship
     default prop_message = gui_set_variable("prop_message", "")
     p = """
-    message: 'gui_input("desc: message;",var="prop_message")'
+    message: 'gui_input("desc: message;",var="prop_message", listbox_container=get_comms_options_property_list_box())'
     """
-    # This is gui variable, this is why we need client scope!
-    gui_properties_set(p)
-
+    signal_emit(signal_comms_property_list_box_update_ship_to_ship(COMMS_ORIGIN_ID), data={"NEW_PROPERTIES": p})
+    
     + "Back" //comms
     + "Send":
         prop_message = gui_get_variable("prop_message", "")
