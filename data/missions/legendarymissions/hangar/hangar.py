@@ -195,17 +195,7 @@ def hangar_craft_spawn(docked_id, craft_data):
 
     style = craft_data.get("display_text", "Fighter")
     set_inventory_value(craft.id, "CRAFT_TYPE", style )
-
-    #
-    # 
-    torp_types = craft_data.get("torp_types", {})
-    for t, count in torp_types.items():
-        craft.blob.set(f"{t}_MAX", count, 0)
-        craft.blob.set(f"{t}_VAL", count, 0)
     
-    torp_available = ",".join(torp_types.keys())
-    craft.blob.set("torpedo_types_available", torp_available, 0)
-
     #
     # Cross links
     #
@@ -304,17 +294,11 @@ def hangar_launch_craft(craft_id, client_id):
     grid_rebuild_grid_objects(craft.id)
 
     blob = to_data_set(craft.id)
-
-    # Use the torp blob dat to refill
-    avail = blob.get("torpedo_types_available", 0)
-    if not isinstance(avail, str):
-        avail = ""
-    avail = avail.split(",")
-    for t in avail:
-        t = t.strip()
-        h = blob.get( f"{t}_MAX", 0)
-        blob.set(f"{t}_NUM", h, 0)
-
+    
+    for ordinance_type in ["Homing", "Nuke", "EMP", "Mine"]:
+        max_count = blob.get( f"{ordinance_type}_MAX", 0)
+        blob.set(f"{ordinance_type}_NUM", max_count, 0)
+    
     # Reset shields
     c = blob.get("shield_count", 0)
     for x in range(c):
