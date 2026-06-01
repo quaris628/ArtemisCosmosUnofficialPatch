@@ -118,7 +118,10 @@ distance: 600
     if get_counter_elapsed_seconds(DOCKING_PLAYER_ID,"refuel") >= refuel_delay:
         start_counter(DOCKING_PLAYER_ID,"refuel")
         fuel_value = DOCKING_PLAYER.data_set.get("energy",0)
-        if fuel_value < 1000:
+        if fuel_value < 1000 and 1000 < fuel_value + refuel_amount:
+            fuel_value = 1000.9
+            DOCKING_PLAYER.data_set.set("energy", int(fuel_value),0)
+        elif fuel_value < 1000:
             fuel_value = fuel_value + refuel_amount
             DOCKING_PLAYER.data_set.set("energy", int(fuel_value),0)
 ### Refill torps
@@ -220,7 +223,10 @@ match_side: True
     if get_counter_elapsed_seconds(DOCKING_PLAYER_ID,"refuel") > refuel_delay:
         start_counter(DOCKING_PLAYER_ID,"refuel")
         fuel_value = DOCKING_PLAYER.data_set.get("energy",0)
-        if fuel_value < 1000:
+        if fuel_value < 1000 and 1000 < fuel_value + refuel_amount:
+            fuel_value = 1000.9
+            DOCKING_PLAYER.data_set.set("energy", int(fuel_value),0)
+        elif fuel_value < 1000:
             fuel_value = fuel_value + refuel_amount
             DOCKING_PLAYER.data_set.set("energy", int(fuel_value),0)
 ### Refill torps
