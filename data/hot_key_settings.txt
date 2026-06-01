@@ -71,6 +71,10 @@ comms_control_comms_button_6            | KEY_6                     | clicks thi
 comms_control_comms_button_7            | KEY_7                     | clicks this comms button
 comms_control_comms_button_8            | KEY_8                     | clicks this comms button
 comms_control_comms_button_9            | KEY_9                     | clicks this comms button
+comms_sorted_list____object_list_filter_next| KEY_END                   | selects next filter in the object list
+comms_sorted_list____object_list_filter_prev| KEY_HOME                  | selects previous filter in the object list
+comms_sorted_list____object_list_select_dn| KEY_PAGE_DOWN             | moves the selection in the object list lower
+comms_sorted_list____object_list_select_up| KEY_PAGE_UP               | moves the selection in the object list higher
 debug_server_kill_sci_selection         | KEY_P KEY_CONTROL KEY_SHIFT | hotkey works on 3d view, only on server.  If sci selection is valid, the selected object is deleted.
 eng_heat_controls_level_coolant         | KEY_RETURN                | returns all coolant controls to zero
 eng_power_controls_level_power          | KEY_SPACE                 | returns all power control sliders to 100%
