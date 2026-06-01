@@ -1,4 +1,3 @@
-import prefab_helpers.py
 
 shared SHIP_NAME_DATA = load_json_string(media_read_relative_file("shipnames.json"))
 
