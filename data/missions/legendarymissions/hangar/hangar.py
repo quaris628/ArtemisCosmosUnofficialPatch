@@ -193,8 +193,9 @@ def hangar_craft_spawn(docked_id, craft_data):
     # Not counted for end game
     craft.py_object.remove_role("PlayerShip,__player__")
 
-    style = craft_data.get("display_text", "Fighter")
-    set_inventory_value(craft.id, "CRAFT_TYPE", style )
+    # Unnecessary in the current EF mod codebase, but the vanilla codebase writes to and reads from this,
+    # so keep setting it in case a future vanilla version reads from it somewhere new
+    set_inventory_value(craft.id, "CRAFT_TYPE", get_craft_type_display_text(roles))
     
     #
     # Cross links
@@ -480,11 +481,23 @@ def hangar_get_crafts_at(dock_id):
 def hangar_console_ship_template(item):
     gui_row("row-height: 1.2em;padding:13px;")
     gui_text(f"$text:{item.name};justify: left;")
-    t = item.get_inventory_value("CRAFT_TYPE", "Fighter")
+    craft_type_display_text = get_craft_type_display_text(item.get_roles())
     gui_row("row-height: 1.2em;padding:13px;")
-    gui_text(f"$text:{t};justify: left;font:gui-1")
+    gui_text(f"$text:{craft_type_display_text};justify: left;font:gui-1")
 
-    
+def get_craft_type_display_text(craft_roles):
+    """
+    Returns a string to display to the user describing a craft's type based on its roles.
+    Possible return values are: 'Shuttle', 'Fighter', 'Bomber', or 'Unrecognized'.
+    """
+    if "shuttle" in craft_roles:
+        return "Shuttle"
+    elif "fighter" in craft_roles:
+        return "Fighter"
+    elif "bomber" in craft_roles:
+        return "Bomber"
+    else:
+        return "Unrecognized"
 
 def hangar_console_title_template():
     gui_row("row-height: 1.2em;padding:13px;background:#1578;")
