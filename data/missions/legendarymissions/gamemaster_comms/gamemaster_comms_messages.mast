@@ -56,6 +56,7 @@
 === handle_gamemaster_message_properties
     # default side_select = "tsn" # Not used - yet anyway
     gm_message = gui_get_variable("gm_message", "msg")
+    # TODO pass listbox_container
     p = """
     message: 'gui_input("desc: message;",var="gm_message")'
     """
@@ -68,6 +69,7 @@
     ret = gui_clipboard_get()
     gui_set_variable("gm_message",ret)
     gm_message = gui_get_variable("gm_message")
+    # TODO pass listbox_container
     p = """
     message: 'gui_input("desc: message;",var="gm_message")'
     """
