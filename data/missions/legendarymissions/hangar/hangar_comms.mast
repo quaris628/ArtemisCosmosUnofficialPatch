@@ -63,7 +63,9 @@
     + !0 "Back" //comms/grid
     for d in dockable:
         + "{d.name} as dock" {"dock": d.id}: 
-            hangar_set_dock(COMMS_ORIGIN_ID, dock)
+            # don't set selection if selection was destroyed after opening the menu or if selection is already the home dock
+            if not(to_space_object(dock) is None or get_dedicated_link(COMMS_ORIGIN_ID, "home_dock") == dock):
+                hangar_set_dock(COMMS_ORIGIN_ID, dock)
             comms_navigate("//comms/grid")
 
 
