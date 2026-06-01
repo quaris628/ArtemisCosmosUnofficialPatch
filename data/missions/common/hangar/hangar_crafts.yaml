@@ -1,80 +1,44 @@
 # Default can also be terran
 terran:
   - key: tsn_fighter
-    torp_types:
-      Homing: 10
     roles: fighter
     display_text: Fighter
   - key: tsn_bomber
     roles: bomber
-    torp_types: 
-      Homing: 10
-      Nuke: 2
-      EMP: 1
-      Mine: 5
     display_text: Bomber
   - key: tsn_shuttle
-    torp_types: 
-      Homing: 2
     roles: shuttle
     display_text: Shuttle
 
 ximni:
   - key: xim_avenger
-    torp_types:
-      Homing: 5
     roles: fighter
     display_text: Fighter
   - key: xim_avenger
     roles: bomber
-    torp_types:
-      Homing: 5
-      Nuke: 2
-      EMP: 2
-      Mine: 5 
     display_text: Bomber
   - key: tsn_shuttle
-    torp_types: 
-      Homing: 2
     roles: shuttle
     display_text: Shuttle
 
 pirate:
   - key: pirate_fighter
-    torp_types: 
-      Homing: 10
     roles: fighter
     display_text: Fighter
   - key: pirate_fighter
     roles: bomber
-    torp_types:
-      Homing: 10
-      Nuke: 2
-      EMP: 1
-      Mine: 5 
     display_text: Bomber
   - key: tsn_shuttle
-    torp_types: 
-      Homing: 2
     roles: shuttle
     display_text: Shuttle
 
 arvonian:
   - key: arvonian_fighter
-    torp_types: 
-      Homing: 10
     roles: fighter
     display_text: Fighter
   - key: arvonian_fighter
     roles: bomber
-    torp_types: 
-      Homing: 10
-      Nuke: 2
-      EMP: 1
-      Mine: 5
     display_text: Bomber
   - key: tsn_shuttle
-    torp_types: 
-      Homing: 2
     roles: shuttle
     display_text: Shuttle
