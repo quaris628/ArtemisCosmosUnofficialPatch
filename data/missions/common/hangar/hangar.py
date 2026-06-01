@@ -205,7 +205,6 @@ def hangar_craft_spawn(docked_id, craft_data):
     
     torp_available = ",".join(torp_types.keys())
     craft.blob.set("torpedo_types_available", torp_available, 0)
-    shields = craft_data.get("shields", [-1,-1])
 
     #
     # Cross links
