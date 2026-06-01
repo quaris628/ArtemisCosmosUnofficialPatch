@@ -1,0 +1,46 @@
+shared game_paused = False
+default shared OPERATOR_MODE_enabled = False
+
+
+@console/admin !0 ^95 "Operator Admin" if OPERATOR_MODE_enabled
+" A console for the game operator
+
+    gui_section( style=f"area: 20, 40, 80, 40+40px;")
+    pin = ""
+    """operator pin"""
+    _in = gui_input("""desc: Enter pin;password:True;""", var="pin")
+    on gui_message(_in):
+        jump operator_admin_console if pin == OPERATOR_MODE.get("pin")
+
+    await gui():
+        + "cancel":
+            jump select_console
+
+
+====== operator_admin_console ===== 
+
+    watch_end_game_task = None
+    shared watch_raider_count = None
+
+    jump operator_stats if GAME_STARTED
+
+    jump show_server_menu 
+
+=== operator_stats
+    gm_console =  gui_get_console_type("gamemaster")
+    if GAME_STARTED and gm_console is not None:
+        GAMEMASTER_SKIP_PIN = True
+        jump(gm_console.label)
+    
+    gui_section("area: 20,20,80,40;")
+
+    """
+    Operator mode depends on the game master addon
+    """"
+
+    await gui()
+
+
+
+
+

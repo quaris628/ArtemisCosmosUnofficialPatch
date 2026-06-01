@@ -1,0 +1,193 @@
+@map/siege "Siege"
+" In this scenario, bases will be located in the center of the sector, 
+" with minefields ringing the center, and enemies advancing from every 
+" angle. Siege makes for a fast game, where stations are continually under threat.
+metadata:``` yaml
+Properties:
+  Main:
+    Player Ships: 'gui_int_slider("$text:int;low: 1.0;high:8.0;", var= "PLAYER_COUNT")'
+    Difficulty: 'gui_int_slider("$text:int;low: 1.0;high:11.0;", var= "DIFFICULTY")'
+  Map:
+    Terrain: 'gui_drop_down("$text: {TERRAIN_SELECT};list: none, few, some, lots, max",var="TERRAIN_SELECT")'
+    Lethal Terrain: 'gui_drop_down("$text: {LETHAL_SELECT};list: none, few, some, lots, max", var="LETHAL_SELECT")'
+    Friendly Ships: 'gui_drop_down("$text: {FRIENDLY_SELECT};list: none, few, some, lots, max", var="FRIENDLY_SELECT")'
+    Monsters: 'gui_drop_down("$text: {MONSTER_SELECT};list: none, few, some, lots, max", var="MONSTER_SELECT")'
+    Upgrades: 'gui_drop_down("$text: {UPGRADE_SELECT};list: none, few, some, lots, max", var= "UPGRADE_SELECT")'
+    Time Limit: 'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT")'
+```
+
+
+    terrain_value = terrain_to_value(TERRAIN_SELECT)
+    lethal_value =  terrain_to_value(LETHAL_SELECT)
+    friendly_value = terrain_to_value(FRIENDLY_SELECT)
+    monster_value = terrain_to_value(MONSTER_SELECT)
+    upgrade_value = terrain_to_value(UPGRADE_SELECT)
+
+    #------------------------------------------------------------------------------------------------------------
+
+    # Should yield 16 points
+    # The stations are placed in one of these slots
+    # The points are moved within the slot but stay in the slot
+    # the 0.8 drift mean that the startion can drift from the center point by up to 80% of 20,000 = 16,000
+    if DIFFICULTY > 7:
+        # 4 slots
+        spawn_points = scatter_simple_noise(0, 0, 0, 0, 20_000, 750, 20_000, 2, 1, 2, centered=True, drift=0.7)
+    elif DIFFICULTY > 3:
+        # nine slots
+        spawn_points = scatter_simple_noise(0, 0, 0, 0, 60_000, 750, 60_000, 3, 1, 3, centered=True, drift=0.7)
+    else:
+        # 16  slots
+        spawn_points = scatter_simple_noise(0, 0, 0, 0, 60_000, 750, 60_000, 4, 1, 4, centered=True, drift=0.7)
+
+    # Add stations
+    # This return the object create
+    # These will be used later to prune a set of points
+    stations = terrain_spawn_stations(DIFFICULTY, lethal_value, points=spawn_points)
+    
+
+    top = 50_000
+    left = -50_000
+    right = 50_000
+    bottom = -50_000
+
+    # Use this to see the cneter point and boundaries
+    # marker_obj = terrain_spawn(0,0,0, "center", "map", "generic-sphere", "behav_selection")
+    # marker_obj.data_set.set("radar_color_override", "cyan" ,0)
+
+    # marker_obj = terrain_spawn(-50_000,0,-50_000, "bottom left", "map", "generic-sphere", "behav_selection")
+    # marker_obj.data_set.set("radar_color_override", "red" ,0)
+    # marker_obj = terrain_spawn(50_000,0,-50_000, "bottom right", "map", "generic-sphere", "behav_selection")
+    # marker_obj.data_set.set("radar_color_override", "lime" ,0)
+    # marker_obj = terrain_spawn(-50_000,0,50_000, "top left", "map", "generic-sphere", "behav_selection")
+    # marker_obj.data_set.set("radar_color_override", "orange" ,0)
+    # marker_obj = terrain_spawn(50_000,0,50_000, "top right", "map", "generic-sphere", "behav_selection")
+    # marker_obj.data_set.set("radar_color_override", "purple" ,0)
+    
+
+    await task_schedule(spawn_friendly_npc)
+    await task_schedule(spawn_players)
+    await task_schedule(default_player_friendly_eyes)
+    await task_schedule(docking_standard_player_station)
+
+    # Grab a set of points that are not over lapping
+    # This is the 100k x 100k in 100x100 grid of 1000x1000 squares
+    spawn_points = scatter_simple_noise(0, 0,0, 0, 120_000, 750, 120_000, 120, 1,120, centered=True)
+    
+    # Remove points around stations so no points near 10,000
+    # of a station
+    spawn_points = terrain_remove_points_near(spawn_points, stations, 15_000)
+    # Shrink Terrain area a bit
+    t_spawn_points = list(terrain_random_point_box(spawn_points, -45_000, -500, 45_000, 45_000, 500, -45_000))
+    # Nebula and asteroids can be over other points
+    terrain_spawn_nebula_clusters(terrain_value, points=t_spawn_points)
+    terrain_asteroid_clusters(terrain_value, points=t_spawn_points)
+    # These should remove points / sample
+    terrain_spawn_pickups(upgrade_value, points=t_spawn_points)
+    # Monsters
+    m_points = terrain_spawn_monsters(monster_value, points=t_spawn_points)
+    t_spawn_points = terrain_remove_points_near(t_spawn_points, m_points, 7_000)
+    # Black holes
+    b_points = terrain_spawn_black_holes(lethal_value, points=t_spawn_points)
+    # Remove monster and blck hole from main pool
+    spawn_points = terrain_remove_points_near(spawn_points, m_points, 7_000)
+    spawn_points = terrain_remove_points_near(spawn_points, b_points, 7_000)
+
+
+
+    #------------------------------------------------------------------------------------------------------------
+    # Generate Siege Fleets - These fleets are weighted towards Kraliens (based on DIFFICULTY), from 85% Kralien at DIFFICULTY 1 
+    # to 22% Kralien at DIFFICULTY 10. The fleet lists can be found in 'map_common.py'. Skaraans are generated separately, as these 
+    # 'independent contractors' tend to operate better on their own. The idea is to hopefully match the 'feel' of Artemis 2.x. 
+    enemyTypeNameList = ["Kralien", "Torgoth", "Arvonian", "Ximni"]
+
+    diff_weight = [ [85, 5, 5, 5], [82, 6, 6, 6], [79, 7, 7, 7], [76, 8, 8, 8], [70, 10, 10, 10], [64, 12, 12, 12], [58, 14, 14, 14], [46, 18, 18, 18], [34, 22, 22, 22], [22, 26, 26, 26], [10, 30, 30, 30]]
+    
+    fleet_count = 3 + int(DIFFICULTY/2)
+    fleet_index = int(DIFFICULTY - 1)
+
+    # Now try to make it so enemies don't spawn on stations
+    spawn_points = terrain_remove_points_near(spawn_points, stations, 20_000)
+
+    top = 65_000
+    left = -65_000
+    right = 65_000
+    bottom = -65_000
+    size = 32_500
+
+    # Create 4 spawn emitter blocks
+    enemy_emitters = []
+    # 1 2 3
+    # 4 5 6
+    # 7 8 9
+    # 1
+    enemy_emitters.append( terrain_random_point_box(spawn_points, left, -500, top, left+size , 500, top-size) )
+    # 3
+    enemy_emitters.append( terrain_random_point_box(spawn_points, right-30_000, -500, top, right , 500, top-size) )
+    # 7
+    enemy_emitters.append( terrain_random_point_box(spawn_points, left, -500, bottom+size, left+size , 500, bottom) )
+    # 9
+    enemy_emitters.append( terrain_random_point_box(spawn_points, right-size, -500, bottom+size, right , 500, bottom) )
+    # 2
+    enemy_emitters.append( terrain_random_point_box(spawn_points, left+size, -500, top, right-size, 500, top-size) )
+    # 4
+    enemy_emitters.append( terrain_random_point_box(spawn_points, left, -500, top-size, left+size, 500, bottom+size) )
+    # 6
+    enemy_emitters.append( terrain_random_point_box(spawn_points, right-size, -500, top-size, right, 500, bottom+size) )
+    # 8
+    enemy_emitters.append( terrain_random_point_box(spawn_points, left+size, -500, bottom+size, right-size, 500, bottom) )
+
+    random.shuffle(enemy_emitters)
+    emitters = list(enemy_emitters)
+    
+
+    # times to for skarrans
+    if len(spawn_points) < fleet_count*2:
+        # There should be enough points, but if not
+        spawn_points = None
+        
+    for a in range(fleet_count):
+        enemy_temp = random.choices(enemyTypeNameList, weights=diff_weight[fleet_index])
+        
+        enemy = enemy_temp[0]
+        if spawn_points is None:
+            fleet_pos = Vec3.rand_in_sphere(39990, 40000, False, True)
+            debug_print("Wrong spawn")
+        else:
+            if len(emitters)==0:
+                debug_print("Shuffle")
+                random.shuffle(enemy_emitters)
+                emitters = list(enemy_emitters)
+            em = emitters.pop()
+            # Get the next random point from teh emitter
+            fleet_pos = next(em, None)
+        
+        if fleet_pos is None:
+            fleet_pos = Vec3.rand_in_sphere(39990, 40000, False, True)
+            debug_print("FLEET POS out of points?")
+
+        prefab_spawn(prefab_fleet_raider, {"race": enemy, "fleet_difficulty": DIFFICULTY,"START_X": fleet_pos.x, "START_Y": fleet_pos.y, "START_Z": fleet_pos.z})
+        if a > 1 and DIFFICULTY > 2:
+            if spawn_points is None:
+                fleet_pos = Vec3.rand_in_sphere(39990, 40000, False, True)
+            else:
+                # Rotate emitters reshuffle after each has been used
+                if len(emitters)==0:
+                    random.shuffle(enemy_emitters)
+                    emitters = list(enemy_emitters)
+                    print("Shuffle 2")
+                em = emitters.pop()
+                # Get the next random point from teh emitter
+                fleet_pos = next(em, None)
+
+            if fleet_pos is None:
+                fleet_pos = Vec3.rand_in_sphere(39990, 40000, False, True)
+                debug_print("FLEET POS out of points?")
+        
+            prefab_spawn(prefab_fleet_raider, {"race": "Skaraan", "fleet_difficulty": DIFFICULTY, "START_X": fleet_pos.x, "START_Y": fleet_pos.y, "START_Z": fleet_pos.z})
+
+    #------------------------------------------------------------------------------------------------------------
+
+    task_schedule(task_end_game)
+
+    #------------------------------------------------------------------------------------------------------------
+
