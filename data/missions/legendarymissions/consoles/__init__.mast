@@ -1,3 +1,5 @@
+import ../../common/q_logger.py
+
 import standard_consoles.mast
 import common_console_select.mast
 import manual_weapons.mast
