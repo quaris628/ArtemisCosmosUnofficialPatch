@@ -148,7 +148,7 @@ gui_reroute_clients("client_main")
     # Demo only has DIFFICULTY
     #
     #
-    gui_property_list_box(name="Options")
+    map_options_listbox = gui_property_list_box(name="Options")
     p = map_get_properties(WORLD_SELECT)
     
     if sbs.is_demo():

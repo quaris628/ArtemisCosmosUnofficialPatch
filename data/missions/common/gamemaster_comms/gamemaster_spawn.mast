@@ -23,6 +23,7 @@
 #     side_list = ",".join(sides)
 #     p = """
 #     side: 'gui_drop_down("$text:{gm_ship_filter};list:{side_list};",var="gm_ship_side_filter")'
+#     # TODO pass listbox_container
 #     filter: 'gui_input("desc:filter text;",var="gm_ship_filter")'
 #     """
 #     # This is gui variable, this is why we need client scope!
