@@ -1,7 +1,8 @@
+import re
 from ...helpers import FrameContext
 from ..style import apply_control_styles
 from ...pages.layout.text_input import TextInput
-def gui_input(props, style=None, var=None, data=None):
+def gui_input(props, style=None, var=None, data=None, listbox_container=None):
     """ Draw a text type in
 
     Args:
@@ -29,9 +30,12 @@ def gui_input(props, style=None, var=None, data=None):
         val = task.get_variable(var, "")
 
     if "$text:" not in props:
-        props = f"$text:`{val}`;{props}"
+        sanitized_text = re.sub(r"[^A-Za-z0-9 \-_']", "", val)
+        if var is not None and sanitized_text != val:
+            task.set_variable(var, sanitized_text)
+        props = f"$text:{sanitized_text};{props}"
 
-    layout_item = TextInput(tag, props)
+    layout_item = TextInput(tag, props, listbox_container)
     layout_item.data = data
     if var is not None:
         layout_item.var_name = var
