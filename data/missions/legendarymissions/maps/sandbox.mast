@@ -1,7 +1,7 @@
 @map/sandbox "Game master sandbox"
-" Creates a small map with no enemies. Useful in game mastered games using the Admiral Console
-" The map will contain players ships, stations, and friendly ships
-" To end the game, use the Admiral command end game 
+" An empty map.
+" Useful as a blank slate for game masters to set up custom scenarios on, by using the Game Master console to spawn objects.
+" To end the game, use the Game Master command 'end game', or set a time limit.
 metadata:``` yaml
 Properties:
   Main:
