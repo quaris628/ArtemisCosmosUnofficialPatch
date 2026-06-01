@@ -190,7 +190,6 @@ def hangar_craft_spawn(docked_id, craft_data):
     name = f"{origin} {name} {_craft_id}"
     craft = player_spawn(_pos.x, _pos.y,_pos.z, name, roles, sd_key)
     _craft_id += 1
-    hm = sbs.get_hull_map(craft.id,True)
     # Not counted for end game
     craft.py_object.remove_role("PlayerShip,__player__")
 
