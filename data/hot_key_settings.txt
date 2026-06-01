@@ -138,8 +138,6 @@ red_alert_red_alert                     | KEY_F                     | toggles th
 request_dock_dock                       | KEY_F                     | requests dock engage
 rguihotkeys_check1                      | KEY_C KEY_SHIFT           | this is the hotkey for the checkKey button on the setup page of this script.
 rguihotkeys_test1                       | KEY_T KEY_SHIFT           | this is the hotkey for the textKey button on the setup page of this script.
-science_data_scan_type_next             | KEY_DELETE                | selects next scan type
-science_data_scan_type_prev             | KEY_INSERT                | selects previous scan type
 science_data_start_sci_scan             | KEY_RETURN                | start science scan
 science_data_stop_sci_scan              | KEY_RETURN                | stop science scan
 science_data_tabs_scan_type_next        | KEY_DELETE                | selects next scan type
