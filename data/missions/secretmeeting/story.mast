@@ -1,0 +1,305 @@
+#
+# Remember the ID for phoenix stations
+#
+shared phoenix_id = None
+#
+# Life forms are NPCs they can be used in comms etc.
+#
+shared admiral = lifeform_spawn("Admiral Harkin", "ter #964b00 8 1;ter #968b00 3 0;ter #968b00 4 0;ter #968b00 5 2;ter #fff 3 5;ter #964b00 8 4;", "admiral")
+#CREATE Sides and diplomacy
+#
+# These are the side used for LegendaryMissions
+#
+# Some examples of different ways to set up a new side.
+
+#region Spawn TSN side
+tsn = await prefab_spawn(prefab_side_generic, data={"key":"tsn"}) #Spawn using only the key
+# Add a display name, description and color programatically
+side_set_display_name(tsn, "TSN") 
+side_set_description(tsn, "The Terran Stellar Navy")
+side_set_icon_color(tsn, "#07F")
+#endregion
+
+#region Spawn Raider side
+# Everything can be set in the prefab data.
+raider = await prefab_spawn(prefab_side_generic, data={"key":"raider", "name": "Raider", "color": "#F00", "desc":"Hostile Aliens"})
+#endregion
+
+#region Spawn Raider side
+# Everything can be set in the prefab data.
+amb_side = await prefab_spawn(prefab_side_generic, data={"key":"ambassador", "name": "Ambassador", "color": "#FFF", "desc":"Ambassador"})
+#endregion
+
+
+# Now we set the relationships between the sides.
+side_set_relations(tsn, raider, sbs.DIPLOMACY.HOSTILE)
+side_set_relations(tsn, amb_side, sbs.DIPLOMACY.NEUTRAL)
+
+#The colors for diplomatic relations can be set via script.
+sim.set_diplomacy_color(sbs.DIPLOMACY.HOSTILE,"#F00")
+sim.set_diplomacy_color(sbs.DIPLOMACY.NEUTRAL,"#077")
+
+#
+# Set the Music and the sky box to use
+#
+# These are also executing labels, not data 
+# So define any common data before this
+#
+@media/music/default "Cosmos Default Music"
+@media/skybox/sky-bored-alice "borealis"
+
+# The above set the music and skybox to specific values
+#
+# For more sky box examples 
+#    as well as example of setting music based skybox
+#    See the story.mast in Legendary Missions
+#
+# https://github.com/artemis-sbs/LegendaryMissions/blob/main/story.mast
+#
+
+#
+# This makes the map available to the game start UI
+#    The properties section is for properties for this map
+#    Notice their are properties PLAYER_COUNT, DIFFICULTY, and GAME_TIME_LIMIT
+#    These are available to this script and they're used below
+#
+@map/secretmeeting "Secret Meeting"
+" The ambassadors are meeting secretly at starbase Phoenix, a base hidden in an asteroid field.
+metadata:``` yaml
+Properties:
+    Player Ships: 'gui_int_slider("$text:int;low: 1.0;high:8.0;", var= "PLAYER_COUNT")'
+    Difficulty: 'gui_int_slider("$text:int;low: 1.0;high:11.0;", var= "DIFFICULTY")'
+    Meeting Length:  'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT")'
+```
+
+###################
+# Start: Build map
+
+## phoenix starbase 
+    station_object = npc_spawn(0,0,0, "Starbase Phoenix", "tsn, station", "starbase_civil", "behav_station")
+    phoenix_id = to_id(station_object)
+    set_inventory_value(phoenix_id, "HANGAR_ORIGIN_OVERRIDE", "ximni")
+    am = max(1,random.randint(0,10))
+    for x in range(0,am):
+        hangar_random_craft_spawn(phoenix_id)
+
+## Station face for comms
+    set_face(phoenix_id, random_terran(civilian=True)) 
+
+
+## player ships (These are from addons)
+    await task_schedule(spawn_players)
+    await task_schedule(docking_standard_player_station)
+
+    player_object_set = to_object_list(role("__player__"))
+
+## Get the player ships name
+## It uses just the first ship if more than one 
+    player_obj = player_object_set[0]
+    player_name = player_obj.name
+
+
+## big asteroid field
+
+    asteroid_types = ship_data_plain_asteroid_keys()
+    cluster_spawn_points = scatter_box(200,  0,0,0, 10000,1000,10000, True)
+
+    for v2 in cluster_spawn_points:
+        a_type = random.choice(asteroid_types)
+
+        asteroid = terrain_spawn(v2.x, v2.y, v2.z,None, "#,asteroid", a_type, "behav_asteroid")
+        asteroid.engine_object.steer_yaw = random.uniform(0.0001, 0.003)
+        asteroid.engine_object.steer_pitch = -random.uniform(0.0001, 0.003)
+        asteroid.engine_object.steer_roll = random.uniform(0.0001, 0.003)
+
+        sx = random.uniform(1.0,2.0) + 3
+        sy = sx
+        sz = sx
+        sm = max(sx, sy)
+        sm = max(sm, sz)
+
+        asteroid.blob.set("local_scale_x_coeff", sx)
+        asteroid.blob.set("local_scale_y_coeff", sy)
+        asteroid.blob.set("local_scale_z_coeff", sz)
+        asteroid.engine_object.exclusion_radius = asteroid.engine_object.exclusion_radius * 1.0 * sm
+            
+
+
+## Placement of pick/upgrades
+    # I want candy
+    num_upgrade = 5
+    spawn_points = scatter.box(num_upgrade,  0,0,0, 10000,1000,10000, centered=True)
+    upgrade_list = ["carapaction_coil", "infusion_pcoils", "tauron_focuser", "secret_codecase", "hidens_powercell", "vigoranium_nodule", "cetrocite_crystal", "lateral_array", "haplix_overcharger"]
+
+    for v in spawn_points:
+        upg = random.randint(  0,   len(upgrade_list)-1  )
+        pickup_spawn(v.x, v.y, v.z, upgrade_list[upg])
+        log(f"{upgrade_list[upg]} spawned {v.x},{v.y},{v.z}", "upgrades")
+
+
+
+## Create Ambassador ship
+    amb_id = npc_spawn(100, 0, -2000, "Praetor of Peace", "Ambassador", "tsn_warpster", "behav_npcship")
+    amb_id = to_id(amb_id)
+    amb_obj = to_object(amb_id)
+    amb_obj.data_set.set("ally_list","tsn,good_dudes",0)
+## ambassador face
+    set_face(amb_id, random_terran(civilian=False)) 
+## wait 5 seconds
+    await delay_sim(5)
+
+#######################
+# Start of game logic
+
+## time between waves 1/4 of the game time limit
+    END_GAME_DELAY = max(1,int(GAME_TIME_LIMIT) // 4)
+
+## face of admiral and name
+## shared make the value available to all tasks the server and all consoles
+
+## tell it where to go (the station)
+    target_pos(amb_id, 0,0,0, 1.0, 0, 200)
+
+## announcement from admiral
+    await task_schedule(send_admiral_message, {"the_message": "The Praetor of Peace has arrived.  Escort it to the starbase."})
+
+
+# Add game ending conditions
+    game_end_condition_add(destroyed_all(role("__player__")), "The TSN defenders have been destroyed.", False)
+    game_end_condition_add(destroyed_any(amb_id),  "Praetor of Peace has been destroyed.", False)
+    game_end_condition_add(destroyed_any(phoenix_id), "Starbase Phoenix has been destroyed.", False)
+
+#######
+# Waiting for the ambassador ship to get 
+# close to the station (400m)
+
+    await distance_less(phoenix_id, amb_id, 400)
+    
+## when station is reached it picks up from here
+    meeting_len = int(GAME_TIME_LIMIT)
+## now the ambassadors ship has arrived
+## Announce the arrival
+    await task_schedule(send_admiral_message, {"the_message": f"Praetor of Peace has docked.  The meeting should take {meeting_len} minutes.  Your mission is to protect it until then."})
+
+    set_timer(0, "meeting_count", minutes=meeting_len)
+
+## spawn initial skarran attack
+## 2 ships, 4 if difficulty is 11
+    task_schedule(spawn_wave)
+## More if difficulty 11
+    if DIFFICULTY >= 11:
+        task_schedule(spawn_wave)
+##  Calculate the time for the next wave
+    seconds_between_waves = END_GAME_DELAY * 60
+    milestone = meeting_len*60-seconds_between_waves
+    min_left = meeting_len
+
+
+###########################
+## Now transition to a loop
+## Watching for the meeting to end 
+## or any end game conditions
+
+--- meeting_in_progress
+#
+# Pause and await any of these to happen
+#  - We have delayed long enough for the next wave
+    await delay_sim(seconds_between_waves)
+
+    seconds = get_time_remaining(0,"meeting_count")
+## Is it time to launch a new wave of enemies
+### every cycle 1/4 of total game time
+### e.g. 20 minute game each wave is 5 minutes
+    if seconds < milestone:           
+        min_left -= END_GAME_DELAY
+        if min_left >0:
+            the_message = "The meeting should take another {min_left} minutes."
+            await task_schedule(send_admiral_message, {"the_message": the_message})
+
+##another skarran arrives
+        task_schedule(spawn_wave)
+
+        milestone -= seconds_between_waves
+
+    jump meeting_in_progress if not is_timer_finished(0,"meeting_count")
+## ^^^^^ Loop back while meeting is in progress
+### Keep looping until the meeting is ended
+
+# Meeting has adjourned
+# Ambassador leaves, 2 more enemies plus any left over from before 
+--- meeting_adjourned ---
+    the_message = "Praetor of Peace is leaving.  Protect it until it gets clear of the asteroid field."
+    await task_schedule(send_admiral_message, {"the_message": the_message})
+
+# Tell ambassador ship to move south i.e. leave
+# Set a target position to get to safe
+    target_pos(amb_id, 0,0,-5200, 1.0, 0, 0)
+
+# spawn one more wave skarran to harass the player ship(s)
+    task_schedule(spawn_wave)
+
+    
+
+# This should trigger just before the end game
+    await distance_point_less(amb_id, Vec3(0,0,-5200), 400)
+# Add a end game win conditions
+# i.e. it reaches the target position
+    game_end_condition_add(distance_point_greater(amb_id, Vec3(0,0,-5200), 500), "The mission is complete, and Praetor of Peace escaped.  Congratuations!", True)
+
+# ambassador ship is now far enough away from base
+## Announce victory
+    the_message = "Praetor of Peace has left! Well done."
+    await task_schedule(send_admiral_message, {"the_message": the_message})
+
+## accelerate ship to "warp/leave"
+## New target point warp it out warp 50!
+    amb_obj = to_object(amb_id)
+    target_pos(amb_id, 0,0,-55200, 50, 0, 0)
+    # win!
+
+    ->END
+
+
+
+#
+#  This a reusable way to present the admirals message
+#  It could be more general for any face, name etc.
+#  by passing those as well as the the_message
+#
+#  This would also be better placed in a python function.
+#
+#
+#
+===  send_admiral_message
+
+## Make sure we have a text line if it was forgotten
+    default the_message = "Your forgot to set the the_message"
+## send message to server screen
+    face = get_face(admiral.id)
+    sbs.send_story_dialog(0, admiral.name, the_message, face, "#444")
+
+## get all main screens 
+    main_screen_client_list = to_object_list(role("mainscreen") & role("console"))
+## Loop through all main screens
+    for c in main_screen_client_list:
+        # print(c.client_id)
+        sbs.send_story_dialog(c.client_id, admiral.name, the_message, face, "#444")
+
+## send it to all comms players as well
+    my_players = to_object_list(role("__player__") & role("tsn"))
+    comms_message(the_message, my_players, admiral.id)
+## End this task 
+    ->END
+
+=== spawn_wave
+## prefab_spawn creates calls a label
+## with the data passed
+## prefabs typically create one or more Agents
+## In this case a fleet
+    fleet_diff = int(DIFFICULTY-1)
+
+    fleet_pos = Vec3.rand_in_sphere(3000, 5000, False, True)
+    prefab_spawn("prefab_fleet_raider", {"race": "skaraan", "fleet_difficulty": fleet_diff, "START_X": fleet_pos.x, "START_Y": fleet_pos.y, "START_Z": fleet_pos.x})
+    fleet_pos = Vec3.rand_in_sphere(3000, 5000, False, True)
+    prefab_spawn("prefab_fleet_raider", {"race": "skaraan", "fleet_difficulty": fleet_diff, "START_X": fleet_pos.x, "START_Y": fleet_pos.y, "START_Z": fleet_pos.x})
+    ->END

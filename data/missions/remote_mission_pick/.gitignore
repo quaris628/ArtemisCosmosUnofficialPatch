@@ -1,0 +1,10 @@
+/lib/
+**/__pycache__/**
+.vscode/
+/sphinx/_build/
+*.sbslib
+/typings/
+sbs_native.cp311-win_amd64.pyd
+mast/grid_data.json.bak
+mast.compile.log
+mast.runtime.log

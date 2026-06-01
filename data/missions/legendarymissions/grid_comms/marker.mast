@@ -1,0 +1,118 @@
+//enable/grid/comms if has_roles(COMMS_ORIGIN_ID, "__player__") and has_role(COMMS_SELECTED_ID, "marker")
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and has_role(COMMS_SELECTED_ID, "marker") and is_grid_object_id(COMMS_SELECTED_ID)
+    + "set rally point" //comms/grid/marker/rally
+    + "damage" if is_dev_build():
+        go = to_grid_object(COMMS_SELECTED_ID)
+        if go is not None:
+            pos_data = grid_pos_data(COMMS_SELECTED_ID)
+            grid_damage_hallway(COMMS_ORIGIN_ID, pos_data[0],pos_data[1] , "yellow")
+
+
+
+//comms/grid/marker/rally
+    + "Back" //comms
+
+    ###, color=f"{get_inventory_value(d.id, 'color')}", data=
+    dcs = to_object_list(grid_objects(COMMS_ORIGIN_ID) & role("damcons"))
+    sorted_dcs = sorted(dcs, key=lambda d: d.name)
+    for d in sorted_dcs:
+        + "set {d.name} rally point"  comms_marker_rally_dc {"d": d}
+
+# Special options for modifying beam arcs/width on certain TSN ships
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 12) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
+    + "rotate firing arc"  rotate_beam_arc1
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_battle_cruiser") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 3) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 5)
+    + "rotate firing arc"  rotate_beam_arc2
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 16) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
+    + "rotate firing arc"  rotate_beam_arc1
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_juggernaut") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 1) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 3)
+    + "rotate firing arc"  rotate_beam_arc2
+
+//comms/grid if has_roles(COMMS_ORIGIN_ID, "__player__") and (to_object(COMMS_ORIGIN_ID).art_id == "tsn_dreadnought") and (to_blob(COMMS_SELECTED_ID).get("curx", 0) == 8) and (to_blob(COMMS_SELECTED_ID).get("cury", 0) == 2)
+    + "refocus primary beam"  refocus_primary_beam
+
+
+====== rotate_beam_arc1 ======
+        sblob = to_blob(COMMS_ORIGIN_ID)
+        ang1 = sblob.get("beamBarrelAngle", 1)
+        print(ang1)
+        ->END if ang1 > 62 and ang1 < 82
+        if ang1 == 82:
+            for i in range(10):
+                ang1 -= 2   
+                sblob.set("beamBarrelAngle", ang1, 1)
+                await delay_app(1)
+        elif ang1 == 62:
+            for i in range(10):
+                ang1 += 2
+                sblob.set("beamBarrelAngle", ang1, 1)
+                await delay_app(1)
+        ->END
+
+======= rotate_beam_arc2 ======
+        sblob = to_blob(COMMS_ORIGIN_ID)
+        ang2 = sblob.get("beamBarrelAngle", 3)
+        print(ang2)
+        ->END if ang2 > 278 and ang2 < 298
+        if ang2 == 278:
+            for i in range(10):
+                ang2 += 2   
+                sblob.set("beamBarrelAngle", ang2, 3)
+                await delay_app(1)
+        elif ang2 == 298:
+            for i in range(10):
+                ang2 -= 2
+                sblob.set("beamBarrelAngle", ang2, 3)
+                await delay_app(1)
+        ->END
+
+======= refocus_primary_beam ======
+        sblob = to_blob(COMMS_ORIGIN_ID)
+        b_range = sblob.get("beamRange", 1)
+        b_width = sblob.get("beamArcWidth", 1)
+        ->END if b_range > 2000 and b_range < 2800
+        if b_range == 2000:
+            for i in range(10):
+                b_range += 80   
+                b_width -= 6
+                sblob.set("beamRange", b_range, 1)
+                sblob.set("beamArcWidth", b_width, 1)
+                await delay_app(1)
+        elif b_range == 2800:
+            for i in range(10):
+                b_range -= 80   
+                b_width += 6
+                sblob.set("beamRange", b_range, 1)
+                sblob.set("beamArcWidth", b_width, 1)
+                await delay_app(1)
+        ->END
+
+===== comms_marker_rally_dc =======
+
+    # Add this to the 
+    _blob = to_blob(COMMS_SELECTED_ID)
+    _loc_x = _blob.get("curx", 0)
+    _loc_y = _blob.get("cury", 0)
+    set_inventory_value(d.id, "idle_pos", (_loc_x, _loc_y) )
+    #set_inventory_value(d.id, "blackboard:idle_pos", (_loc_x, _loc_y) )
+    idle_marker = get_inventory_value(d.id, "idle_marker", None)
+    #
+    #
+    clear_timer(d.id, "idle_boost_timer")
+
+    if idle_marker is not None:
+        _blob = to_blob(idle_marker)
+        _blob.set("curx",_loc_x, 0)
+        _blob.set("cury",_loc_y, 0)
+
+    #is_idle = get_inventory_value(d.id, "idle")
+    #if is_idle:
+    set_inventory_value(d.id, "idle_state", "start" )
+
+    comms_navigate("//comms")
+    yield success

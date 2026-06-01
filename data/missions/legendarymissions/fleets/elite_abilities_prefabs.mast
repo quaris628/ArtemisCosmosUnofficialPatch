@@ -1,0 +1,385 @@
+==== elite_cloak_start ======
+" The ability to cloak
+metadata: ```
+type: elite/cloak
+display_name: Cloak
+range: close or far
+```
+    set_timer(ELITE_ID, "WARMUP", 25)
+--- warmup
+    so = to_object(ELITE_ID)
+    yield FAIL if so is None
+    
+    jump ready if is_timer_finished(ELITE_ID, "WARMUP")
+    t = format_time_remaining(ELITE_ID, "WARMUP")
+    #
+    # This is hard coded science key value
+    # which is bad to do
+    #
+    # But demo setting science
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Clock charging in {t}"})
+    await delay_sim(0.8)
+    jump warmup
+
+---- ready
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Clock was activated"})
+    old_art_id = get_inventory_value(ELITE_ID, "visible_art_id")
+    yield FAIL if None != old_art_id #if I'm currently cloaked
+
+    # Clear selections???
+
+    set_inventory_value(ELITE_ID, "visible_art_id", so.art_id) # remember art id that's visible
+    so.set_art_id("invisible") # cloaking!
+    sim.force_update_to_clients(ELITE_ID,0)
+    sbs.particle_on(so.engine_object, "align:False; offset:0,0,200;color:pink; lifespan:50; image_cell:9; size:10; speed: 2; count:1000")
+--- wait
+    await delay_sim(30)
+
+--- clear
+    so = to_object(ELITE_ID)
+    yield FAIL if so is None
+
+    old_art_id = get_inventory_value(ELITE_ID, "visible_art_id")
+    yield FAIL if old_art_id is None # This allows us to remove cloak while it's active, and the particle effect won't trigger when the timer runs out.
+    #log(f"uncloak to {old_art_id}", "elites")
+    so.set_art_id(old_art_id)
+    sim.force_update_to_clients(ELITE_ID,0)
+    set_inventory_value(ELITE_ID, "visible_art_id", None)
+    sbs.particle_on(so.engine_object, "align:False; offset:0,0,200;color:pink; lifespan:50; image_cell:9; size:10; speed: 2; count:1000")
+
+# Set cooldown timer
+    set_timer(ELITE_ID, f"{type}_cooldown", 10)
+    yield SUCCESS
+
+
+
+==== elite_jump_forward    
+" Activate jump drive forward
+metadata: ```
+type: elite/jump/forward
+display_name: Teleport Forward
+distance: 5000
+```
+    jump elite_jump_drive
+
+==== elite_jump_drive_back
+" Activate jump drive forward
+metadata: ```
+type: elite/jump/back
+display_name: Teleport Back
+distance: -5000
+```
+    jump elite_jump_drive
+
+
+==== elite_jump_drive
+    set_timer(ELITE_ID, "WARMUP", 30)
+--- warmup
+    so = to_object(ELITE_ID)
+    yield FAIL if so is None
+    
+    jump ready if is_timer_finished(ELITE_ID, "WARMUP")
+    t = format_time_remaining(ELITE_ID, "WARMUP")
+    #
+    # This is hard coded science key value
+    # which is bad to do
+    #
+    # But demo setting science
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Jump drive charging in {t}"})
+    await delay_sim(0.8)
+    jump warmup
+    
+
+--- ready
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Jump drive was activated"})
+# Execute the jump
+    eo = to_engine_object(ELITE_ID)
+    _pos_eo = eo.pos
+    sbs.particle_at(_pos_eo, "align:False; offset:0,0,200;color:blue; lifespan:50; image_cell:9; size:10; speed: 2; count:1000")
+    # Assumes the distance is set but if not use this default
+    default distance = 5000
+
+    _forward = Vec3(eo.forward_vector())
+    _pos = Vec3(_pos_eo) + (_forward * distance)
+    _pos.y = _pos_eo.y
+    so.pos = _pos
+
+# Set cooldown timer
+    set_timer(ELITE_ID, f"{type}_cooldown", 30)
+    yield SUCCESS
+
+
+=== elite_warp_start === 
+" Activate warp drive forward
+metadata: ```
+type: elite/warp
+display_name: Warp
+```
+
+    set_timer(ELITE_ID, "WARMUP", 25)
+--- warmup
+    so = to_object(ELITE_ID)
+    yield FAIL if so is None
+    target_id = so.data_set.get("target_id",0)
+    if target_id != 0:
+        d = sbs.distance_id(ELITE_ID, target_id)
+        yield fail if d <= 500
+
+    
+    jump ready if is_timer_finished(ELITE_ID, "WARMUP")
+    t = format_time_remaining(ELITE_ID, "WARMUP")
+    #
+    # This is hard coded science key value
+    # which is bad to do
+    #
+    # But demo setting science
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Preparing to warp in {t}"})
+    await delay_sim(0.8)
+    jump warmup
+
+
+--- ready
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Warp drive was activated"})
+    blob = to_blob(ELITE_ID)
+    yield FAIL if blob is None
+# get the warp multiplier and time
+    warp_factor = get_inventory_value(ELITE_ID, "elite_warp_multiplier", 2)
+    warp_time = get_inventory_value(ELITE_ID, "elite_warp_time", 60)
+# Save the current Value
+    cur = blob.get("speed_coeff", 0)
+    #debug_print(f"ELITE WARP {cur}")
+    #set_variable("speed_coeff", cur)
+    # increase it by factor
+    blob.set("speed_coeff", max(cur*warp_factor,warp_factor), 0)
+    
+# wait for the warp time
+    await delay_sim(warp_time)
+#restore the val
+    blob = to_blob(ELITE_ID)
+    yield FAIL if blob is None
+    # Set the current Value
+    #cur = get_variable("speed_coeff", 1.0)
+    # Restore
+    blob.set("speed_coeff", cur, 0)
+    #debug_print(f"ELITE WARP {cur}")
+    after = blob.get("speed_coeff", 0)
+    #debug_print(f"ELITE WARP after {after}")
+
+
+# Set cooldown timer
+    set_timer(ELITE_ID, f"{type}_cooldown", 30)
+    yield SUCCESS
+
+
+=== elite_turn_start === 
+" Activate highly efficient turn
+metadata: ```
+type: elite/eft
+display_name: HET
+```
+
+--- ready
+    blob = to_blob(ELITE_ID)
+    yield FAIL if blob is None
+    # Set the current Value
+    tru = blob.get("turn_upgrade_coeff", 0)
+    if tru is None:
+        tru = 1.0
+
+    set_variable("turn_upgrade_coeff", tru)
+    # Triple it 
+    blob.set("turn_upgrade_coeff", tru*3.0, 0)
+
+    await delay_sim(30)
+
+--- clear
+
+    blob = to_blob(ELITE_ID)
+    yield FAIL if blob is None
+    # Set the current Value
+    tru = get_variable("turn_upgrade_coeff", 1.0)
+    # Restore
+    blob.set("turn_upgrade_coeff", tru, 0)
+
+    await delay_sim(10)
+    yield SUCCESS
+
+==== elite_tractor_start === 
+" Activate tractor
+metadata: ```
+type: elite/tractor
+display_name: Tractor
+```
+
+    # Fail early if nothing is near
+
+    #TODO: set tractor_target_uid
+    await delay_sim(10)
+
+
+    yield SUCCESS
+
+--- clear
+    # Fail early if nothing is near
+
+    #TODO: Clear tractor_target_uid
+
+    yield SUCCESS
+
+==== elite_shield_drain_start === 
+" Activate shield drain
+metadata: ```
+type: elite/shield_drain
+display_name: Shield Drain
+```
+    is_vamp = False
+    jump elite_shield_drain_vamp
+
+
+==== elite_shield_vamp_start === 
+" Activate shield vamp
+metadata: ```
+type: elite/shield_vamp
+display_name: Shield Vamp
+```
+    is_vamp = True
+    jump elite_shield_drain_vamp
+
+
+==== elite_shield_drain_vamp
+    default is_vamp = False
+
+    # Fail early if nothing is near
+    yield FAIL if ELITE_ID is None or not object_exists(ELITE_ID)
+    local = broad_test_around(ELITE_ID, 2500,2500, 0xF0) # Find  ships around here
+    #
+    # Target 
+    #
+    target_id = closest(ELITE_ID, local - role(get_side(ELITE_ID)))
+
+    yield FAIL if target_id is None
+    target_eo = to_engine_object(target_id)
+    yield FAIL if target_eo is None
+    is_vamp = get_variable("vamp", False)
+    color = "cyan,blue"
+    if is_vamp:
+        color = "yellow,brown"
+
+    emittor_id = sbs.add_particle_emittor(target_eo, -1, f"align:True; shape:hull; color:{color}; lifespan:4; image_cell:0,3; size:0.8; speed: 5; count:10")
+    count = 5
+
+--- elite_shield_drain_cycle 
+    # Fail early if nothing is near
+    yield FAIL if ELITE_ID is None or not object_exists(ELITE_ID)
+    target_id = get_variable("target_id")
+    yield FAIL if target_id is None
+    emittor_id = get_variable("emittor_id")
+    yield FAIL if emittor_id is None
+
+    if not object_exists(target_id):
+        sbs.delete_particle_emittor(emittor_id)
+        yield FAIL
+
+    #
+    # Hit shield
+    #
+
+    r_blob = to_blob(target_id)
+    jump elite_shield_drain_clean_up if r_blob is None
+    shield_count = r_blob.get("shield_count", 0)
+    jump elite_shield_drain_clean_up if shield_count is None
+
+    for s in range(shield_count):
+        sm = r_blob.get("shield_max_val", s)
+        sv = r_blob.get("shield_val", s)
+        sv -= 4
+        sv = max(0, sv)
+        r_blob.set("shield_val", sv, s)
+
+
+    if is_vamp:
+        r_blob = to_blob(ELITE_ID)
+        jump elite_shield_drain_clean_up if r_blob is None
+
+        shield_count = r_blob.get("shield_count", 0)
+        for s in range(shield_count):
+            sm = r_blob.get("shield_max_val", s)
+            sv = r_blob.get("shield_val", s)
+            sv += 3
+            sv = min(sm,sv)
+            r_blob.set("shield_val", sv, s)
+            
+    await delay_sim(5)
+
+    count += 1
+    jump elite_shield_drain_cycle if count < 5
+
+---  elite_shield_drain_clean_up
+--- clear
+    sbs.delete_particle_emittor(emittor_id)
+    await delay_sim(10)
+    yield SUCCESS
+
+
+
+==== elite_shield_scramble_start === 
+" Activate Shield Scramble
+metadata: ```
+type: elite/shield_scramble
+display_name: Shield Scramble
+```
+    set_timer(ELITE_ID, "WARMUP", 25)
+--- warmup
+    so = to_object(ELITE_ID)
+    yield FAIL if so is None
+    
+    jump ready if is_timer_finished(ELITE_ID, "WARMUP")
+    t = format_time_remaining(ELITE_ID, "WARMUP")
+    #
+    # This is hard coded science key value
+    # which is bad to do
+    #
+    # But demo setting science
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Shield scramble in {t}"})
+    await delay_sim(0.8)
+    jump warmup
+    
+--- ready
+    task_schedule(elite_update_science_status, {"ELITE_ID": ELITE_ID,  "status": f"Shield scrambled"})
+# do it
+    blob = to_blob(ELITE_ID)
+    yield FAIL if blob is None
+
+    #m = 100.0
+    for s in range(5):
+        feq = random.randint(10, 80)
+        blob.set("shield_freq_strength", feq, s)
+
+# Set cool down timer
+    set_timer(ELITE_ID, f"{type}_cooldown", 10)
+    yield SUCCESS
+
+=== elite_update_science_status
+    default status = ""
+    ->END if status == ""
+
+    for player_id in role("__player__"):
+        # Get the current scan data
+        current_scan = science_get_scan_data(player_id, ELITE_ID, "status")
+        continue if current_scan is None
+        if current_scan.startswith("Dynamic"):
+            current_scan = ""
+            
+        new_scan = ""
+        prefix = "Elite Status: "
+        elite_info = prefix + status
+
+        # Does not already have elite abilities in the scan info
+        if (current_scan.count(prefix)==0 or current_scan == ""):
+            new_scan = current_scan + elite_info
+        # If it did already have alite abilities, update it.
+        else:
+            loc = current_scan.find(prefix)
+            new_scan = current_scan[0:loc] + elite_info
+        # Now update the scan data
+        science_update_scan_data(player_id, ELITE_ID, new_scan, "status")

@@ -1,0 +1,133 @@
+// This is an example/test file for a quest document
+
+// These are setting styles
+// Many override the default
+
+[t]: style:font:gui-6;color:#bbb;
+[h1]: style:font:gui-5;color:#55b;background:#115; | I > 0;
+[h2]: style:font:gui-4;color:#5b5; | A > 2;
+[h3]: style:font:gui-3;color:#b55; | a > 4;
+[p2]: style:font:gui-2;color:#11f; | > 2;
+[p3]: style:font:gui-2;color:#11f; | > 4;
+[ol]: style:font:gui-2;color:#393; | 1 > 6;
+[ul]: style:font:gui-2;color:#11f; | * > 6;
+[c]: style:font:gui-2;color:#339;justify:center; 
+[r]: style:font:gui-2;color:#339;justify:right;
+[_]: style:font:gui-2;color:white;
+
+
+# [Quest One](quest1)
+
+
+![b]: image:ball?color=blue 
+
+Track the number of quest1
+
+[](style:font:gui-2;color:blue;background:white) This is blue on white
+[](style:font:gui-2;color:white;background:cyan) This is white on cyan
+
+[](style:font:gui-2;color:green;background:white)
+This is green on white
+still is
+and now
+
+but not now
+
+=$test font:gui-6;color:yellow
+
+Not yellow
+
+$test This is yellow
+so is This
+
+This is not
+
+![b]
+
+The next line should be blank
+<br>
+Now is there a blank above
+
+
+# [Quest Two](quest2)
+
+Track the number of quest2
+
+## This is heading 2
+
+# Title
+
+### This is H3
+
+    
+1. One
+1. Two
+1. Three
+
+## Example sub image
+
+![](image:test2?scale=0.5&fill=center)
+
+
+## Ship
+
+![](ship:tsn_light_cruiser?height=100&align=center)
+
+## Face
+
+![](face:ter #964b00 8 1;ter #968b00 3 0;ter #968b00 4 0;ter #968b00 5 2;ter #fff 3 5;ter #964b00 8 4;?align=left)
+
+### This is H3
+
+
+- Blue
+- Red 
+- Green
+- Test
+
+![](image:test?scale=0.25&fill=center)
+
+![](image:ball?scale=0.25&fill=center&color=blue)
+
+
+
+
+### This is H3
+
+# Heading one
+
+### Heading 3
+
+1. This
+1. Is
+1. ordered
+
+- This
+- is 
+- unordered
+
+# End
+        
+
+# [Kills](kills)
+
+Track the number of kills.
+
+
+
+## [Kill 25 enemies](kills25?state=COMPLETE)
+
+A quest that will be complete after 25 kills
+
+## [Kill 50 enemies](kills50)
+
+A quest that will be complete after 50 kills
+
+## [Kill 100 enemies](kills100?state=FAILED)
+
+A quest that will be complete after 100 kills
+
+## [Kill 200 enemies](kills200?state=SECRET)
+
+A quest that will be complete after 200 kills
+

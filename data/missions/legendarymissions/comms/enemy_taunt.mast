@@ -1,0 +1,213 @@
+#
+# Load taunt data from the json file which contains the current taunts.
+#
+shared taunt_data = load_json_string(media_read_relative_file("taunts.json"))
+
+
+=$raider red,white
+
+
+//spawn has_roles(SPAWNED_ID, "ship")
+if taunt_data is not None:
+    #
+    # Select 3 taunts
+    #
+    race = get_race(SPAWNED_ID)
+    if race is None:
+        print(f"spawn, raider invalid race {race}")
+
+    race_taunts = taunt_data.get(race)
+    if race_taunts is not None:
+        c = min(3, len(race_taunts))
+        this_taunt_data = random.sample(race_taunts, c)
+        set_inventory_value(SPAWNED_ID, "taunt_data", this_taunt_data)
+        set_inventory_value(SPAWNED_ID, "taunt_trait", random.randrange(c))
+
+
+//enable/comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and is_space_object_id(COMMS_SELECTED_ID) and side_are_enemies(COMMS_ORIGIN_ID, COMMS_SELECTED_ID) and has_any_role(COMMS_SELECTED_ID, 'Station,ship')
+
+//comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and is_space_object_id(COMMS_SELECTED_ID) and side_are_enemies(COMMS_ORIGIN_ID, COMMS_SELECTED_ID) and not has_roles(COMMS_SELECTED_ID, 'surrendered') and has_any_role(COMMS_SELECTED_ID, 'Station,ship')
++ "Hail":
+    if has_roles(COMMS_SELECTED_ID, 'kralien'):
+        <<[$raider] "Hail"
+            % Kraliens have arrived to collect rent. {COMMS_ORIGIN.name} will pay Kraliens in blood!
+            % Sector belongs to Kraliens. Pay rent or Kraliens will destroy {COMMS_ORIGIN.name}.
+            % Kraliens want peace. After Kraliens destroy {COMMS_ORIGIN.name}, there will be peace.
+            % {COMMS_ORIGIN.name} makes loud mouth noises. Kraliens not listening.
+            % Hive-mother told Kraliens, do not listen to inferior species. Go away, {COMMS_ORIGIN.name}. 
+            % Hive-mother told Kraliens, do not speak unless Kraliens have something good to say. Communications ended.
+            % Ancient Kralien prophecy says you will die today, {COMMS_ORIGIN.name}. Prepare to meet your ancestors!
+            % Kraliens cannot talk right now. Kraliens very busy getting ready to destroy you. 
+            % Kraliens not talking today. Vow of silence. Also, vow of vengeance. Hold position while Kraliens charge up weapons. 
+            % Kralien High Priests have decided you must be destroyed, {COMMS_ORIGIN.name}. No further discussion is needed.
+    elif has_roles(COMMS_SELECTED_ID, 'torgoth'):
+        <<[$raider] "Hail"
+            % We are here to eat oyster-bat cookies, and crush our enemies. We are all out of oyster-bat cookies, {COMMS_ORIGIN.name}.
+            % Pathetic little tadpoles. Stay out of our way, {COMMS_ORIGIN.name}, or you will be destroyed!
+            % My trophy room could use a few more skulls, {COMMS_ORIGIN.name}. Yours will do nicely!
+            % We could smell you ten sectors away, {COMMS_ORIGIN.name}. Leave or we will cleanse this sector of your filthy stench!
+            % We suspected your inferior species was capable of meaningful communication, {COMMS_ORIGIN.name}. But we were mistaken.
+            % The Torgoth are not interested in the noisy chatterings of lesser creatures, {COMMS_ORIGIN.name}. Go away.
+            % Do you wish to be crushed under the heel of the mighty Torgoth, {COMMS_ORIGIN.name}? We will be happy to accomodate you!
+            % You make more noise than a parrot-squid on a harpoon, {COMMS_ORIGIN.name}. The silence of death shall be your reward.
+            % Your mere existence annoys us, {COMMS_ORIGIN.name}. We shall rectify this with your destruction. 
+            % We are here to clean out the garbage in this sector, {COMMS_ORIGIN.name}, and you smell like trash. 
+    elif has_roles(COMMS_SELECTED_ID, 'arvonian'):
+        <<[$raider] "Hail"
+            % {COMMS_ORIGIN.name}, the Supreme Understander has decided that you are not capable of intelligent conversation.
+            % Your incessant mewlings are quite annoying, {COMMS_ORIGIN.name}. Perhaps you could go bother someone else?
+            % Were you saying something, {COMMS_ORIGIN.name}? We weren't listening. Never mind, I'm sure it wasn't important.
+            % Could you find something boring to do in another sector, {COMMS_ORIGIN.name}? You'll just get in our way.
+            % We smelled something like rotting zuniki in this sector. Apparently it was just your ship, {COMMS_ORIGIN.name}.
+            % Message received. Perhaps you could just go somewhere else and die, {COMMS_ORIGIN.name}? That would please us.
+            % Oh look, a nice juicy target for our fighter squadrons to play with! Hold position, {COMMS_ORIGIN.name}. 
+            % The Supreme Understander has predicted your defeat, {COMMS_ORIGIN.name}. Run away now, and we won't tell anyone. 
+            % This sector belongs to the Royal House of Queen Sasha, {COMMS_ORIGIN.name}. Leave or be destroyed!
+            % Your ugly ship makes us vomit, {COMMS_ORIGIN.name}. We are compelled to remove it from the universe! 
+    elif has_roles(COMMS_SELECTED_ID, 'skaraan'):
+        <<[$raider] "Hail"
+            % There is no profit in listening to your idiotic blathering, {COMMS_ORIGIN.name}. Go bother someone else.
+            % We have better things to do than listen to your infantile nonsense, {COMMS_ORIGIN.name}. Go away.
+            % Your moronic attempts at communication are of no value to us, {COMMS_ORIGIN.name}. End communcation.
+            % Communication privileges disengaged, {COMMS_ORIGIN.name}. Further attempts will incur a mandatory consultation fee.
+            % Market research tells us that communicating with you would not be profitable, {COMMS_ORIGIN.name}. Goodbye.
+            % Market research says the universe would be greatly improved without you in it, {COMMS_ORIGIN.name}. Go hug a tac-nuke.
+            % Thank you for waiting. Your call is very imporant to us. Please hold while we charge up our weapon systems. 
+            % Your quick destruction will be excellent material for our promotional holovids, {COMMS_ORIGIN.name}.  
+            % By all means, close to weapons range, {COMMS_ORIGIN.name}. We look forward to destroying you. 
+            % Your continued existence did not score well with our focus groups, {COMMS_ORIGIN.name}, so we will destroy you.
+    elif has_roles(COMMS_SELECTED_ID, 'ximni'):
+        <<[$raider] "Hail"
+            % This is not a good time to talk, {COMMS_ORIGIN.name}. Today we fight!
+            % No time to talk, {COMMS_ORIGIN.name}! We will bask in glorious victory, or choke on shameful defeat!
+            % Hold your position, {COMMS_ORIGIN.name}. We were looking for some easy target practice.
+            % We meet on the field of battle, {COMMS_ORIGIN.name}! Shall we determine where the fires of Xim burn the strongest?    
+            % Which of our crews has captured the true spirit of Xim, {COMMS_ORIGIN.name}? Let's find out! 
+            % We look forward to meeting you in battle, {COMMS_ORIGIN.name}. May the best crew emerge victorious! 
+            % We are honored to engage a worthy opponent, {COMMS_ORIGIN.name}. May the true spirit of Xim determine the victor!
+            % Fate has put us at opposite ends of the battlefield, {COMMS_ORIGIN.name}. May the spirit of Xim be with you! 
+            % We talk. We live. We fight. We die. Shall we roll the dice, {COMMS_ORIGIN.name}?
+            % We play the hand we are dealt, {COMMS_ORIGIN.name}. Prepare for battle!
+    elif has_roles(COMMS_SELECTED_ID, 'pirate'):
+        <<[$raider] "Hail"
+            % Don't get your panties in a twist, {COMMS_ORIGIN.name}. You can buy it back from us at a discount.
+            % Don't mind us, {COMMS_ORIGIN.name}. We're just here to burgle some things.
+            % Hey, if it wasn't nailed down, who can say if it really belonged to anybody?
+            % The universe is 14 billion years old, and we exist for the briefest of moments. So why get all upset out who owns what?
+            % Oh, hey there, {COMMS_ORIGIN.name}... In our defense, we were left unsupervised. 
+            % Uh, yeah... We were just checking on your security procedures.
+            % We don't want any trouble, {COMMS_ORIGIN.name}. We are just honest merchants exploring local business opportunities.   
+            % To be honest, we got into this line of work for the rum. Stealing-things-to-buy-more-rum sorta came after the rum ran out.  
+            % Well, it's not exactly our fault if some things over HERE are worth a lot more if we grab them and sell them over THERE. 
+            % We were, uh... just borrowing it. We'll put it all back when we're done.
+    else: 
+        <<[$raider] "Hail"
+            % Go away, {COMMS_ORIGIN.name}! You talk too much!
+
+//comms if has_any_role(COMMS_ORIGIN_ID, "__player__,admiral") and is_space_object_id(COMMS_SELECTED_ID) and side_are_enemies(COMMS_ORIGIN_ID, COMMS_SELECTED_ID) and not has_roles(COMMS_SELECTED_ID, 'surrendered')
++ "Taunt"  handle_comms_taunt_raider_top
+
+
+//comms/taunt/raider
+    #
+    # Present taunts
+    # Taunts are added when the raider spawns 
+    # see the above //spawn handler
+    #
+    name = COMMS_ORIGIN.name
+    this_taunt_data = get_inventory_value(COMMS_SELECTED_ID, "taunt_data")
+    #
+    # Skip if the loading of taunts failed
+    #
+    yield fail if this_taunt_data is None
+
+    taunt_trait=get_inventory_value(COMMS_SELECTED_ID, "taunt_trait")
+    right_button = this_taunt_data[taunt_trait]['button']
+
+
+    #data_wrap = {"data": data}
+    #~~data_wrap["select_right"] = right_button == button_text~~
+    + !0 "Back" //comms
+    for data in this_taunt_data:
+        button_text = data["button"]
+        right = right_button == button_text
+        + "{button_text}" handle_comms_taunt_raider_select {"data": data, "select_right": right}
+        
+
+
+
+=== handle_comms_taunt_raider_top ====
+player = to_object(COMMS_ORIGIN_ID)
+yield fail if player is None
+name = to_object(COMMS_ORIGIN_ID).name
+ship_id = COMMS_SELECTED_ID
+ship = to_object(ship_id)
+yield fail if ship is None
+
+fleet_id = get_inventory_value(COMMS_SELECTED_ID, "my_fleet_id")
+fleet_obj = to_object(fleet_id)
+yield fail if fleet_obj is None
+
+enrage_value = fleet_obj.get_heat_for(ship_id)
+this_taunt_data = get_inventory_value(COMMS_SELECTED_ID, "taunt_data")
+has_been_taunted = get_inventory_value(COMMS_SELECTED_ID, "taunt_attempted", False)
+
+hide_taunt = this_taunt_data is None or has_role(ship_id, "surrendered") or has_been_taunted
+if hide_taunt==True:
+    <<[$raider] "Taunt Worthless"
+        % Your taunts are worthless to us, {name}.
+        % I've heard enough from you, {name}.
+        % I'm am weary off all this drivel, {name}.
+elif enrage_value:
+    <<[$raider] "Already Angry"
+        % I'm too angry to deal with you right now, {name}.
+        % You cannot make my hatred for you any greater, {name}.
+elif this_taunt_data is None:
+    race = get_race(COMMS_SELECTED_ID)
+    comms_receive(f"""The taunts for this element were not defined properly race expected: {race}.""", title="Taunt coding error", title_color=raider_color)
+else:
+    comms_navigate("//comms/taunt/raider")
+
+yield success
+
+
+
+
+
+================ handle_comms_taunt_raider_select ==================
+player = to_object(COMMS_ORIGIN_ID)
+yield fail if player is None
+
+name = player.name
+
+# Need to format the data
+msg = data['transmit']
+msg = mast_format_string(msg)
+comms_transmit(f"{msg}", title="taunt", title_color="green")
+# failure
+right = select_right
+if not right:
+    msg = "{data['failure']}"
+    msg = mast_format_string(msg)
+    comms_receive(f"{msg}", title="taunt failed", title_color=raider_color)
+# success == enrage the fleet
+else:
+    msg = "{data['success']}"
+    msg = mast_format_string(msg)
+    comms_receive(f"{msg}", title="taunt succeeded", title_color=raider_color)
+    fleet_id = get_inventory_value(COMMS_SELECTED_ID, "my_fleet_id")
+    fleet_obj = to_object(fleet_id)
+    if fleet_obj:
+        fleet_obj.make_enraged_by(COMMS_ORIGIN_ID)    
+#
+# Return to top menu
+#
+comms_navigate("")
+#
+# Clear the taunt data, only can taunt once
+#
+set_inventory_value(COMMS_SELECTED_ID, "taunt_data", None)
+set_inventory_value(COMMS_SELECTED_ID, "taunt_attempted", True)
+
+yield success
+
