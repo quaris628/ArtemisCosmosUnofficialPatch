@@ -1,0 +1,394 @@
+default gamemaster_face = random_terran()
+=$gamemaster #0E0,white,gamemaster_face
+=$confirm #ff0000,white,gamemaster_face
+=$careful #eea300,white,gamemaster_face
+
+
+//enable/comms if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+
+
+# //comms if gm_comms_path(COMMS_ORIGIN_ID, "test_comms")
+#     +"Test1":
+#         set_inventory_value(COMMS_ORIGIN_ID,"spawn/ship/single")
+#     +"Test2":
+#         set_inventory_value(COMMS_ORIGIN_ID, "spawn/ship/fleet")
+
+# //comms if gm_comms_path(COMMS_ORIGIN_ID, "spawn/ship/single")
+#     +"Single"
+
+//comms if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    gui_set_variable("gm_selected", COMMS_SELECTED_ID)
+    +[$gamemaster]"Spawn" //comms/gamemaster/spawn if not has_any_role(COMMS_SELECTED_ID, "ship, station")
+    +[$gamemaster]"Selected" //comms/gamemaster/selected if has_any_role(COMMS_SELECTED_ID, "ship, station")
+    +[$gamemaster]"Area" //comms/gamemaster/area
+    +[$gamemaster]"Commands" //comms/gamemaster/commands if COMMS_SELECTED_ID is not None and not has_role(COMMS_SELECTED_ID, "gamemaster")
+    if COMMS_ORIGIN_ID != COMMS_SELECTED_ID:
+        +[$careful]"Delete":
+            if has_role(COMMS_SELECTED_ID, "__player__"):
+                comms_navigate("//comms/gamemaster/confirm_delete")
+            else:
+                sbs.delete_object(COMMS_SELECTED_ID)
+
+//comms/gamemaster/selected if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gamemaster]"Back" //comms
+    +[$gamemaster]"Set attribute" //comms/gamemaster/selected/set
+    # +[$gamemaster]"Set Objective" //comms/gamemaster/selected/objective
+    +[$gamemaster]"Loadout" //comms/gamemaster/selected/loadout
+    +[$gamemaster]"Damage" //comms/gamemaster/selected/damage
+    
+    
+//comms/gamemaster/selected/set if has_roles(COMMS_ORIGIN_ID, 'gamemaster') 
+    +^1[$gamemaster]"Back" //comms
+
+//comms/gamemaster/selected/set if has_roles(COMMS_ORIGIN_ID, 'gamemaster') and has_role(get_science_selection(COMMS_ORIGIN),"__player__")
+    +[$gamemaster]"Fuel" //comms/gamemaster/selected/set/fuel
+
+//comms/gamemaster/selected/damage if has_roles(COMMS_ORIGIN_ID, 'gamemaster') 
+    +^1[$gamemaster]"Back" //comms
+
+//comms/gamemaster/selected/damage if has_roles(COMMS_ORIGIN_ID, 'gamemaster') and has_role(get_science_selection(COMMS_ORIGIN),"__player__")
+    _systems =  ["Beam", "torpedo","Impulse", "Warp", "Jump", "Maneuver",  "front shield", "rear shield"]
+    _roles = ["beam", "torpedo", "impulse", "warp","jump", "maneuver", "fwd", "aft"]
+    did = get_science_selection(COMMS_ORIGIN)
+    i = 0
+    for a in _systems:
+        +[$gamemaster]"{a}" {"did":did, "_roles":_roles[i]}:
+            grid_damage_system(did, _roles)
+        i+=1
+
+//comms/gamemaster/selected/loadout if has_any_role(COMMS_SELECTED_ID, "ship, station")
+    gui_sub_task_schedule(handle_gamemaster_torp_properties, {"obj":COMMS_SELECTED_ID})
+    +[$gamemaster]"Back" //comms/gamemaster/selected
+    +[$gamemaster]"Fill to Max":
+        type = gui_get_variable("gm_torp_mod_type", "Homing")
+        maxTorps = get_data_set_value(COMMS_SELECTED_ID, f"{type}_MAX",0)
+        set_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", maxTorps)
+    +[$gamemaster]"Set Torp Count":
+        type = gui_get_variable("gm_torp_mod_type", "Homing")
+        count = gui_get_variable("gm_torp_mod_count", 0)
+        count = int(count)
+        if count < 0:
+            count = 0
+        set_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", count)
+    +[$gamemaster]"Add Torpedoes":
+        type = gui_get_variable("gm_torp_mod_type", "Homing")
+        count = gui_get_variable("gm_torp_mod_count", 0)
+        count = int(count)
+        newCount = get_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", 0) + count
+        set_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", newCount)
+    +[$gamemaster]"Remove Torpedoes":
+        type = gui_get_variable("gm_torp_mod_type", "Homing")
+        count = gui_get_variable("gm_torp_mod_count", 0)
+        count = int(count)
+        curCount = get_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", 0)
+        curCount = int(curCount)
+        newCount = curCount - count
+        if newCount < 0:
+            newCount = 0
+        print(COMMS_SELECTED_ID)
+        print(f"{type}_NUM")
+        print(f"{newCount}")
+        set_data_set_value(COMMS_SELECTED_ID, f"{type}_NUM", newCount)
+    +[$gamemaster]"Remove All Torpedoes":
+        set_data_set_value(COMMS_SELECTED_ID, "Homing_NUM", 0)
+        set_data_set_value(COMMS_SELECTED_ID, "EMP_NUM", 0)
+        set_data_set_value(COMMS_SELECTED_ID, "Mine_NUM", 0)
+        set_data_set_value(COMMS_SELECTED_ID, "Nuke_NUM", 0)
+    +[$gamemaster]"Fill All to Max":
+        maxTorps = get_data_set_value(COMMS_SELECTED_ID, f"Homing_MAX",0)
+        set_data_set_value(COMMS_SELECTED_ID, f"Homing_NUM", maxTorps)
+        maxTorps = get_data_set_value(COMMS_SELECTED_ID, f"EMP_MAX",0)
+        set_data_set_value(COMMS_SELECTED_ID, f"EMP_NUM", maxTorps)
+        maxTorps = get_data_set_value(COMMS_SELECTED_ID, f"Mine_MAX",0)
+        set_data_set_value(COMMS_SELECTED_ID, f"Mine_NUM", maxTorps)
+        maxTorps = get_data_set_value(COMMS_SELECTED_ID, f"Nuke_MAX",0)
+        set_data_set_value(COMMS_SELECTED_ID, f"Nuke_NUM", maxTorps)
+
+=== handle_gamemaster_torp_properties
+    # TODO: How to deal with custom torpedo types?
+    print("Test loadout")
+    print(obj)
+    default_count = get_data_set_value(obj, "Homing_NUM",0)
+    gm_torp_mod_count = gui_get_variable("gm_torp_mod_count", default_count)
+    gui_set_variable("gm_torp_mod_count", gm_torp_mod_count)
+    gm_torp_mod_type = gui_get_variable("gm_torp_mod_type", "Homing")
+    gui_set_variable("gm_torp_mod_type", gm_torp_mod_type)
+    # Seems that we can't use f-strings inside of these multi-quote strings?
+    p = """
+    type: 'gui_drop_down("$text:{gm_torp_mod_type};list:Homing,EMP,Mine,Nuke", var="gm_torp_mod_type")'
+    count: 'gui_input("desc:count;",var="gm_torp_mod_count")'
+    """
+    # print(p)
+    # This is gui variable, this is why we need client scope!
+    gui_properties_set(p)
+    yield idle
+
+//comms/gamemaster/selected/objective # WIP - not used yet
+    
+    labels = role("__MAST_LABEL__")
+    for label in labels:
+        o = to_object(label)
+        t = get_inventory_value(label, "type")
+        if t is not None:
+            if t.startswith("brain/npc"):
+                print("{t}")
+                print(f"{o.name}")
+                lbl = o.name
+                +[$gamemaster]"{lbl}" {"name": lbl, "ship": COMMS_SELECTED_ID}:
+                    objective_clear(ship)
+                    objective_add(ship,lbl,{"BRAIN_AGENT_ID":ship, "BRAIN_AGENT": to_object(ship)})
+                    # task_schedule(name, {"BRAIN_AGENT": to_object(ship)})
+
+
+
+//comms/gamemaster/selected if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+
+//comms/gamemaster/selected/set/fuel if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1 [$gamemaster] "Back" //comms
+    +[$gamemaster]"Add Fuel":
+        _other = COMMS_SELECTED_ID
+        if _other and COMMS_ORIGIN_ID != _other:
+            _blob = to_blob(_other)
+            if _blob is not None:
+                energy = _blob.get("energy",0)
+                _blob.set("energy", energy+20)
+    +[$gamemaster]"Remove Fuel":
+        _other = COMMS_SELECTED_ID
+        if _other and COMMS_ORIGIN_ID != _other:
+            _blob = to_blob(_other)
+            if _blob is not None:
+                energy = _blob.get("energy",0)
+                _blob.set("energy", max(0,energy-20)) # Limit minimum to zero
+    +[$gamemaster]"Refill Fuel":
+        blob = to_blob(COMMS_SELECTED_ID)
+        blob.set("energy", 1000)
+
+
+//comms/gamemaster/area if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1 [$gamemaster] "Back" //comms
+    +[$gamemaster]"Change gamemaster size" //comms/gamemaster/area/size
+    +[$gamemaster]"Delete" //comms/gamemaster/area/delete
+    +[$gamemaster]"Move to orders area" //comms/gamemaster/area/move
+
+//comms/gamemaster/area/size if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    ## PROPS
+    #gui_int_slider("$text:int;low: 1.0;high:8.0",  var="PLAYER_COUNT")
+    #props_lb = get_inventory_value(client_id, "__PROPS_LB__")
+    #if props_lb:
+    #    p = [{"label": "Admiral size", "control": "gui_slider", "props": "low: 2000.0;high:25000.0;"},{"label": "Order size", "control": "gui_slider", "props": "low: 2000.0;high:25000.0;"}]
+    #    props_lb.items = p
+    #    gui_represent(props_lb)
+
+    # gui_activate_properties([{"label": "Admiral size", "control": "gui_slider", "props": "low: 2000.0;high:25000.0;"},{"label": "Order size", "control": "gui_slider", "props": "low: 2000.0;high:25000.0;"}])
+
+    # Back would clear properties
+    +^1[$gamemaster] "Back" //comms/gamemaster/area
+    +[$gamemaster]"Grow":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        gamemaster_show_nav_area(COMMS_ORIGIN_ID, pos, 1000, "Game Master", "lmb", "#040")
+    +[$gamemaster]"Shrink":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        gamemaster_show_nav_area(COMMS_ORIGIN_ID, pos, -1000, "Game Master", "lmb", "#040")
+    +[$gamemaster]"Reset":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        gamemaster_show_nav_area(COMMS_ORIGIN_ID, pos, 0, "Game Master", "lmb", "#040")
+
+
+//comms/gamemaster/area/move if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1 [$gamemaster] "Back" //comms
+    +[$gamemaster]"Terrain":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        # & role("Asteroid")
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x01)
+
+        pos = gamemaster_get_pos(COMMS_ORIGIN_ID, "rmb")
+        for _other in to_object_list(ids):
+            if COMMS_ORIGIN_ID != _other.id:
+                _other.pos = pos
+
+
+
+    +[$gamemaster]"Npc":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x10)
+        pos = gamemaster_get_pos(COMMS_ORIGIN_ID, "rmb")
+        for _other in to_object_list(ids):
+            if COMMS_ORIGIN_ID != _other.id:
+                _other.pos = pos
+
+    +[$gamemaster]"Player":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x20)
+        pos = gamemaster_get_pos(COMMS_ORIGIN_ID, "rmb")
+        for _other in to_object_list(ids):
+            if COMMS_ORIGIN_ID != _other.id:
+                _other.pos = pos
+
+
+//comms/gamemaster/area/delete if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gamemaster] "Back" //comms
+    +[$gamemaster]"Terrain":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        # & role("Asteroid")
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x01)
+        for id in ids:
+            sbs.delete_object(id)
+
+
+    +[$gamemaster]"Npc":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x10)
+        for id in ids:
+            sbs.delete_object(id)
+
+    +[$gamemaster]"Player" //comms/gamemaster/area/delete/players
+        
+
+//comms/gamemaster/area/delete/players if has_role(COMMS_ORIGIN_ID, "gamemaster")
+    +[$gamemaster]"Cancel Delete" //comm/gamemaster/area/delete
+    +[$confirm]"Confirm Delete Players":
+        pos = Vec3(COMMS_ORIGIN.pos)
+        size = get_inventory_value(COMMS_ORIGIN_ID, f"GAMEMASTER_lmb_SIZE", 5000)
+        ids = broad_test_around(COMMS_ORIGIN_ID, size*2, size*2, 0x20)
+        for id in ids:
+            continue if id == COMMS_ORIGIN_ID
+            sbs.delete_object(id)
+        comms_navigate("//comms")
+
+
+//comms/gamemaster/commands if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gamemaster]"Back" //comms
+    +[$gamemaster]"Jump to" //comms/gamemaster/commands/jump
+    +[$gamemaster]"Count" //comms/gamemaster/commands/count
+    +[$gamemaster]"Game" //comms/gamemaster/commands/game
+    if is_timer_set(SHARED, "time_limit"):
+        +[$gamemaster]"Game time" //comms/gamemaster/commands/time
+    else:
+        +[$gamemaster]"Set Time Limit" //comms/gamemaster/commands/set_timer
+
+//comms/gamemaster/commands/set_timer if has_role(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gmemaster]"Back" //comms/gamemaster/commands
+    for x in range(10,40,10):
+        +[$gamemaster]"{x}" gm_time_limit {"minutes": x, "seconds": 0}
+            
+//comms/gamemaster/commands/count if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gamemaster]"Back" //comms
+    +[$gamemaster]"Raider":
+        count = len(role("raider"))
+        comms_broadcast(client_id, f"Raiders remaining {count}")    
+    +[$gamemaster]"Stations":
+        count = len(role("station"))
+        comms_broadcast(client_id, f"Station remaining {count}")    
+    +[$gamemaster]"Players":
+        count = len(role("__player__"))
+        comms_broadcast(client_id, f"Players remaining {count}")    
+
+
+
+//comms/gamemaster/commands/jump if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +^1[$gamemaster]"Back" //comms
+    +[$gamemaster]"Raider":
+        raider = closest(COMMS_ORIGIN_ID, role("raider"))
+        if raider:
+            raider = to_object(raider)
+            COMMS_ORIGIN.pos = raider.pos
+            gamemaster_show_nav_area(COMMS_ORIGIN_ID, raider.pos, 0, "Game Master", "lmb", "#040")
+    +[$gamemaster]"Stations":
+        raider = closest(COMMS_ORIGIN_ID, role("station"))
+        if raider:
+            raider = to_object(raider)
+            COMMS_ORIGIN.pos = raider.pos
+            gamemaster_show_nav_area(COMMS_ORIGIN_ID, raider.pos, 0, "Game Master", "lmb", "#040")
+    +[$gamemaster]"Players":
+        raider = closest(COMMS_ORIGIN_ID, role("__player__"))
+        if raider:
+            raider = to_object(raider)
+            COMMS_ORIGIN.pos = raider.pos
+            gamemaster_show_nav_area(COMMS_ORIGIN_ID, raider.pos, 0, "Game Master", "lmb", "#040")
+
+
+
+
+//comms/gamemaster/commands/game if has_roles(COMMS_ORIGIN_ID, "gamemaster")
+    + !0 "Back" //comms
+    +[$gamemaster] "pause game" if not game_paused:
+        game_paused = True
+        sbs.pause_sim()
+    +[$gamemaster] "resume game" if game_paused:
+        game_paused = False
+        sbs.resume_sim()
+    +[$gamemaster] "end game"  //comms/gamemaster/commands/game/end
+
+
+//comms/gamemaster/commands/game/end if has_roles(COMMS_ORIGIN_ID, 'gamemaster')
+    +[$gamemaster]"No don't end the game" //comms
+    +[$gamemaster]"Yes end the game":
+        START_TEXT = "Mission ended."
+        signal_emit("show_game_results", None)
+
+
+
+
+//comms/gamemaster/commands/time if has_roles(COMMS_ORIGIN_ID, "gamemaster")
+    +!0 [$gamemaster] "Back" //comms
+    +[$gamemaster] "Add 1 minute":
+        task_schedule(gm_time_limit, {'seconds':60})
+    +[$gamemaster] "Add 10 minutes":
+        task_schedule(gm_time_limit, {'seconds':600})
+    +[$gamemaster] "Subtract 1 minute":
+        task_schedule(gm_time_limit, {'seconds':-60})
+    +[$gamemaster] "Subtract 10 minutes":
+        task_schedule(gm_time_limit, {'seconds':-600})
+
+
+
+//popup/science if has_roles(SCIENCE_ORIGIN_ID, 'gamemaster') and SCIENCE_SELECTED_ID != 0
+    + "Move Selection here":
+        so = to_object(SCIENCE_SELECTED_ID)
+        if so is not None:
+            so.pos = SCIENCE_POPUP_POINT
+
+//popup/science if has_roles(SCIENCE_ORIGIN_ID, 'gamemaster') and SCIENCE_POPUP_ID != 0 and SCIENCE_POPUP_ID != SCIENCE_ORIGIN_ID
+    + "Delete {SCIENCE_POPUP.name}":
+        so = to_object(SCIENCE_POPUP_ID)
+        if so is not None:
+            if has_role(SCIENCE_POPUP_ID, "__player__"):
+                if get_inventory_value(SCIENCE_POPUP_ID, "gm_confirm_delete", False):
+                    comms_broadcast(client_id, "Player ship deleted.")
+                    await delay_sim(2)
+                    sbs.delete_object(SCIENCE_POPUP_ID)
+                # gui_info_panel_send_message(client_id, "This is a player ship. Confirm that you want to delete it?", "#ff0000ff") # TODO: This is a better method if it'll pop up
+                comms_broadcast(client_id, "Warning! You have tried to delete a player ship. Please confirm you wish to delete the ship.", "#ff0000")
+                set_inventory_value(SCIENCE_POPUP_ID,"gm_confirm_delete",True)
+                # After one minute, if the ship still exists, reset the delete confirmation.
+                await delay_sim(60)
+                so = to_object(SCIENCE_POPUP_ID)
+                if so is not None:
+                    set_inventory_value(SCIENCE_POPUP_ID,"gm_confirm_delete",False)
+            else:
+                sbs.delete_object(SCIENCE_POPUP_ID)
+
+//comms/gamemaster/confirm_delete if has_role(COMMS_ORIGIN_ID, "gamemaster")
+    +^1[$gamemaster]"Cancel Delete" //comms
+    + [$confirm]"Delete {COMMS_SELECTED.name}":
+        sbs.delete_object(COMMS_SELECTED_ID)
+
+== gm_time_limit
+" Add time to the game. Can subtract by including a '-' before the number.
+metadata: ```
+type: gm/command
+seconds: 0 # seconds to add
+minutes: 0 # minutes to add
+```
+    time_diff = seconds + (minutes * 60)
+    time = get_time_remaining(SHARED, "time_limit")
+    set_timer(SHARED, "time_limit", time + time_diff)
+    time = format_time_remaining(SHARED, "time_limit")
+    comms_broadcast(client_id,"Remaining Time: {time}")
+    ->END
+

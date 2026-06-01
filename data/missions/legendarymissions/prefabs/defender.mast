@@ -1,0 +1,208 @@
+import prefab_helpers.py
+
+shared SHIP_NAME_DATA = load_json_string(media_read_relative_file("shipnames.json"))
+
+
+=== prefab_npc_defender
+metadata: ```
+type: prefab/npc/defender
+side_value: tsn
+objective: objective_protect_area
+give_orders_type: objective/orders/defender
+allies: civ,surrendered
+```
+    default name = get_defender_name(side_value)
+    default origin = side_value
+    default crew = origin
+    default face = None
+    default max_hull_points = 10
+
+
+#TODO: This seems like it will slow things down
+    tsn_ship_data = ship_data_filter_ship_data_by_side(None, origin, "defender", ret_key_only=True)
+#
+#
+    default ship_art = random.choice(tsn_ship_data)
+    # Default is ony set if the variable is not set
+    #default ship_art = None
+    ->END if ship_art is None
+    friend = to_object(npc_spawn(START_X, START_Y, START_Z, name, side_value+",friendly,prefab_npc_defender", ship_art, "behav_npcship"))
+    if face is None:
+        if (crew is None or crew=="terran") and side_value == "tsn":
+            # Force terran defenders to be military and not civilian
+            set_face(friend.id, random_terran(civilian=False))
+        set_face(friend.id, random_face(crew))
+    
+    if allies is not None:
+        friend.data_set.set("ally_list",allies,0)
+
+    set_inventory_value(friend, "give_orders_type", give_orders_type)
+    
+
+    # Objective will set brain 
+    objective_add(friend.id, objective)
+    yield result friend.id
+
+
+=== objective_goto_location
+metadata: ```
+display_name: Head to location
+type: objective/orders/defender
+objective_target: null
+objective_target_point: null
+valid_for: any
+```
+    
++++ enter
+    # This objective assumes it has control of the brain
+    brain_clear(OBJECTIVE_AGENT_ID)
+    # Need to clear any values we depend on
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", None)
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", None)
+    # Why would allies shoot? Just a Go To, so no real target? - changed to use side_are_enemeies for this.
+    shoot = side_are_enemies(OBJECTIVE_AGENT_ID, objective_target)
+    #
+    brain_add(OBJECTIVE_AGENT_ID, goto_object_or_location, {"force_target": objective_target, "force_target_point": objective_target_point, "clear_when_reached": False, "shoot": shoot})
+    brain_add(OBJECTIVE_AGENT_ID, ai_full_stop)
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", objective_target_point)
+    # Set targets later
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", objective_target)
+    
++++ test
+    name = get_location_text(objective_target, objective_target_point, "assigned location")
+    <var msg>
+        % currently heading to {name}
+        % on my way to {name}
+        % petal to the metal to {name}
+
+    # you need the str() to get a random string
+    message = str(msg)
+    OBJECTIVE.set_inventory_value("desc", message)
+    yield idle
+
+=== objective_attack_target
+metadata: ```
+display_name: Attack
+type: objective/orders/defender
+objective_target: null
+objective_target_point: null
+valid_for: hostile
+line_of_sight: 10000
+cut_off_distance: 20000
+```
++++ enter
+    # This objective assumes it has control of the brain
+    #
+    # Will chase the current target,
+    # goto/return an assign location
+    # look for new targets
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", objective_target_point)
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", objective_target)
+    
+    brain_clear(OBJECTIVE_AGENT_ID)
+    brain_add(OBJECTIVE_AGENT_ID, ai_chase_current, {"distance":cut_off_distance})
+    brain_add(OBJECTIVE_AGENT_ID, ai_chase_npc, {"SIZE_X":line_of_sight})
+    brain_add(OBJECTIVE_AGENT_ID, goto_object_or_location, {"clear_when_reached": False})    
+    # Goto the assigned location
+    brain_add(OBJECTIVE_AGENT_ID, goto_object_or_location, {"force_target": objective_target, "force_target_point": objective_target_point, "clear_when_reached": False})
+    brain_add(OBJECTIVE_AGENT_ID, ai_full_stop)
+
++++ test
+    message = "currently idle"
+    current = get_inventory_value(OBJECTIVE_AGENT_ID, "brain_active", None)
+    if current is not None:
+        desc = current
+        name = "location"
+        _tp = get_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", None)
+        # Set targets later
+        _t = get_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", None)
+        if _t is not None or _tp is not None:
+            name = get_location_text(_t, _tp, name)
+        else:
+            name = get_location_text(objective_target, objective_target_point, name)
+
+        <var msg>
+            % Looking for trouble at {name}
+            % Attacking anything near {name}
+            % Getting my beam on with {name}
+
+        # you need the str() to get a random string
+        obj_message = str(msg)
+        
+        message = "{obj_message}: {desc}"
+    OBJECTIVE.set_inventory_value("desc", message)
+    yield idle
+
+
+
+=== objective_protect_area
+metadata: ```
+display_name: Protect
+type: objective/orders/defender
+objective_target: null
+objective_target_point: null
+valid_for: allies
+line_of_sight: 10000
+```
++++ enter
+    # This objective assumes it has control of the brain
+    brain_clear(OBJECTIVE_AGENT_ID)
+    # Need to clear any values we depend on
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", None)
+    set_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", None)
+    brain_add(OBJECTIVE_AGENT_ID, ai_chase_npc, {"SIZE_X": line_of_sight})
+    brain_add(OBJECTIVE_AGENT_ID, goto_object_or_location, {"clear_when_reached": False})
+    # Goto the assigned location
+    brain_add(OBJECTIVE_AGENT_ID, goto_object_or_location, {"force_target": objective_target, "force_target_point": objective_target_point, "clear_when_reached": False})
+    brain_add(OBJECTIVE_AGENT_ID, ai_full_stop)
+
++++ test
+    message = "currently idle"
+    current = get_inventory_value(OBJECTIVE_AGENT_ID, "brain_active", None)
+    if current is not None:
+        desc = current
+        name = "location"
+        _tp = get_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target_point", None)
+        # Set targets later
+        _t = get_inventory_value(OBJECTIVE_AGENT_ID, "blackboard:target", None)
+        if _t is not None or _tp is not None:
+            name = get_location_text(_t, _tp, name)
+        else:
+            name = get_location_text(objective_target, objective_target_point, name)
+
+        <var msg>
+            % Locking down {name}
+            % I will protect {name} until the end
+            % Protecting {name}
+            % Anyone messes with {name} they will pay
+
+        # you need the str() to get a random string
+        obj_message = str(msg)
+        
+        message = "{obj_message}: {desc}"
+    OBJECTIVE.set_inventory_value("desc", message)
+    yield idle
+
+
+
+=== objective_full_stop
+metadata: ```
+display_name: Full Stop
+type: objective/orders/defender
+objective_target: null
+objective_target_point: null
+valid_for: self
+```
++++ enter
+    # This objective assumes it has control of the brain
+    brain_clear(OBJECTIVE_AGENT_ID)
+    brain_add(OBJECTIVE_AGENT_ID, ai_full_stop)
+
++++ test
+    message = "currently idle"
+    OBJECTIVE.set_inventory_value("desc", message)
+    yield idle
+
+
+
+
