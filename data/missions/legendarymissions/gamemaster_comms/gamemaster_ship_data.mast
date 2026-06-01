@@ -85,6 +85,7 @@ brain:
     gui_set_variable("gm_ship_side", gm_ship_side)
     sides = sorted(list(side_keys_set()))
     side_list = ",".join(sides)
+    # TODO pass listbox_container
     p = """
     Name: 'gui_input("desc:count;",var="gm_ship_name")'
     Side: 'gui_drop_down("$text:{gm_ship_side};list:{side_list}", var="gm_ship_side")'
@@ -131,6 +132,7 @@ brain:
 #         # Indentation apparently matters for this...
 #         props += """
 #     "{a}":
+#         # TODO pass listbox_container
 #         "Current": 'gui_input("desc:current;", var="gm_shield_current_{a}")'
 #         "Max": 'gui_input("desc:value;",var="gm_shield_max_{a}")'
 #     """
