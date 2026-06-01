@@ -7,6 +7,8 @@ from sbs_utils.procedural.signal import signal_emit
 from sbs_utils.procedural.sides import side_keys_set
 import sbs
 
+from data.missions.common.library_function_patches import gui_input
+
 world_options = [
     {"path":"world_options","title": "Manage Sides", "label": "gamemaster_side_relations"}
 ]

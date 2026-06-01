@@ -1,3 +1,4 @@
+import ../../common/library_function_patches.py
 
 import main_screen.mast
 import remote_console.mast
