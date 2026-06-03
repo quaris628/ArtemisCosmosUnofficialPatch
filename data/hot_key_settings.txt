@@ -143,7 +143,7 @@ main_screen_control_look_right          | KEY_I                     | changes ca
 main_screen_control_mode_long_range     | KEY_K                     | changes main screen to long range 2d view
 main_screen_control_mode_ship_data      | KEY_L                     | changes main screen to internal ship view
 main_screen_control_mode_tactical       | KEY_J                     | changes main screen to tactical view
-radar-2d_side rep                       | KEY_PAGE_DOWN KEY_CONTROL | 2d radar color type
+radar-2d_side rep                       | KEY_M                     | 2d radar color type
 radar-2d_zoom 1                         | KEY_F1                    | 2d radar zoom level 1
 radar-2d_zoom 2                         | KEY_F2                    | 2d radar zoom level 2
 radar-2d_zoom 3                         | KEY_F3                    | 2d radar zoom level 3
