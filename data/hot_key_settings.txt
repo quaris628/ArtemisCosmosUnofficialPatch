@@ -146,10 +146,10 @@ main_screen_control_mode_long_range     | KEY_K                     | changes ma
 main_screen_control_mode_ship_data      | KEY_L                     | changes main screen to internal ship view
 main_screen_control_mode_tactical       | KEY_J                     | changes main screen to tactical view
 radar-2d_side rep                       | KEY_PAGE_DOWN KEY_CONTROL | 2d radar color type
-radar-2d_zoom 1                         | KEY_1 KEY_CONTROL         | 2d radar zoom level 1
-radar-2d_zoom 2                         | KEY_2 KEY_CONTROL         | 2d radar zoom level 2
-radar-2d_zoom 3                         | KEY_3 KEY_CONTROL         | 2d radar zoom level 3
-radar-2d_zoom 4                         | KEY_4 KEY_CONTROL         | 2d radar zoom level 4
+radar-2d_zoom 1                         | KEY_F1                    | 2d radar zoom level 1
+radar-2d_zoom 2                         | KEY_F2                    | 2d radar zoom level 2
+radar-2d_zoom 3                         | KEY_F3                    | 2d radar zoom level 3
+radar-2d_zoom 4                         | KEY_F4                    | 2d radar zoom level 4
 radar-2d_zoom in                        | KEY_PAGE_DOWN KEY_CONTROL | 2d radar zoom in
 radar-2d_zoom out                       | KEY_PAGE_UP KEY_CONTROL   | 2d radar zoom out
 red_alert_red_alert                     | KEY_F                     | toggles the red alert state
