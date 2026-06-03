@@ -171,7 +171,7 @@ throttle_impulse-down                   | KEY_V                     | lower impu
 throttle_impulse-full                   | KEY_SHIFT                 | sets full impulse
 throttle_impulse-half                   | KEY_CONTROL               | sets 50% impulse
 throttle_impulse-up                     | KEY_B                     | increase impulse by 20%
-throttle_reverse                        | KEY_R KEY_CONTROL         | toggles reverse
+throttle_reverse                        | KEY_R                     | toggles reverse
 throttle_stop                           | KEY_SPACE                 | stops warp, or full stop if in impulse
 throttle_warp1                          | KEY_1                     | toggles warp level 1
 throttle_warp2                          | KEY_2                     | toggles warp level 2
