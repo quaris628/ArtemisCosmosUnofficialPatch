@@ -150,8 +150,8 @@ radar-2d_zoom 1                         | KEY_F1                    | 2d radar z
 radar-2d_zoom 2                         | KEY_F2                    | 2d radar zoom level 2
 radar-2d_zoom 3                         | KEY_F3                    | 2d radar zoom level 3
 radar-2d_zoom 4                         | KEY_F4                    | 2d radar zoom level 4
-radar-2d_zoom in                        | KEY_PAGE_DOWN KEY_CONTROL | 2d radar zoom in
-radar-2d_zoom out                       | KEY_PAGE_UP KEY_CONTROL   | 2d radar zoom out
+radar-2d_zoom in                        | KEY_OEM_COMMA             | 2d radar zoom in
+radar-2d_zoom out                       | KEY_OEM_PERIOD            | 2d radar zoom out
 red_alert_red_alert                     | KEY_F                     | toggles the red alert state
 request_dock_dock                       | KEY_F                     | requests dock engage
 rguihotkeys_check1                      | KEY_C KEY_SHIFT           | this is the hotkey for the checkKey button on the setup page of this script.
