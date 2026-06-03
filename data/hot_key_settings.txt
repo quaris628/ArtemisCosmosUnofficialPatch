@@ -16,8 +16,6 @@ modifiers may be used on a key.  Key tags are separated by spaces.
 
 internal name of the hotkey             - key tags                  - description of what the hotkey does
 
-2dview_select_first_active              | KEY_H                     | weapon selection to closest object
-2dview_select_next_active               | KEY_J                     | weapon `|selection to| next|-closest|` object
 GUI_WIDGET_control                      | KEY_F5                    | hold this key combo to activate the screen widget edit mode
 OPT_change_console_button               | KEY_E                     | clicks Change Console button on client
 OPT_continue_button                     | KEY_C                     | clicks Continue button on client
@@ -177,8 +175,6 @@ throttle_warp1                          | KEY_1                     | toggles wa
 throttle_warp2                          | KEY_2                     | toggles warp level 2
 throttle_warp3                          | KEY_3                     | toggles warp level 3
 throttle_warp4                          | KEY_4                     | toggles warp level 4
-weapon_2d_view_select_first_active      | KEY_H                     | weapon selection to closest object
-weapon_2d_view_select_next_active       | KEY_INSERT                | weapon selection to next-closest object
 weapon_control_fire_tube_1              | KEY_1 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_fire_tube_2              | KEY_2 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_fire_tube_3              | KEY_3 KEY_CONTROL         | Launches the torpedo in this tube
