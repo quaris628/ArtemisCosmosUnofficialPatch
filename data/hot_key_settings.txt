@@ -40,20 +40,20 @@ _confirm_jump_button                    | KEY_RETURN                | clicks Con
 _press_jump_button                      | KEY_RETURN                | clicks JUMP button on jump controls
 _switch_to_next_jump_typein             | KEY_TAB                   | toggles active text typein for jump controls
 comms_control_comms_button_1            | KEY_1                     | clicks this comms button
-comms_control_comms_button_10           |                           | clicks this comms button
-comms_control_comms_button_11           |                           | clicks this comms button
-comms_control_comms_button_12           |                           | clicks this comms button
-comms_control_comms_button_13           |                           | clicks this comms button
-comms_control_comms_button_14           |                           | clicks this comms button
-comms_control_comms_button_15           |                           | clicks this comms button
+comms_control_comms_button_10           | KEY_0                     | clicks this comms button
+comms_control_comms_button_11           | KEY_A                          | clicks this comms button
+comms_control_comms_button_12           | KEY_B                     | clicks this comms button
+comms_control_comms_button_13           | KEY_C                     | clicks this comms button
+comms_control_comms_button_14           | KEY_D                     | clicks this comms button
+comms_control_comms_button_15           | KEY_E                     | clicks this comms button
 comms_control_comms_button_16           |                           | clicks this comms button
-comms_control_comms_button_17           | KEY_A                     | clicks this comms button
-comms_control_comms_button_18           | KEY_B                     | clicks this comms button
-comms_control_comms_button_19           | KEY_C                     | clicks this comms button
+comms_control_comms_button_17           |                           | clicks this comms button
+comms_control_comms_button_18           |                           | clicks this comms button
+comms_control_comms_button_19           |                           | clicks this comms button
 comms_control_comms_button_2            | KEY_2                     | clicks this comms button
-comms_control_comms_button_20           | KEY_D                     | clicks this comms button
-comms_control_comms_button_21           | KEY_E                     | clicks this comms button
-comms_control_comms_button_22           | KEY_F                     | clicks this comms button
+comms_control_comms_button_20           |                           | clicks this comms button
+comms_control_comms_button_21           |                           | clicks this comms button
+comms_control_comms_button_22           |                           | clicks this comms button
 comms_control_comms_button_3            | KEY_3                     | clicks this comms button
 comms_control_comms_button_4            | KEY_4                     | clicks this comms button
 comms_control_comms_button_5            | KEY_5                     | clicks this comms button
