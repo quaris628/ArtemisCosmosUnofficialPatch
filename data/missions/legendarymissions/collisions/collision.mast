@@ -128,5 +128,7 @@ damage: 0
         #     sbs.particle_at(a, "color: #641,#977; lifespan:30; image_cell:9; size:20;speed: 1; count:100,1000")
             # task_schedule(asteroid_hit, {"asteroid_id": a, "damage": 10})
 
-
-
+//collision/passive if has_role(COLLISION_TARGET_ID, "cockpit")
+    if has_role(COLLISION_SOURCE_ID, "black_hole"):
+        explode_player_ship(COLLISION_TARGET_ID)
+    ->END
