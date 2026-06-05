@@ -90,6 +90,8 @@
 
     ->END
 
+# This never seems to run. The actual ship destruction from
+# a black hole seems to happen in //collisions/collision.mast
 //damage/internal if has_role(DAMAGE_ORIGIN_ID, "__player__") and EVENT.sub_tag == "maelstrom"
     explode_player_ship(DAMAGE_ORIGIN_ID)
 
