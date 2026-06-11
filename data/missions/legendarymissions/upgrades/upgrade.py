@@ -136,3 +136,17 @@ def get_anom_data():
     This contains the internal name of the upgrade as the key, and the art_id, and the name of the upgrade.
     """
     return anom_data
+
+# ----- signals -----
+
+def signal_upgrade_activated(ship_id):
+    return f"upgrade_activated_{ship_id}"
+
+def signal_upgrade_timer_tick(ship_id):
+    return f"upgrade_timer_tick_{ship_id}"
+
+def signal_upgrade_timer_ended(ship_id):
+    return f"upgrade_timer_ended_{ship_id}"
+
+def signal_upgrade_count_increased(ship_id):
+    return f"upgrade_picked_up_{ship_id}"
