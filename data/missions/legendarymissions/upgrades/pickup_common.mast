@@ -10,6 +10,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "carapaction_coil", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "carapaction_coil", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "carapaction_coil"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -20,6 +21,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "infusion_pcoils", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "infusion_pcoils", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "infusion_pcoils"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -30,6 +32,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "tauron_focuser", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "tauron_focuser", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "tauron_focuser"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -40,6 +43,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "secret_codecase", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "secret_codecase", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "secret_codecase"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -69,6 +73,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "vigoranium_nodule", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "vigoranium_nodule", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "vigoranium_nodule"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -79,6 +84,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "cetrocite_crystal", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "cetrocite_crystal", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "cetrocite_crystal"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -89,6 +95,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "lateral_array", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "lateral_array", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "lateral_array"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -99,6 +106,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "haplix_overcharger", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "haplix_overcharger", addinv)
+        signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "haplix_overcharger"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
