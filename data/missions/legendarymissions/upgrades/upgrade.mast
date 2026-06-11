@@ -8,6 +8,9 @@ shared UPGRADE_TAB_ENABLED = True
     jump upgrade_screen
 
 === upgrade_screen
+    if not ensure_on_gui_task(upgrade_screen):
+        ->END
+    
     gui_tab_back(CONSOLE_SELECT)
     # Get inventory values for upgrade counts and timers.
 
@@ -106,10 +109,7 @@ shared UPGRADE_TAB_ENABLED = True
             cc_timer = get_inventory_value(ship_id, "cc_timer" )
             comms_broadcast(ship_id, "Carapaction Coil Activated", "#FF0")
             task_schedule(cc_countdown)
-            gui_update_shared("sh-cc-count", "color:#0f0;$text: {cc_count};")
-            gui_update_shared("sh-cc-txt", "color:#0f0;$text: Carapaction Coil;")
-            gui_update_shared("sh-cc-timer", "color:#0f0;$text: {cc_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         if cc_timer > 0:
@@ -125,10 +125,7 @@ shared UPGRADE_TAB_ENABLED = True
             ip_timer = get_inventory_value(ship_id, "ip_timer" )
             comms_broadcast(ship_id, "Infusion P-Coils Activated", "#FF0")
             task_schedule(ip_countdown)
-            gui_update_shared("sh-ip-count", "color:#0f0;$text: {ip_count};")
-            gui_update_shared("sh-ip-txt", "color:#0f0;$text: Infusion P-Coils;")
-            gui_update_shared("sh-ip-timer", "color:#0f0;$text: {ip_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
     else:
         if ip_timer > 0:
             """color:#0f0;$text: Infusion P-Coils;""" style="tag:sh-ip-txt;"
@@ -144,10 +141,7 @@ shared UPGRADE_TAB_ENABLED = True
             tf_timer = get_inventory_value(ship_id, "tf_timer" )
             comms_broadcast(ship_id, "Tauron Focuser Activated", "#FF0")
             task_schedule(tf_countdown)
-            gui_update_shared("sh-tf-count", "color:#0f0;$text: {tf_count};")
-            gui_update_shared("sh-tf-txt", "color:#0f0;$text: Tauron Focuser;")
-            gui_update_shared("sh-tf-timer", "color:#0f0;$text: {tf_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         if tf_timer > 0:
@@ -163,10 +157,7 @@ shared UPGRADE_TAB_ENABLED = True
             sc_timer = get_inventory_value(ship_id, "sc_timer" )
             comms_broadcast(ship_id, "Secret Codecase Activated", "#FF0")
             task_schedule(sc_countdown)
-            gui_update_shared("sh-sc-count", "color:#0f0;$text: {sc_count};")
-            gui_update_shared("sh-sc-txt", "color:#0f0;$text: Secret Codecase;")
-            gui_update_shared("sh-sc-timer", "color:#0f0;$text: {sc_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         if sc_timer > 0:
@@ -188,14 +179,13 @@ shared UPGRADE_TAB_ENABLED = True
                 set_inventory_value(ship_id, "vn_timer", 5)
                 vn_timer = get_inventory_value(ship_id, "vn_timer" )
                 task_schedule(vn_countdown)
-                gui_update_shared("sh-vn-timer", "color:#ff0;$text: Damage Control Teams already at full strength;")
             else: 
                 grid_restore_damcons(ship_id)
                 vn_count -= 1
                 set_inventory_value(ship_id, "vigoranium_nodule", vn_count)
                 comms_broadcast(ship_id, "Vigoranium Nodule Activated", "#FF0")
 
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         """$text: Vigoranium Nodule;""" style="tag:sh-vn-txt;"
@@ -209,10 +199,7 @@ shared UPGRADE_TAB_ENABLED = True
             cl_timer = get_inventory_value(ship_id, "cl_timer" )
             comms_broadcast(ship_id, "Cetrocite Crystal Activated", "#FF0")
             task_schedule(cl_countdown)
-            gui_update_shared("sh-cl-count", "color:#0f0;$text: {cl_count};")
-            gui_update_shared("sh-cl-txt", "color:#0f0;$text: Cetrocite Crystal;")
-            gui_update_shared("sh-cl-timer", "color:#0f0;$text: {cl_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         if cl_timer > 0:
@@ -229,10 +216,7 @@ shared UPGRADE_TAB_ENABLED = True
             la_timer = get_inventory_value(ship_id, "la_timer" )
             comms_broadcast(ship_id, "Lateral Array Activated", "#FF0")
             task_schedule(la_countdown)
-            gui_update_shared("sh-la-count", "color:#0f0;$text: {la_count};")
-            gui_update_shared("sh-la-txt", "color:#0f0;$text: Lateral Array;")
-            gui_update_shared("sh-la-timer", "color:#0f0;$text: {la_timer} seconds remaining.;")
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
     
     else:
         if la_timer > 0:
@@ -257,7 +241,6 @@ shared UPGRADE_TAB_ENABLED = True
                 set_inventory_value(ship_id, "ho_timer", 5)
                 ho_timer = get_inventory_value(ship_id, "ho_timer" )
                 task_schedule(ho_countdown)
-                gui_update_shared("sh-ho-timer", "color:#ff0;$text: Shields already overcharged;")
             else: 
                 fshield += 300.0
                 rshield += 300.0
@@ -284,8 +267,7 @@ shared UPGRADE_TAB_ENABLED = True
 
                     dmgcheck -= 25
 
-
-            jump upgrade_screen
+            signal_emit(signal_upgrade_activated(ship_id))
 
     else:
         """$text: Haplix Overcharger;""" style="tag:sh-ho-txt;"
@@ -294,61 +276,83 @@ shared UPGRADE_TAB_ENABLED = True
     # Third Column, displays short description if inactive, or timer countdown (in green) if active.
     # For Vigoranium Nodule or Haplix Overcharger, will also display yellow warning if button is pressed 
     # but upgrade can't be used (DamCons full, or shields already overcharged)
+    
+    sh_timer_texts = {}
 
     gui_section( style="area:38,15,100,100;row-height:35px;")
 
     gui_blank()
     gui_row()
     gui_blank()
+    
     gui_row()
     if cc_timer > 0:
-        """color:#0f0;$text: {cc_timer} seconds remaining.""" style="tag:sh-cc-timer;"
+        sh_timer_texts["cc_timer"] = gui_text(f"{cc_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: 5 Minute 300% Shield Recharge Boost""" style="tag:sh-cc-timer;"
-
+        sh_timer_texts["cc_timer"] = gui_text("5 Minute 300% Shield Recharge Boost")
+    
     gui_row()
     if ip_timer > 0:
-        """color:#0f0;$text: {ip_timer} seconds remaining.""" style="tag:sh-ip-timer;"
+        sh_timer_texts["ip_timer"] = gui_text(f"{ip_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: 5 Minute 300% Impulse and Maneuver Speed Boost""" style="tag:sh-ip-timer;"
-
+        sh_timer_texts["ip_timer"] = gui_text("5 Minute 300% Impulse and Maneuver Speed Boost")
+    
     gui_row()
     if tf_timer > 0:
-        """color:#0f0;$text: {tf_timer} seconds remaining.""" style="tag:sh-tf-timer;"
+        sh_timer_texts["tf_timer"] = gui_text(f"{tf_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: 5 Minute 100% Beam and Reload Speed Boost""" style="tag:sh-tf-timer;"
-
+        sh_timer_texts["tf_timer"] = gui_text("5 Minute 100% Beam and Reload Speed Boost")
+    
     gui_row()
     if sc_timer > 0:
-        """color:#0f0;$text: {sc_timer} seconds remaining.""" style="tag:sh-sc-timer;"
+        sh_timer_texts["sc_timer"] = gui_text(f"{sc_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: Force one enemy ship to auto-surrender""" style="tag:sh-sc-timer;"
-
+        sh_timer_texts["sc_timer"] = gui_text("Force one enemy ship to auto-surrender")
+    
     gui_row()
     if vn_timer > 0:
-        """color:#ff0;$text: Damage Control Teams already at full strength""" style="tag:sh-vn-timer;"
+        sh_timer_texts["vn_timer"] = gui_text("Damage Control Teams already at full strength", style="color:#ff0;")
     else:
-        """$text: Restore Damage Control Teams.""" style="tag:sh-vn-timer;"
-
+        sh_timer_texts["vn_timer"] = gui_text("Restore Damage Control Teams")
+    
     gui_row()
     if cl_timer > 0:
-        """color:#0f0;$text: {cl_timer} seconds remaining.""" style="tag:sh-cl-timer;"
+        sh_timer_texts["cl_timer"] = gui_text(f"{cl_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: 5 Minute 100% Faster Heat Reduction""" style="tag:sh-cl-timer;"
-
+        sh_timer_texts["cl_timer"] = gui_text("5 Minute 100% Faster Heat Reduction")
+    
     gui_row()
     if la_timer > 0:
-        """color:#0f0;$text: {la_timer} seconds remaining.""" style="tag:sh-la-timer;"
+        sh_timer_texts["la_timer"] = gui_text(f"{la_timer} seconds remaining", style="color:#0f0;")
     else:
-        """$text: 5 Minute Target Scan Triple Speed""" style="tag:sh-la-timer;"
-
+        sh_timer_texts["la_timer"] = gui_text("5 Minute Target Scan Triple Speed")
+    
     gui_row()
     if ho_timer > 0:
-        """color:#ff0;$text: Shields already overcharged""" style="tag:sh-ho-timer;"
+        sh_timer_texts["ho_timer"] = gui_text("Shields already overcharged", style="color:#ff0;")
     else:
-        """$text: +300 to shields but may damage shield generators""" style="tag:sh-ho-timer;"
-
+        sh_timer_texts["ho_timer"] = gui_text("+300 to shields but may damage shield generators")
+    
+    signal_register(signal_upgrade_count_increased(ship_id), upgrade_screen_redraw, is_temporary=True)
+    signal_register(signal_upgrade_activated(ship_id), upgrade_screen_redraw, is_temporary=True)
+    signal_register(signal_upgrade_timer_tick(ship_id), upgrade_screen_on_timer_tick, is_temporary=True)
+    signal_register(signal_upgrade_timer_ended(ship_id), upgrade_screen_redraw, is_temporary=True)
+    
     await gui()
+
+==== upgrade_screen_redraw ====
+    gui_switch_to(upgrade_screen)
+    ->END
+
+==== upgrade_screen_on_timer_tick ====
+    if UPGRADE_TIMER_TYPE == "vn_timer" or UPGRADE_TIMER_TYPE == "ho_timer":
+        ->END
+    timer_text = sh_timer_texts[UPGRADE_TIMER_TYPE]
+    
+    timer_text.value = f"{SECONDS_REMAINING} seconds remaining"
+    
+    gui_represent_patched(timer_text)
+    ->END
 
     # Countdown timers adjust the upgrade coefficients from the ship blob, 
     # starts the timer, then sets the upgrade coefficients back to normal. 
@@ -367,17 +371,15 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"New Shield Repair Rate: {shieldrate}")
     for x in range(300):
         cc_timer = get_inventory_value(ship_id, "cc_timer" )
-        gui_update_shared("sh-cc-timer", "color:#0f0;$text: {cc_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "cc_timer", "SECONDS_REMAINING": cc_timer})
         cc_timer -= 1
         set_inventory_value(ship_id, "cc_timer", cc_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
     shieldrate /= 3.0
     print(f"Reset Shield Repair Rate: {shieldrate}")
     player_blob.set("all_shield_upgrade_coeff", shieldrate)
-    gui_update_shared("sh-cc-count", "$text: {cc_count};")
-    gui_update_shared("sh-cc-txt", "$text: Carapaction Coil;")
-    gui_update_shared("sh-cc-timer", "$text: 5 Minute 300% Shield Recharge Boost;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== ip_countdown ===== 
@@ -400,10 +402,10 @@ shared UPGRADE_TAB_ENABLED = True
 
     for x in range(300):
         ip_timer = get_inventory_value(ship_id, "ip_timer" )
-        gui_update_shared("sh-ip-timer", "color:#0f0;$text: {ip_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "ip_timer", "SECONDS_REMAINING": ip_timer})
         ip_timer -= 1
         set_inventory_value(ship_id, "ip_timer", ip_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
     impfaster /= 3.0
     turnfaster /= 3.0
@@ -414,9 +416,7 @@ shared UPGRADE_TAB_ENABLED = True
     player_blob.set("impulse_upgrade_oeff", impfaster)
     player_blob.set("turn_upgrade_coeff", turnfaster)
     #player_blob.set("warp_upgrade_coeff", warpfaster)
-    gui_update_shared("sh-ip-count", "$text: {ip_count};")
-    gui_update_shared("sh-ip-txt", "$text: Infusion P-Coils;")
-    gui_update_shared("sh-ip-timer", "$text: 5 Minute 300% Impulse and Maneuver Speed Boost;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== tf_countdown ===== 
@@ -437,10 +437,10 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"New TorpeTube Coefficient: {tubefaster}")
     for x in range(300):
         tf_timer = get_inventory_value(ship_id, "tf_timer" )
-        gui_update_shared("sh-tf-timer", "color:#0f0;$text: {tf_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "tf_timer", "SECONDS_REMAINING": tf_timer})
         tf_timer -= 1
         set_inventory_value(ship_id, "tf_timer", tf_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
     beamfaster /= 2.0
     tubefaster /= 2.0
@@ -448,35 +448,31 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"Reset TorpeTube Coefficient: {tubefaster}")
     player_blob.set("all_beam_upgrade_coeff", beamfaster)
     player_blob.set("all_tube_upgrade_coeff", tubefaster)
-    gui_update_shared("sh-tf-count", "$text: {tf_count};")
-    gui_update_shared("sh-tf-txt", "$text: Tauron Focuser;")
-    gui_update_shared("sh-tf-timer", "$text: 5 Minute 100% Beam and Reload Speed Boost;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== sc_countdown ===== # Code for using Secred Codecase in comms.mast
     for x in range(300):
         sc_timer = get_inventory_value(ship_id, "sc_timer" )
-        gui_update_shared("sh-sc-timer", "color:#0f0;$text: {sc_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "sc_timer", "SECONDS_REMAINING": sc_timer})
         break if sc_timer == 0
         sc_timer -= 1
         set_inventory_value(ship_id, "sc_timer", sc_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
-    gui_update_shared("sh-sc-count", "$text: {sc_count};")
-    gui_update_shared("sh-sc-txt", "$text: Secret Codecase;")
-    gui_update_shared("sh-sc-timer", "$text: Force one enemy ship to auto-surrender;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== vn_countdown ===== 
     for x in range(5):
         vn_timer = get_inventory_value(ship_id, "vn_timer" )
-        gui_update_shared("sh-vn-timer", "color:#ff0;$text: Damage Control Teams already at full strength;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "vn_timer", "SECONDS_REMAINING": vn_timer})
         vn_timer -= 1
         set_inventory_value(ship_id, "vn_timer", vn_timer )
         print(f"VN Timer: {vn_timer}")
         await delay_app(1)
 
-    gui_update_shared("sh-vn-timer", "$text: Restore Damage Control Teams;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== cl_countdown ===== 
@@ -492,17 +488,15 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"New Coolant Coefficient: {stayfrosty}")
     for x in range(300):
         cl_timer = get_inventory_value(ship_id, "cl_timer" )
-        gui_update_shared("sh-cl-timer", "color:#0f0;$text: {cl_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "cl_timer", "SECONDS_REMAINING": cl_timer})
         cl_timer -= 1
         set_inventory_value(ship_id, "cl_timer", cl_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
     stayfrosty /= 2.0
     print(f"Reset Coolant Coefficient: {stayfrosty}")
     player_blob.set("coolant_upgrade_coeff", stayfrosty)
-    gui_update_shared("sh-cl-count", "$text: {cl_count};")
-    gui_update_shared("sh-cl-txt", "$text: Cetrocite Crystal;")
-    gui_update_shared("sh-cl-timer", "$text: 5 Minute 100% Faster Heat Reduction;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== la_countdown ===== 
@@ -518,29 +512,27 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"New Scan Speed: {scanrate}")
     for x in range(300):
         la_timer = get_inventory_value(ship_id, "la_timer" )
-        gui_update_shared("sh-la-timer", "color:#0f0;$text: {la_timer} seconds remaining.;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "la_timer", "SECONDS_REMAINING": la_timer})
         la_timer -= 1
         set_inventory_value(ship_id, "la_timer", la_timer )
-        await delay_app(1)
+        await delay_sim(1)
 
     scanrate /= 3.0
     print(f"Reset Scan Speed: {scanrate}")
     player_blob.set("sensor_upgrade_coeff", scanrate)
-    gui_update_shared("sh-la-count", "$text: {la_count};")
-    gui_update_shared("sh-la-txt", "$text: Lateral Array;")
-    gui_update_shared("sh-la-timer", "$text: 5 Minute Target Scan Triple Speed;")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 ===== ho_countdown ===== 
     for x in range(5):
         ho_timer = get_inventory_value(ship_id, "ho_timer" )
-        gui_update_shared("sh-ho-timer", "color:#ff0;$text: Shields already overcharged;")
+        signal_emit(signal_upgrade_timer_tick(ship_id), data={"UPGRADE_TIMER_TYPE": "ho_timer", "SECONDS_REMAINING": ho_timer})
         ho_timer -= 1
         set_inventory_value(ship_id, "ho_timer", ho_timer )
         print(f"HO Timer: {ho_timer}")
         await delay_app(1)
 
-    gui_update_shared("sh-ho-timer", "$text: +300 to shields but may damage shield generators")
+    signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
 //shared/signal/cockpit_dock_success
@@ -562,6 +554,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(home, upgrade, craft_count + hangar_count)
             set_inventory_value(craft_id, upgrade, 0)
             comms_broadcast(home, "Transfered {craft_count} " + upgrade_list[upgrade]["name"])
+            signal_emit(signal_upgrade_count_increased(home), data={"UPGRADE_TYPE": upgrade})
         # Now, since we've added all the upgrades to inventory in the ship, we need to consume the Hi Dens Powercells.
         # TODO: When we update to the card system, I expect this will change.
         hdp = get_inventory_value(home, "hidens_powercell",0)
