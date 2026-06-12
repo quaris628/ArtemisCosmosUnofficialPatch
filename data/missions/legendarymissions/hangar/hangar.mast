@@ -109,6 +109,8 @@ hangar_get_craft_data("terran")
     if len(crafts)>0:
         if ride_choice not in crafts:
             ride_choice = crafts[0]
+    else:
+        ride_choice = None
 
     gui_section(style="area: 0,0, 41,100-150px;background: #fff1;")
 
