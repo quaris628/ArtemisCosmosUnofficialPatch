@@ -202,6 +202,8 @@ hangar_get_craft_data("terran")
         else:
             refit_time = format_time_remaining(ride_choice, "refit")
             gui_text("$text: refit - launch in {refit_time}", style="tag:refit-text")
+    else:
+        gui_text("select ship", style="tag:refit-text")
 
     on change update_ticker < get_counter_elapsed_seconds(client_id, "refresh_status"):
         fighter_change += 1
