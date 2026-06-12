@@ -25,9 +25,9 @@ Enemy shields are more vulnerable to beam weapons adjusted to their weakest freq
 <br>
 Weapons can arm and fire torpedoes with variety of warheads. Homing torpedoes are the cheapest and do moderate damage to one target. EMP torpedoes have a large blast radius, damaging the shields of anything caught in their blast. Nukes also have a large blast radius, severely damaging anything caught in their blast. Mines are like Nukes but they drop behind your ship and explode when a target comes near.
 <br>
-In an emergency, Weapons can provide energy to your ship by draining a torpedo weapon.
+In an emergency, Weapons can provide energy to your ship by disassembling a torpedo weapon.
 <br>
-To make your beam weapons hit harder, ask Engineering to increase power to beams.
+To make your beam weapons fire faster, ask Engineering to increase power to beams.
 <br>
 To make your torpedo tubes load faster, ask Engineering to increase power to torpedo tubes.
 
@@ -60,7 +60,7 @@ To make your sensors scan faster, ask Engineering to increase power to sensors.
 
 The Communications console has a text scroll of incoming and outgoing messages, and is the voice of the ship.
 <br>
-Comms can taunt enemies, choosing from many biting insults, but each enemy will respond to only one taunt. The wrong taunt will get the enemy to laugh at you and cut off communications, so ask Science for advice on which taunt to use.
+Comms can taunt enemies, choosing from many biting insults, but each enemy will respond to only one taunt. The wrong taunt will get the enemy to laugh at you and ignore all subsequent taunt attempts, so ask Science for advice on which taunt to use.
 <br>
 Comms can order friendly ships to change course, attacking or evading enemies.
 <br>
@@ -70,7 +70,7 @@ The comms station has a 'RED ALERT' button which will keep your crew on their to
 
 ## [Flight Hangar](hangar?icon_index=140)
 
-The Flight Hangar allows player the wish to fly single craft (fighter, shuttle, bomber) missions. They can join the lgh hangar.
+The Flight Hangar allows player the wish to fly single craft (fighter, shuttle, bomber) missions. They can join the flight hangar.
 <br>
-Select from several station, and ship hangar. Grab a craft. Select a mission and Fly.
+Select from several station and ship hangars. Grab a craft. Review that craft's mission and launch.
 
