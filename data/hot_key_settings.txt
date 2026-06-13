@@ -54,7 +54,17 @@ comms_control_comms_button_2            | KEY_2                     | clicks thi
 comms_control_comms_button_20           |                           | clicks this comms button
 comms_control_comms_button_21           |                           | clicks this comms button
 comms_control_comms_button_22           |                           | clicks this comms button
+comms_control_comms_button_23           |                           | clicks this comms button
+comms_control_comms_button_24           |                           | clicks this comms button
+comms_control_comms_button_25           |                           | clicks this comms button
+comms_control_comms_button_26           |                           | clicks this comms button
+comms_control_comms_button_27           |                           | clicks this comms button
+comms_control_comms_button_28           |                           | clicks this comms button
+comms_control_comms_button_29           |                           | clicks this comms button
 comms_control_comms_button_3            | KEY_3                     | clicks this comms button
+comms_control_comms_button_30           |                           | clicks this comms button
+comms_control_comms_button_31           |                           | clicks this comms button
+comms_control_comms_button_32           |                           | clicks this comms button
 comms_control_comms_button_4            | KEY_4                     | clicks this comms button
 comms_control_comms_button_5            | KEY_5                     | clicks this comms button
 comms_control_comms_button_6            | KEY_6                     | clicks this comms button
