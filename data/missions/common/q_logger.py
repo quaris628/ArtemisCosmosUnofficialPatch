@@ -47,11 +47,12 @@ def initialize_qlog():
         else:
             qlog(qlog_level_info(), f"Will NOT delete hard-server-crash-stack-trace file because it appears to contain some data")
 
-def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id=None, grid_object_id=None):
+def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id=None, grid_object_id=None, player_craft_id=None):
     client_id_prefix = ""
     player_ship_prefix = ""
     non_player_ship_prefix = ""
     grid_object_prefix = ""
+    player_craft_prefix = ""
     if player_ship_id is not None:
         player_ship_object = to_space_object(player_ship_id)
         player_ship_name = player_ship_object.name if player_ship_object is not None else ""
@@ -66,14 +67,18 @@ def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id
         grid_object = to_grid_object(grid_object_id)
         grid_object_name = grid_object.name
         grid_object_prefix = f"Grid object {grid_object_name} (id={grid_object_id}) "
+    if player_craft_id is not None:
+        player_craft_object = to_space_object(player_craft_id)
+        player_craft_name = player_craft_object.name if player_craft_object is not None else ""
+        player_craft_prefix = f"Player craft {player_craft_name} (id={player_craft_id}) "
     
     # Try to minimize how many intermediate string values are created, for performance
     if level in {qlog_level_critical(), qlog_level_error(), qlog_level_warn()}:
-        message = f"[{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{message}"
+        message = f"[{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
         print(message)
         full_message = f"[{datetime.now()}] {message}"
     else:
-        full_message = f"[{datetime.now()}] [{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{message}"
+        full_message = f"[{datetime.now()}] [{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
     log(message=full_message, name=_QLOG_LOGGER_NAME)
 
 # Problem. The sim cannot possibly continue
