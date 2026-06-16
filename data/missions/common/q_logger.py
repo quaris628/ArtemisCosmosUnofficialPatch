@@ -1,4 +1,6 @@
+import atexit
 from datetime import datetime
+import faulthandler
 import os
 from pathlib import Path
 from time import time
@@ -19,6 +21,31 @@ def initialize_qlog():
     # for determining when the log is old enough to be automatically deleted
     log(message=str(time()), name=_QLOG_LOGGER_NAME)
     _qlog_delete_old_logs()
+    
+    hard_crash_stack_trace_filepath = _qlog_get_hard_crash_stack_trace_filepath_relative_to_artemis_cosmos_folder()
+    qlog(qlog_level_info(), f"Opening hard-server-crash-stack-trace file '{hard_crash_stack_trace_filepath}'")
+    stack_trace_file = open(hard_crash_stack_trace_filepath, "w+")
+    stack_trace_file.write(f"{time()}\nIf the server hard crashes, then a python stack trace might be written to this file. If the currently-running mission script ends normally, then this file should get deleted. (It might not get deleted if the game server is closed forcefully.)\n")
+    faulthandler.enable(file=stack_trace_file)
+    
+    @atexit.register
+    def cleanup_faulthandler():
+        qlog(qlog_level_info(), f"Attempting to close hard-server-crash-stack-trace file")
+        faulthandler.disable()
+        stack_trace_file.close()
+        qlog(qlog_level_info(), f"Successfully closed hard-server-crash-stack-trace file")
+        # If a hard crash actually happened, this cleanup code should never even run.
+        # But still, just in case, verify the file is empty (besides the timestamp on
+        # the first line and description on the second).
+        with open(hard_crash_stack_trace_filepath, "r") as f:
+            f.readline()
+            f.readline()
+            has_third_line = 0 < len(f.read(1))
+        if not has_third_line:
+            qlog(qlog_level_info(), f"Deleting hard-server-crash-stack-trace file")
+            Path(hard_crash_stack_trace_filepath).unlink(missing_ok=True)
+        else:
+            qlog(qlog_level_info(), f"Will NOT delete hard-server-crash-stack-trace file because it appears to contain some data")
 
 def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id=None, grid_object_id=None):
     client_id_prefix = ""
@@ -77,14 +104,18 @@ def qlog_level_debug():
 _QLOG_LOGGER_NAME = "qlog"
 
 def _qlog_get_new_log_filepath_relative_to_mission_folder():
-    cleaned_timestamp = _qlog_clean_timestamp(str(datetime.now()))
-    
+    cleaned_timestamp = _qlog_get_cleaned_timestamp()
     return f"q_logs/q-log {cleaned_timestamp}.txt"
 
 def _qlog_get_logs_folder_filepath_relative_to_artemis_cosmos_folder():
     return f"data\\missions\\{get_mission_name()}\\q_logs\\"
 
-def _qlog_clean_timestamp(timestamp):
+def _qlog_get_hard_crash_stack_trace_filepath_relative_to_artemis_cosmos_folder():
+    cleaned_timestamp = _qlog_get_cleaned_timestamp()
+    return f"{_qlog_get_logs_folder_filepath_relative_to_artemis_cosmos_folder()}q-log {cleaned_timestamp} hard-server-crash-stack-trace.txt"
+
+def _qlog_get_cleaned_timestamp():
+    timestamp = str(datetime.now())
     # remove the decimals at the end
     timestamp = timestamp.split(".", 1)[0]
     # replace : with -
