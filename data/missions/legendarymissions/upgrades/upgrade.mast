@@ -17,7 +17,9 @@ shared UPGRADE_TAB_ENABLED = True
 
     ship_id = sbs.get_ship_of_client(client_id)  
     ->END if not ship_id
-
+    
+    qlog(qlog_level_info(), "opening upgrades screen", client_id=client_id, player_ship_id=ship_id)
+    
     # Use `default` here, that way when `jump upgrade_screen` is called on button press, the console type is not changed.
     ctype = get_inventory_value(client_id, "CONSOLE_TYPE")
     cc_count = get_inventory_value(ship_id, "carapaction_coil", 0)
@@ -109,6 +111,7 @@ shared UPGRADE_TAB_ENABLED = True
             cc_timer = get_inventory_value(ship_id, "cc_timer" )
             comms_broadcast(ship_id, "Carapaction Coil Activated", "#FF0")
             task_schedule_server(cc_countdown)
+            qlog(qlog_level_info(), "activated carapaction_coil", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -125,6 +128,7 @@ shared UPGRADE_TAB_ENABLED = True
             ip_timer = get_inventory_value(ship_id, "ip_timer" )
             comms_broadcast(ship_id, "Infusion P-Coils Activated", "#FF0")
             task_schedule_server(ip_countdown)
+            qlog(qlog_level_info(), "activated infusion_pcoils", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
     else:
         if ip_timer > 0:
@@ -141,6 +145,7 @@ shared UPGRADE_TAB_ENABLED = True
             tf_timer = get_inventory_value(ship_id, "tf_timer" )
             comms_broadcast(ship_id, "Tauron Focuser Activated", "#FF0")
             task_schedule_server(tf_countdown)
+            qlog(qlog_level_info(), "activated tauron_focuser", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -157,6 +162,7 @@ shared UPGRADE_TAB_ENABLED = True
             sc_timer = get_inventory_value(ship_id, "sc_timer" )
             comms_broadcast(ship_id, "Secret Codecase Activated", "#FF0")
             task_schedule_server(sc_countdown)
+            qlog(qlog_level_info(), "activated secret_codecase", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -185,6 +191,7 @@ shared UPGRADE_TAB_ENABLED = True
                 set_inventory_value(ship_id, "vigoranium_nodule", vn_count)
                 comms_broadcast(ship_id, "Vigoranium Nodule Activated", "#FF0")
 
+            qlog(qlog_level_info(), "activated vigoranium_nodule", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -199,6 +206,7 @@ shared UPGRADE_TAB_ENABLED = True
             cl_timer = get_inventory_value(ship_id, "cl_timer" )
             comms_broadcast(ship_id, "Cetrocite Crystal Activated", "#FF0")
             task_schedule_server(cl_countdown)
+            qlog(qlog_level_info(), "activated cetrocite_crystal", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -216,6 +224,7 @@ shared UPGRADE_TAB_ENABLED = True
             la_timer = get_inventory_value(ship_id, "la_timer" )
             comms_broadcast(ship_id, "Lateral Array Activated", "#FF0")
             task_schedule_server(la_countdown)
+            qlog(qlog_level_info(), "activated lateral_array", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
     
     else:
@@ -267,6 +276,7 @@ shared UPGRADE_TAB_ENABLED = True
 
                     dmgcheck -= 25
 
+            qlog(qlog_level_info(), "activated haplix_overcharger", client_id=client_id, player_ship_id=ship_id)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -341,6 +351,7 @@ shared UPGRADE_TAB_ENABLED = True
     await gui()
 
 ==== upgrade_screen_redraw ====
+    qlog(qlog_level_info(), "redrawing upgrades screen", client_id=client_id, player_ship_id=ship_id)
     gui_switch_to(upgrade_screen)
     ->END
 
@@ -379,6 +390,7 @@ shared UPGRADE_TAB_ENABLED = True
     shieldrate /= 3.0
     print(f"Reset Shield Repair Rate: {shieldrate}")
     player_blob.set("all_shield_upgrade_coeff", shieldrate)
+    qlog(qlog_level_info(), "carapaction_coil is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -416,6 +428,7 @@ shared UPGRADE_TAB_ENABLED = True
     player_blob.set("impulse_upgrade_oeff", impfaster)
     player_blob.set("turn_upgrade_coeff", turnfaster)
     #player_blob.set("warp_upgrade_coeff", warpfaster)
+    qlog(qlog_level_info(), "infusion_pcoils is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -448,6 +461,7 @@ shared UPGRADE_TAB_ENABLED = True
     print(f"Reset TorpeTube Coefficient: {tubefaster}")
     player_blob.set("all_beam_upgrade_coeff", beamfaster)
     player_blob.set("all_tube_upgrade_coeff", tubefaster)
+    qlog(qlog_level_info(), "tauron_focuser is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -460,6 +474,7 @@ shared UPGRADE_TAB_ENABLED = True
         set_inventory_value(ship_id, "sc_timer", sc_timer )
         await delay_sim(1)
 
+    qlog(qlog_level_info(), "secret_codecase is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -472,6 +487,7 @@ shared UPGRADE_TAB_ENABLED = True
         print(f"VN Timer: {vn_timer}")
         await delay_app(1)
 
+    qlog(qlog_level_info(), "vigoranium_nodule is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -496,6 +512,7 @@ shared UPGRADE_TAB_ENABLED = True
     stayfrosty /= 2.0
     print(f"Reset Coolant Coefficient: {stayfrosty}")
     player_blob.set("coolant_upgrade_coeff", stayfrosty)
+    qlog(qlog_level_info(), "cetrocite_crystal is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -520,6 +537,7 @@ shared UPGRADE_TAB_ENABLED = True
     scanrate /= 3.0
     print(f"Reset Scan Speed: {scanrate}")
     player_blob.set("sensor_upgrade_coeff", scanrate)
+    qlog(qlog_level_info(), "lateral_array is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -532,6 +550,7 @@ shared UPGRADE_TAB_ENABLED = True
         print(f"HO Timer: {ho_timer}")
         await delay_app(1)
 
+    qlog(qlog_level_info(), "haplix_overcharger is no longer active", client_id=client_id, player_ship_id=ship_id)
     signal_emit(signal_upgrade_timer_ended(ship_id))
     ->END
 
@@ -554,6 +573,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(home, upgrade, craft_count + hangar_count)
             set_inventory_value(craft_id, upgrade, 0)
             comms_broadcast(home, "Transfered {craft_count} " + upgrade_list[upgrade]["name"])
+            qlog(qlog_level_info(), f"dropped off {craft_count} {upgrade}", player_ship_id=ship_id, player_craft_id=craft_id)
             signal_emit(signal_upgrade_count_increased(home), data={"UPGRADE_TYPE": upgrade})
         # Now, since we've added all the upgrades to inventory in the ship, we need to consume the Hi Dens Powercells.
         # TODO: When we update to the card system, I expect this will change.
