@@ -32,6 +32,7 @@ gui_reroute_clients("client_main")
 ========== start_server ===============
     
     initialize_qlog()
+    qlog(qlog_level_info(), "Server is starting")
     
     default shared SETTINGS = settings_get_defaults()
     shared WORLD_SELECT  = SETTINGS.get("WORLD_SELECT")
@@ -171,6 +172,9 @@ Main:
 
 
 ===== start ======
+    
+    qlog(qlog_level_info(), "Starting game")
+    
     # sim_create()
     sim_resume()
     #
@@ -203,7 +207,9 @@ Main:
     PLAYER_LIST = sorted(to_object_list(role("__player__")), key=lambda p: p.id)
     if len(PLAYER_LIST)>0:
         sbs.assign_client_to_ship(0, PLAYER_LIST[0].id)
-        
+        for i in range(len(PLAYER_LIST)):
+            qlog(qlog_level_info(), f"is ship {i}", player_ship_id=PLAYER_LIST[i].id)
+    
     gui_reroute_clients(game_started_console, exclude={client_id})
     #
     # This is very coupled to operator mode
