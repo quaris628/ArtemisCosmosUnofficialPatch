@@ -1,1 +1,3 @@
+import ../../common/q_logger.py
+
 import basic_player_destroy.mast

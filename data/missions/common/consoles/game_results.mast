@@ -39,8 +39,10 @@ shared game_stats = ~~{
 
 
 //signal/show_game_results
-
-
+    
+    if client_id == 0:
+        qlog(qlog_level_info(), "Game ended")
+    
     sim_pause()
 
     GAME_ENDED = True
