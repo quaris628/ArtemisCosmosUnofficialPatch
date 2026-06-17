@@ -10,6 +10,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "carapaction_coil", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "carapaction_coil", addinv)
+        qlog(qlog_level_info(), "picked up carapaction_coil", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "carapaction_coil"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -21,6 +22,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "infusion_pcoils", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "infusion_pcoils", addinv)
+        qlog(qlog_level_info(), "picked up infusion_pcoils", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "infusion_pcoils"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -32,6 +34,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "tauron_focuser", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "tauron_focuser", addinv)
+        qlog(qlog_level_info(), "picked up tauron_focuser", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "tauron_focuser"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -43,6 +46,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "secret_codecase", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "secret_codecase", addinv)
+        qlog(qlog_level_info(), "picked up secret_codecase", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "secret_codecase"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -63,6 +67,7 @@
             addinv = get_inventory_value(COLLISION_SELECTED_ID, "hidens_powercell", 0)
             addinv += 1
             set_inventory_value(COLLISION_SELECTED_ID, "hidens_powercell", addinv)
+        qlog(qlog_level_info(), "picked up hidens_powercell", player_ship_id=ship_id)
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
         sbs.delete_object(COLLISION_ORIGIN_ID)
@@ -73,6 +78,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "vigoranium_nodule", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "vigoranium_nodule", addinv)
+        qlog(qlog_level_info(), "picked up vigoranium_nodule", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "vigoranium_nodule"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -84,6 +90,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "cetrocite_crystal", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "cetrocite_crystal", addinv)
+        qlog(qlog_level_info(), "picked up cetrocite_crystal", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "cetrocite_crystal"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -95,6 +102,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "lateral_array", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "lateral_array", addinv)
+        qlog(qlog_level_info(), "picked up lateral_array", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "lateral_array"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos
@@ -106,6 +114,7 @@
         addinv = get_inventory_value(COLLISION_SELECTED_ID, "haplix_overcharger", 0)
         addinv += 1
         set_inventory_value(COLLISION_SELECTED_ID, "haplix_overcharger", addinv)
+        qlog(qlog_level_info(), "picked up haplix_overcharger", player_ship_id=ship_id)
         signal_emit(signal_upgrade_count_increased(COLLISION_SELECTED_ID), data={"UPGRADE_TYPE": "haplix_overcharger"})
         tobj = sim.get_space_object(COLLISION_ORIGIN_ID)
         tpos = tobj.pos

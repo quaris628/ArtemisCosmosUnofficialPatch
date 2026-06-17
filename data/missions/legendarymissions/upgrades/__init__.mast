@@ -1,4 +1,5 @@
 import ../../common/library_function_patches.py
+import ../../common/q_logger.py
 
 import pickup_common.mast
 import upgrade.mast
