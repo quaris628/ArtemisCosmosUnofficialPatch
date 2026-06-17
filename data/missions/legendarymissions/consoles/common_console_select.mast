@@ -29,6 +29,8 @@ if CAN_CHANGE_CONSOLE:
 #
 
 ========= client_main ==========
+    qlog(qlog_level_info(), "connected", client_id=client_id)
+    
     # Assure the tab enabled variables object_exists
     # But don't overwrite ones set
     for con_tab in TAB_CONSOLES:
@@ -227,6 +229,7 @@ if CAN_CHANGE_CONSOLE:
     else:
         on gui_message(gui_button("ready")):
             console_ready = True
+            qlog(qlog_level_info(), "readied while game in progress", client_id=client_id)
             jump console_selected
 
     gui_section(style="area: 0,100-50px, 35,100;")
@@ -309,6 +312,9 @@ if CAN_CHANGE_CONSOLE:
 ====== game_started_console ====
     if not console_ready:
         jump select_console
+    
+    qlog(qlog_level_info(), "game started while ready", client_id=client_id)
+    
     #
     # This delay lets the server finish
     # building the map, some times 
@@ -322,7 +328,9 @@ if CAN_CHANGE_CONSOLE:
 
     if CONSOLE_SELECT is None or client_select_ship is None:
         jump select_console
-
+    
+    qlog(qlog_level_info(), f"jumping into the game on ship {client_selected_index} {CONSOLE_SELECT}", client_id=client_id)
+    
     _ship_id= None
     for player_ship in to_object_list(role("__PLAYER__")):
         if player_ship.name.lower() == client_select_ship.lower():
@@ -406,6 +414,10 @@ if CAN_CHANGE_CONSOLE:
     else:
         """ Invalid Console defined and selected"""
         await gui()
+
+//shared/signal/client_disconnect
+    qlog(qlog_level_info(), "DISconnected", client_id=client_id)
+    ->END
 
 =========== debug_mast =========
 
