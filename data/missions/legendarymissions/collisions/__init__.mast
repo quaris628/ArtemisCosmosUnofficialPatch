@@ -1,1 +1,3 @@
+import ../../common/q_logger.py
+
 import collision.mast
