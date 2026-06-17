@@ -129,5 +129,6 @@ damage: 0
             # task_schedule(asteroid_hit, {"asteroid_id": a, "damage": 10})
 
 //collision/passive if has_role(COLLISION_SOURCE_ID, "black_hole") and has_role(COLLISION_TARGET_ID, "cockpit")
+    qlog(qlog_level_info(), "being destroyed by black hole", player_craft_id=COLLISION_TARGET_ID)
     explode_player_ship(COLLISION_TARGET_ID)
     ->END
