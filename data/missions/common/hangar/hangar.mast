@@ -273,12 +273,14 @@ hangar_get_craft_data("terran")
     
 
 ==== launch_to_cockpit ======
-
+    
     jump show_hangar if ride_select is None
     jump show_hangar if not has_role(ride_select, "standby")
 
     jump show_hangar if not hangar_launch_craft(to_id(ride_select), client_id)
-
+    
+    qlog(qlog_level_info(), "launched", client_id=client_id, player_craft_id=to_id(ride_choice))
+    
     sbs.assign_client_to_ship(client_id,to_id(ride_select))
     set_inventory_value(ride_select, "client_id", client_id)
     set_dedicated_link(client_id, "craft_id", ride_select)
@@ -295,8 +297,6 @@ hangar_get_craft_data("terran")
     gui_row(style="row-height:50px;")
     brain = gui_button("icon_index:134;color:#fff", on_press="hangar_grid_select", data={"sel_role":"computer"}, is_sub_task=True)
     
-
-
     await gui()
 
 --- hangar_grid_select
@@ -333,7 +333,7 @@ hangar_get_craft_data("terran")
 
 
 //dock/hangar if has_roles(EVENT.parent_id, "cockpit")
-
+    
     fighter_so = to_object(EVENT.parent_id)
     ->END if fighter_so is None
     name = fighter_so.name
@@ -343,6 +343,8 @@ hangar_get_craft_data("terran")
 
 
     if hangar_attempt_dock_craft(fighter_so.id):
+        qlog(qlog_level_info(), "docked", player_craft_id=EVENT.parent_id)
+        
         fighter_client = get_inventory_value(fighter_so.id, "client_id")
         new_home = to_space_object(get_science_selection(fighter_so.id))
         
@@ -380,6 +382,7 @@ hangar_get_craft_data("terran")
             # TODO: Do we need to assign brains to the craft to return to its parent?
             # For now we'll just re-dock it immediately
             hangar_attempt_dock_craft(craft, None)
+            qlog(qlog_level_info(), "identified as stray due to client disconnect; auto-docking", player_craft_id=craft)
             continue
         #
         # check if this is the correct fighter
@@ -394,7 +397,9 @@ hangar_get_craft_data("terran")
 
         #TODO: Some people want the crafts to be left and need to be retrieved
         print("Craft console changed returning craft to hanger")
-
+        
+        qlog(qlog_level_info(), "identified as stray; auto-docking", player_craft_id=craft)
+        
         redocked = hangar_attempt_dock_craft(craft, None)
         #if redocked:
         #    print("redocked")
