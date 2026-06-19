@@ -1,4 +1,4 @@
-from sbs_utils.procedural.execution import get_shared_variable
+from sbs_utils.procedural.execution import get_shared_variable, set_shared_variable
 from sbs_utils.procedural.query import to_space_object
 import random
 
@@ -32,5 +32,21 @@ def get_location_text(t, tp, defa):
         
     return defa
 
-
-
+def get_civilian_callsign_and_name():
+    CIVILIAN_CALLSIGN_UNIQUE_NUMBER = get_shared_variable("CIVILIAN_CALLSIGN_UNIQUE_NUMBER")
+    SHIP_NAME_DATA = get_shared_variable("SHIP_NAME_DATA")
+    
+    # amount added must be coprime with the total number of possibilities
+    # to ensure all possible callsigns are used up before one is repeated
+    CIVILIAN_CALLSIGN_UNIQUE_NUMBER = (CIVILIAN_CALLSIGN_UNIQUE_NUMBER + 353) % 1200
+    set_shared_variable("CIVILIAN_CALLSIGN_UNIQUE_NUMBER", CIVILIAN_CALLSIGN_UNIQUE_NUMBER)
+    
+    letter_index, digits = divmod(CIVILIAN_CALLSIGN_UNIQUE_NUMBER, 100)
+    letter = "BCFGHJRSUVYZ"[letter_index]
+    
+    civname_list = SHIP_NAME_DATA.get("civilian")
+    name = civname_list.pop(random.randrange(len(civname_list)))
+    
+    callsign_and_name = f"{letter}{digits:02d} {name}"
+    
+    return callsign_and_name
