@@ -1,0 +1,32 @@
+# Default can also be terran
+terran:
+  - key: tsn_fighter
+    roles: fighter
+  - key: tsn_bomber
+    roles: bomber
+  - key: tsn_shuttle
+    roles: shuttle
+
+ximni:
+  - key: xim_avenger
+    roles: fighter
+  - key: xim_avenger
+    roles: bomber
+  - key: tsn_shuttle
+    roles: shuttle
+
+pirate:
+  - key: pirate_fighter
+    roles: fighter
+  - key: pirate_fighter
+    roles: bomber
+  - key: tsn_shuttle
+    roles: shuttle
+
+arvonian:
+  - key: arvonian_fighter
+    roles: fighter
+  - key: arvonian_fighter
+    roles: bomber
+  - key: tsn_shuttle
+    roles: shuttle

@@ -1,0 +1,20 @@
+
+        
+
+
+=== prefab_lifeform_generic
+" Generic definition of a lifeform.
+metadata: ```
+type: prefab/lifeform
+name: Lifeform
+desc:
+role_values: ""
+host_id: null
+face: null
+title_color: green
+message_color: white
+path: //comms/lifeform
+```
+    id = self.get_id()
+    lifeform_init(self, name, face, role_values, host_id, None, path, title_color, message_color)
+    yield result id

@@ -1,0 +1,6 @@
+import ../../common/library_function_patches.py
+
+import main_screen.mast
+import remote_console.mast
+import operator1.py
+import admin_console.mast
