@@ -19,10 +19,26 @@ OPERATOR_MODE:
     logo: "media/LegendaryMissions/operator"
     show_logo_on_main: true
     pin: "000000"
+#
+# Additional Lock down settings
+#
+SHIP_PICK_READ_ONLY: false
+CAN_CHANGE_CONSOLE: true
 
+### Very rough prototype of a comms interaction change 
+# COMMS_PROTOTYPE: true
+# ALLOW_CONSOLE_TABS: true
+
+# Use Brain based Damcons
+# This is a temporary setting 
+# The old version will be removed
+# after further play testing
+NEW_DAMCONS: true
 
 GAMEMASTER: 
     enable: true
+    beta: false
+    menu_icon_size: 45 # Pixels
 ### Uncomment the pin if you want the 
 ###Gamemaster to require a pin
     #pin: "000000"
