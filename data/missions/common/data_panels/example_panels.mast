@@ -3,7 +3,7 @@
 # a display panel
 
 @console/display_panels !0 ^110 "Display panels" 
-    " Display panels for of this ship
+    " Display panels for this ship
 
 
     gui_section( style=f"area: 0, 45px, 100, 100;")
