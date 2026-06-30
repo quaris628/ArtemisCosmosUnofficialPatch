@@ -108,7 +108,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "cc_timer", 300)
             cc_timer = get_inventory_value(ship_id, "cc_timer" )
             comms_broadcast(ship_id, "Carapaction Coil Activated", "#FF0")
-            task_schedule(cc_countdown)
+            task_schedule_server(cc_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -124,7 +124,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "ip_timer", 300)
             ip_timer = get_inventory_value(ship_id, "ip_timer" )
             comms_broadcast(ship_id, "Infusion P-Coils Activated", "#FF0")
-            task_schedule(ip_countdown)
+            task_schedule_server(ip_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
     else:
         if ip_timer > 0:
@@ -140,7 +140,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "tf_timer", 300)
             tf_timer = get_inventory_value(ship_id, "tf_timer" )
             comms_broadcast(ship_id, "Tauron Focuser Activated", "#FF0")
-            task_schedule(tf_countdown)
+            task_schedule_server(tf_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -156,7 +156,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "sc_timer", 300)
             sc_timer = get_inventory_value(ship_id, "sc_timer" )
             comms_broadcast(ship_id, "Secret Codecase Activated", "#FF0")
-            task_schedule(sc_countdown)
+            task_schedule_server(sc_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -178,7 +178,7 @@ shared UPGRADE_TAB_ENABLED = True
             if total_hp == 18: # Show warning message if DamCons already at full strength
                 set_inventory_value(ship_id, "vn_timer", 5)
                 vn_timer = get_inventory_value(ship_id, "vn_timer" )
-                task_schedule(vn_countdown)
+                task_schedule_server(vn_countdown)
             else: 
                 grid_restore_damcons(ship_id)
                 vn_count -= 1
@@ -198,7 +198,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "cl_timer", 300)
             cl_timer = get_inventory_value(ship_id, "cl_timer" )
             comms_broadcast(ship_id, "Cetrocite Crystal Activated", "#FF0")
-            task_schedule(cl_countdown)
+            task_schedule_server(cl_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
 
     else:
@@ -215,7 +215,7 @@ shared UPGRADE_TAB_ENABLED = True
             set_inventory_value(ship_id, "la_timer", 300)
             la_timer = get_inventory_value(ship_id, "la_timer" )
             comms_broadcast(ship_id, "Lateral Array Activated", "#FF0")
-            task_schedule(la_countdown)
+            task_schedule_server(la_countdown)
             signal_emit(signal_upgrade_activated(ship_id))
     
     else:
@@ -240,7 +240,7 @@ shared UPGRADE_TAB_ENABLED = True
             if fshield > fshieldmax or rshield > rshieldmax: # Show warning message if one/both shields are already over the max
                 set_inventory_value(ship_id, "ho_timer", 5)
                 ho_timer = get_inventory_value(ship_id, "ho_timer" )
-                task_schedule(ho_countdown)
+                task_schedule_server(ho_countdown)
             else: 
                 fshield += 300.0
                 rshield += 300.0
