@@ -69,7 +69,7 @@ metadata:``` yaml
 Properties:
     Player Ships: 'gui_int_slider("$text:int;low: 1.0;high:8.0;", var= "PLAYER_COUNT")'
     Difficulty: 'gui_int_slider("$text:int;low: 1.0;high:11.0;", var= "DIFFICULTY")'
-    Meeting Length:  'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT")'
+    Meeting Length:  'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT", listbox_container=gui_get_variable("map_options_listbox"))'
 ```
 
 ###################
