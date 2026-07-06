@@ -41,6 +41,8 @@
 !sbs_utils/**
 **/__pycache__/**
 
+!data/graphics/CosmosLogo.png
+
 !data/missions/common/**
 data/missions/common/dmx.py
 !data/missions/legendarymissions/**
