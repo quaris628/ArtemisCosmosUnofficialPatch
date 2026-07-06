@@ -74,7 +74,7 @@ def gui_properties_set(p=None, tag=None):
     
     # This happens in a follow_route_select_comms
     # And it runs on the server not a true comms console
-    if event is None or event.tag == "gui_present":
+    if event is None:
         return
     #print(f"TAG {event.tag}")
     changes = set(gui_task.get_variable("__PROP_CHANGES__", []))
