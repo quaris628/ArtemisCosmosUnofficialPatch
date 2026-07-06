@@ -13,6 +13,10 @@ def gui_represent(layout_item):
     """    
     layout_item.represent(FakeEvent(get_variable("client_id")))
 
+# for backwards compatibility with some older mod code
+def gui_represent_patched(layout_item):
+    gui_represent(layout_item)
+
 def gui_show(layout_item):
     """gui show. If the item is hidden it will make it visible again
 
