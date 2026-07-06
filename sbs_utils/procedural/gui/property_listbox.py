@@ -54,7 +54,7 @@ def _gui_properties_items(values=None):
     
 
 
-def gui_properties_set(p=None, tag=None):
+def gui_properties_set(p=None, tag=None, listbox_object=None):
     # 
     # This is confusing because of COMMS
     # Comms runs on the sever task, but the GUI needs 
@@ -83,11 +83,14 @@ def gui_properties_set(p=None, tag=None):
 
 
     with FrameContextOverride(FrameContext.client_task, FrameContext.client_page):
-        tag = tag if tag is not None else "__PROPS_LB__"
-        props_lb = gui_task.get_inventory_value(tag)
-        if props_lb is None:
-            # print(f"No properties found {gui_page.client_id}")
-            return
+        if listbox_object is not None:
+            props_lb = listbox_object
+        else:
+            tag = tag if tag is not None else "__PROPS_LB__"
+            props_lb = gui_task.get_inventory_value(tag)
+            if props_lb is None:
+                # print(f"No properties found {gui_page.client_id}")
+                return
         props_lb.items = _gui_properties_items(p)
         # Clear the on changes
         gui_represent(props_lb)
