@@ -200,7 +200,7 @@ if CAN_CHANGE_CONSOLE:
     ship_select_lb = gui_list_box(ship_list,"background:#1572;tag:sh_ship_list;", item_template=console_ship_select_template, title_template=console_ship_select_title_template, select=True)
 
     if len(ship_list)>0:
-        ship_select_lb.set_selected_index(client_selected_index)
+        ship_select_lb.set_value(PLAYER_LIST[client_selected_index])
 
 
     #
@@ -241,7 +241,7 @@ if CAN_CHANGE_CONSOLE:
             # Otherwise can refresh faster if adding ships
             ship_list = player_list_all[:PLAYER_COUNT]
             ship_select_lb.items = ship_list
-            ship_select_lb.set_selected_index(min(client_selected_index, len(ship_list)))
+            ship_select_lb.set_value(PLAYER_LIST[client_selected_index])
         
 
     on change console_select_lb.get_value():
