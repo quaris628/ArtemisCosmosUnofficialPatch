@@ -38,6 +38,8 @@
 # https://github.com/artemis-sbs/LegendaryMissions/issues/570
 !data/client_string_set.txt
 
+!data/graphics/CosmosLogo.png
+
 !data/missions/common/**
 data/missions/common/dmx.py
 !data/missions/legendarymissions/**
