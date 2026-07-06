@@ -94,8 +94,10 @@ def gui_properties_set(p=None, tag=None, listbox_object=None):
         props_lb.items = _gui_properties_items(p)
         # Clear the on changes
         gui_represent(props_lb)
-        
 
+# for backwards compatibility with some older mod code
+def gui_properties_set_patched(listbox_object, p=None):
+    gui_properties_set(p=p, tag=None, listbox_object=listbox_object)
 
 def _property_lb_item_template_one_line(item):
     
