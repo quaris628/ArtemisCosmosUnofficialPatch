@@ -324,12 +324,12 @@ if CAN_CHANGE_CONSOLE:
 ====== console_selected ====
     jump show_console_selected if len(PLAYER_LIST) ==0
 
-    if CONSOLE_SELECT is None or client_select_ship is None:
+    if CONSOLE_SELECT is None or client_selected_index is None:
         jump select_console
 
     _ship_id= None
     for player_ship in to_object_list(role("__PLAYER__")):
-        if player_ship.name.lower() == client_select_ship.lower():
+        if player_ship.id == client_selected_index:
             _ship_id = player_ship.id
 
 ## unlink previous ship
