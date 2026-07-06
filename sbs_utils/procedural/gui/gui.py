@@ -543,7 +543,7 @@ def gui(buttons=None, timeout=None):
     from ...futures import Promise
     page = FrameContext.page
     task = FrameContext.task
-    gui_task = FrameContext.client_task
+    gui_task = FrameContext.page.gui_task
 
 
     ret = GuiPromise(page, timeout)
