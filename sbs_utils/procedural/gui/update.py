@@ -1,4 +1,5 @@
 from ...helpers import FrameContext, FakeEvent
+from sbs_utils.procedural.execution import get_variable
 
 
 def gui_represent(layout_item):
@@ -10,34 +11,7 @@ def gui_represent(layout_item):
     Args:
         layout_item (layout_item): 
     """    
-    
-    #
-    # This get the client ID from the event
-    # To get the true client ID
-    # There was confusion when comms runs on  client_id 0
-    # but want to update the client's GUI
-    #
-    frame_event = FrameContext.context.event
-    if frame_event is None:
-        return
-    
-
-    event = frame_event
-    event_cl = FrameContext.context.event.client_id
-    page_cl = FrameContext.page.client_id
-    # Sometimes the event and page don' match
-    # if one is 0 the other is more likely correct
-    # Example: Manual beams Event is 0, but page is right
-    # Property Grid event is right, Page is wrong
-    if event_cl != page_cl:
-        actual_cl = max(event_cl, page_cl)
-        event = FakeEvent(actual_cl)
-
-    
-    #print(f"E: {event_cl} P: {page_cl}")
-    # region_cl = region.page.client_id
-    layout_item.represent(event)
-
+    layout_item.represent(FakeEvent(get_variable("client_id")))
 
 def gui_show(layout_item):
     """gui show. If the item is hidden it will make it visible again
