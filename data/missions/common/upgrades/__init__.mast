@@ -1,3 +1,5 @@
+import ../../common/gui_switching.py
+
 import pickup_common.mast
 import upgrade.mast
 
