@@ -201,6 +201,7 @@ if CAN_CHANGE_CONSOLE:
 
     if len(ship_list)>0:
         ship_select_lb.set_value(PLAYER_LIST[client_selected_index])
+        ship_select_lb.set_selected_index(ship_select_lb.get_selected_index()) # work around issue #428
 
 
     #
@@ -242,6 +243,7 @@ if CAN_CHANGE_CONSOLE:
             ship_list = player_list_all[:PLAYER_COUNT]
             ship_select_lb.items = ship_list
             ship_select_lb.set_value(PLAYER_LIST[client_selected_index])
+            ship_select_lb.set_selected_index(ship_select_lb.get_selected_index()) # work around issue #428
         
 
     on change console_select_lb.get_value():
