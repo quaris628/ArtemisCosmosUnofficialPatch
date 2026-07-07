@@ -204,27 +204,8 @@ display_name: HET
     await delay_sim(10)
     yield SUCCESS
 
-==== elite_tractor_start === 
-" Activate tractor
-metadata: ```
-type: elite/tractor
-display_name: Tractor
-```
-
-    # Fail early if nothing is near
-
-    #TODO: set tractor_target_uid
-    await delay_sim(10)
-
-
-    yield SUCCESS
-
---- clear
-    # Fail early if nothing is near
-
-    #TODO: Clear tractor_target_uid
-
-    yield SUCCESS
+# Tractor doesn't work, so remove it, to avoid misleading the science officer
+# https://github.com/artemis-sbs/LegendaryMissions/issues/54
 
 ==== elite_shield_drain_start === 
 " Activate shield drain
