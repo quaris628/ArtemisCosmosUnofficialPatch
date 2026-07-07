@@ -8,7 +8,9 @@ engine_abilities = {
         "elite_main_scn_invis": "Invs",
         "elite_drone_launcher": "Drones",
         "elite_anti_mine": "AntiMine",
-        "elite_anti_torpedo": "AntiTorp"
+        # Anti-torp doesn't work, so disable it, to avoid misleading the science officer
+        # https://github.com/artemis-sbs/LegendaryMissions/issues/406
+        #"elite_anti_torpedo": "AntiTorp"
 }
 
 abilities = {}
