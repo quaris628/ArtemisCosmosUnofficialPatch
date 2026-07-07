@@ -161,7 +161,7 @@ type: objective
 ```
   object_id = OBJECTIVE.get_inventory_value("objective:goto_object")
   if object_id is None:
-    object_ids = role("__player__") - broad_test_around(OBJECTIVE_AGENT_ID, 900,900)
+    object_ids = role("station") - broad_test_around(OBJECTIVE_AGENT_ID, 900,900)
     OBJECTIVE.set_inventory_value("desc", "")
   if OBJECTIVE.get_inventory_value("desc") == "":
     obj = to_object(object_id)
@@ -177,7 +177,7 @@ type: objective
 ```
   object_id = OBJECTIVE.get_inventory_value("objective:goto_object")
   if object_id is None:
-    object_ids = role("__player__") - broad_test_around(OBJECTIVE_AGENT_ID, 900,900)
+    object_ids = role("station") - broad_test_around(OBJECTIVE_AGENT_ID, 900,900)
     OBJECTIVE.set_inventory_value("desc", "")
   if OBJECTIVE.get_inventory_value("desc") == "":
     obj = to_object(object_id)
