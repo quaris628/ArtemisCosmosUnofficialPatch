@@ -29,7 +29,6 @@ objective:
       choices:
         - deliver_lifeform
         - deliver_resource
-        - deliver_ammo
         - goto_station
 ```
   default ship_art = "cargo_ship"
@@ -186,6 +185,8 @@ type: objective
   jump goto_random_object
 
 
+# Disabled, to avoid misleading players into thinking
+# this affects station/player ordinance stocks
 === deliver_ammo
 metadata: ```
 type: objective
