@@ -1,4 +1,4 @@
-@map/sandbox "Game master sandbox"
+@map/sandbox "Game Master Sandbox"
 " Creates a small map with no enemies. Useful in game mastered games using the Admiral Console
 " The map will contain players ships, stations, and friendly ships
 " To end the game, use the Admiral command end game 
