@@ -133,7 +133,7 @@ helm_movement_steer_left                | KEY_A                     | turns the 
 helm_movement_steer_right               | KEY_D                     | turns the ship right
 helm_movement_steer_up                  | KEY_S                     | turns the ship up
 main_screen_control_camera_chase        | KEY_8                     | changes camera view to outside the player ship
-main_screen_control_camera_cinematic    | KEY_0                     | changes camera view to cinematic mode
+main_screen_control_camera_cinematic    | KEY_N KEY_CONTROL KEY_SHIFT | changes camera view to cinematic mode
 main_screen_control_camera_inside       | KEY_7                     | changes camera view to inside the player ship
 main_screen_control_camera_tracking     | KEY_9                     | changes camera view to track the weapon target
 main_screen_control_look_back           | KEY_P                     | changes camera angle to back
