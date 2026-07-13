@@ -132,10 +132,10 @@ helm_movement_steer_down                | KEY_W                     | turns the 
 helm_movement_steer_left                | KEY_A                     | turns the ship left
 helm_movement_steer_right               | KEY_D                     | turns the ship right
 helm_movement_steer_up                  | KEY_S                     | turns the ship up
-main_screen_control_camera_chase        | KEY_8                     | changes camera view to outside the player ship
+main_screen_control_camera_chase        | KEY_G                     | changes camera view to outside the player ship
 main_screen_control_camera_cinematic    | KEY_N KEY_CONTROL KEY_SHIFT | changes camera view to cinematic mode
-main_screen_control_camera_inside       | KEY_7                     | changes camera view to inside the player ship
-main_screen_control_camera_tracking     | KEY_9                     | changes camera view to track the weapon target
+main_screen_control_camera_inside       | KEY_H                     | changes camera view to inside the player ship
+main_screen_control_camera_tracking     | KEY_T                     | changes camera view to track the weapon target
 main_screen_control_look_back           | KEY_P                     | changes camera angle to back
 main_screen_control_look_forward        | KEY_U                     | changes camera angle to front
 main_screen_control_look_left           | KEY_Y                     | changes camera angle to left
@@ -176,18 +176,35 @@ throttle_warp2                          | KEY_2                     | toggles wa
 throttle_warp3                          | KEY_3                     | toggles warp level 3
 throttle_warp4                          | KEY_4                     | toggles warp level 4
 weapon_control_fire_tube_1              | KEY_1 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_10             | KEY_0 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_fire_tube_2              | KEY_2 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_fire_tube_3              | KEY_3 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_fire_tube_4              | KEY_4 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_5              | KEY_5 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_6              | KEY_6 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_7              | KEY_7 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_8              | KEY_8 KEY_CONTROL         | Launches the torpedo in this tube
+weapon_control_fire_tube_9              | KEY_9 KEY_CONTROL         | Launches the torpedo in this tube
 weapon_control_load_tube_1              | KEY_1 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_10             | KEY_0 KEY_SHIFT           | Activates the tube to load or unload
 weapon_control_load_tube_2              | KEY_2 KEY_SHIFT           | Activates the tube to load or unload
 weapon_control_load_tube_3              | KEY_3 KEY_SHIFT           | Activates the tube to load or unload
 weapon_control_load_tube_4              | KEY_4 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_5              | KEY_5 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_6              | KEY_6 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_7              | KEY_7 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_8              | KEY_8 KEY_SHIFT           | Activates the tube to load or unload
+weapon_control_load_tube_9              | KEY_9 KEY_SHIFT           | Activates the tube to load or unload
 weapon_control_torp_type_1              | KEY_1 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
+weapon_control_torp_type_10             | KEY_0 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
 weapon_control_torp_type_2              | KEY_2 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
 weapon_control_torp_type_3              | KEY_3 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
 weapon_control_torp_type_4              | KEY_4 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
 weapon_control_torp_type_5              | KEY_5 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
+weapon_control_torp_type_6              | KEY_6 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
+weapon_control_torp_type_7              | KEY_7 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
+weapon_control_torp_type_8              | KEY_8 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
+weapon_control_torp_type_9              | KEY_9 NOT KEY_CONTROL NOT KEY_SHIFT | selects the torpedo type for loading
 
 
 
