@@ -34,6 +34,8 @@ class CardLabelBase(DecoratorLabel):
     def test(self, task):
         if self.code is None:
             return True
+        from data.missions.common.q_logger import _qlog_mast_line
+        _qlog_mast_line(f"eval_code card_base file self={self.__dict__}")
         return task.eval_code(self.code)
 
     def generate_label_end_cmds(self, compile_info=None):

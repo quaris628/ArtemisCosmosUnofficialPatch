@@ -176,6 +176,8 @@ class Button(MastNode):
 
     def resolve_data_context(self, task):
         if self.data is not None and not isinstance(self.data, dict):
+            from data.missions.common.q_logger import _qlog_mast_line
+            _qlog_mast_line(f"eval_code button resolve_data_context self.data={self.data}")
             self.data = task.eval_code(self.data)
             self.message = task.format_string(self.message)
             self.color = task.format_string(self.color)
@@ -188,6 +190,8 @@ class Button(MastNode):
     def run(self, task, button_promise):
         task_data = self.data
         if self.data is not None and not isinstance(self.data, dict):
+            from data.missions.common.q_logger import _qlog_mast_line
+            _qlog_mast_line(f"eval_code button run self.data={self.data}")
             task_data = task.eval_code(self.data)
         if self.promise is not None:
             self.promise.set_result(self)

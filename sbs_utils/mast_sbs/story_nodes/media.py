@@ -107,6 +107,8 @@ class MediaLabel(DecoratorLabel):
 
     def test(self, task):
         if self.code is not None:
+            from data.missions.common.q_logger import _qlog_mast_line
+            _qlog_mast_line(f"eval_code media self={self.__dict__}")
             if not task.eval_code(self.code):
                 return False
         return self.test_file()

@@ -153,3 +153,6 @@ def _qlog_is_log_file_old(filepath):
 def _qlog_extract_creation_time_from_log_file(filepath):
     with open(filepath, "r") as f:
         return float(f.readline())
+
+def _qlog_mast_line(mast_line):
+    qlog(qlog_level_debug(), mast_line)

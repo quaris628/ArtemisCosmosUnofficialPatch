@@ -608,6 +608,8 @@ class Mast():
 
 
     def compile(self, lines, file_name, root):
+        from data.missions.common.q_logger import _qlog_mast_line
+        _qlog_mast_line(f"compile lines={lines} file_name={file_name} root={root}")
         # Catching compiler errors lower to give better error message
         errors = []
         try:

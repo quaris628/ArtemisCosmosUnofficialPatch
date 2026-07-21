@@ -5,7 +5,6 @@ from ...futures import Promise
 from ..mast_globals import MastGlobals
 import re
 
-
 PY_EXP_REGEX = r"""((?P<py>~~)[\s\S]*?(?P=py))"""
 YAML_EXP_REGEX = r"""((?P<yaml>```)\s*yaml\s*[\s\S]*?(?P=yaml))"""
     
@@ -91,6 +90,9 @@ class AssignRuntimeNode(MastRuntimeNode):
             return PollResults.OK_ADVANCE_TRUE
 
         if not self.promise:
+            
+            from data.missions.common.q_logger import _qlog_mast_line
+            _qlog_mast_line(f"eval_code assign file {node.file_num} line {node.line_num}: {node.line}")
             value = task.eval_code(node.code)
             if node.is_await and isinstance(value, Promise):
                 self.promise = value
@@ -109,6 +111,9 @@ class AssignRuntimeNode(MastRuntimeNode):
         if node.oper != Assign.EQUALS or node.is_default:
             # Value should be set by here
             if "." in node.lhs or "[" in node.lhs:
+                
+                from data.missions.common.q_logger import _qlog_mast_line
+                _qlog_mast_line(f"eval_code assign lhs file {node.file_num} line {node.line_num}: {node.lhs}")
                 start = task.eval_code(f"""{node.lhs}""")
             else:
                 start = task.get_variable(node.lhs, (None,))

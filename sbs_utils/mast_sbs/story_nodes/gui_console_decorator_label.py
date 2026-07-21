@@ -76,5 +76,7 @@ class GuiConsoleDecoratorLabel(DecoratorLabel):
     def test(self, task):
         if self.code is None:
             return True
+        from data.missions.common.q_logger import _qlog_mast_line
+        _qlog_mast_line(f"eval_code gui_console_decorator_label {self.name}")
         return task.eval_code(self.code)
 

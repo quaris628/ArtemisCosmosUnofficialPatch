@@ -86,6 +86,8 @@ class IfStatementsRuntimeNode(MastRuntimeNode):
         for i in node.if_chain:
             test_node = i # task.mast_ticker.cmds[i]
             if test_node.code:
+                from data.missions.common.q_logger import _qlog_mast_line
+                _qlog_mast_line(f"eval_code conditional if file {node.file_num} line {node.line_num}: {node.line}")
                 value = task.eval_code(test_node.code)
                 if value:
                     cmd_to_run = i
@@ -185,6 +187,8 @@ class MatchStatementsRuntimeNode(MastRuntimeNode):
         for i in node.chain:
             test_node = i # task.mast_ticker.cmds[i]
             if test_node.code:
+                from data.missions.common.q_logger import _qlog_mast_line
+                _qlog_mast_line(f"eval_code conditional match file {node.file_num} line {node.line_num}: {node.line}")
                 value = task.eval_code(test_node.code)
                 if value:
                     cmd_to_run = i
