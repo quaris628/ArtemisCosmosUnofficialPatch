@@ -9,6 +9,41 @@ from sbs_utils.fs import get_mission_name
 from sbs_utils.procedural.execution import logger, log
 from sbs_utils.procedural.query import to_space_object, to_grid_object
 
+# ----- constants -----
+
+# Log levels can't be an enum b/c enums aren't accessible in mast
+
+# Problem. The sim cannot possibly continue
+def qlog_level_critical():
+    return 5
+
+# Problem. The sim can continue
+def qlog_level_error():
+    return 4
+
+# Likely or potential problem. The sim can continue
+def qlog_level_warn():
+    return 3
+
+# Not a problem
+def qlog_level_info():
+    return 2
+
+# Very small details for targeted bug investigations
+def qlog_level_debug():
+    return 1
+
+def qlog_get_level_abbrev(level):
+    return {
+        5: "CRIT",
+        4: "ERRO",
+        3: "WARN",
+        2: "INFO",
+        1: "DEBG",
+    }[level]
+
+# Only information at or above this level will be logged
+_QLOG_LOWEST_LEVEL = qlog_level_info()
 
 # ----- public -----
 
@@ -48,6 +83,10 @@ def initialize_qlog():
             qlog(qlog_level_info(), f"Will NOT delete hard-server-crash-stack-trace file because it appears to contain some data")
 
 def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id=None, grid_object_id=None, player_craft_id=None):
+    if level < _QLOG_LOWEST_LEVEL:
+        return
+    
+    level_abbrev = qlog_get_level_abbrev(level)
     client_id_prefix = ""
     player_ship_prefix = ""
     non_player_ship_prefix = ""
@@ -74,35 +113,12 @@ def qlog(level, message, player_ship_id=None, client_id=None, non_player_ship_id
     
     # Try to minimize how many intermediate string values are created, for performance
     if level in {qlog_level_critical(), qlog_level_error(), qlog_level_warn()}:
-        message = f"[{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
+        message = f"[{level_abbrev}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
         print(message)
         full_message = f"[{datetime.now()}] {message}"
     else:
-        full_message = f"[{datetime.now()}] [{level}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
+        full_message = f"[{datetime.now()}] [{level_abbrev}] {client_id_prefix}{player_ship_prefix}{non_player_ship_prefix}{grid_object_prefix}{player_craft_prefix}{message}"
     log(message=full_message, name=_QLOG_LOGGER_NAME)
-
-# Problem. The sim cannot possibly continue
-def qlog_level_critical():
-    return "CRIT"
-
-# Problem. The sim can continue
-def qlog_level_error():
-    return "ERRO"
-
-# Likely or potential problem. The sim can continue
-def qlog_level_warn():
-    return "WARN"
-
-# Not a problem
-def qlog_level_info():
-    return "INFO"
-
-# Very small details for targeted bug investigations
-# I don't anticpate this being used much; you probably want print() instead,
-# unless you're not able to reproduce in your development working copy.
-def qlog_level_debug():
-    return "DEBG"
-
 
 # ----- private -----
 
