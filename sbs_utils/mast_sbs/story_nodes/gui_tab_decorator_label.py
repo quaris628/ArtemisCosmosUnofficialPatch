@@ -54,5 +54,7 @@ class GuiTabDecoratorLabel(DecoratorLabel):
     def test(self, task):
         if self.code is None:
             return True
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code guI_tab_decorator_label file self={self.__dict__}")
         return task.eval_code(self.code)
 

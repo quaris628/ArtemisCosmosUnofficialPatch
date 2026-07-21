@@ -89,6 +89,9 @@ class AwaitRuntimeNode(MastRuntimeNode):
         self.promise = None
         if node.is_end:
             return
+        
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code await enter file {node.file_num} line {node.line_num}: {node.line}")
         value = task.eval_code(node.code)
         if isinstance(value, Promise):
             self.promise = value
@@ -113,6 +116,8 @@ class AwaitRuntimeNode(MastRuntimeNode):
             else:
                 return PollResults.OK_RUN_AGAIN
         
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code await file {node.file_num} line {node.line_num}: {node.line}")
         value = task.eval_code(node.code)
         if value:
             task.jump(task.active_label, node.dedent_loc)

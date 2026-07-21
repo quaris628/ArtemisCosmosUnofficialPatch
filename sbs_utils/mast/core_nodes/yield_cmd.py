@@ -55,10 +55,14 @@ class Yield(MastNode):
 class YieldRuntimeNode(MastRuntimeNode):
     def poll(self, mast, task, node:Yield):
         if node.if_code:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), f"eval_code yield if file {node.file_num} line {node.line_num}: {node.line}")
             value = task.eval_code(node.if_code)
             if not value:
                 return PollResults.OK_ADVANCE_TRUE
         if node.code is not None:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), f"eval_code yield code file {node.file_num} line {node.line_num}: {node.line}")
             value = task.eval_code(node.code)
             task.yield_results = value
         if node.result.lower() == 'fail':
