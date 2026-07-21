@@ -84,6 +84,8 @@ if TYPE_CHECKING:
 @mast_runtime_node(WithStart)
 class WithStartRuntimeNode(MastRuntimeNode):
     def poll(self, mast, task, node:WithStart):
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code with file {node.file_num} line {node.line_num}: {node.line}")
         value = task.eval_code(node.code)
         if value is None:
             return PollResults.OK_ADVANCE_TRUE

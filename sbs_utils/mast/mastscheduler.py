@@ -16,16 +16,20 @@ from .mast_runtime_node import MastRuntimeNode
 from .mast_globals import MastGlobals
     
     
-    
 class ChangeRuntimeNode(MastRuntimeNode):
     def enter(self, mast:Mast, task:MastAsyncTask, node):
         self.task = task
         self.node = node
+        
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"mastscheduler ChangeRuntimeNode enter node={node.__dict__}")
         self.value = task.eval_code(node.value) 
         self.node_label = task.active_label
 
     def test(self):
         prev = self.value
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"mastscheduler ChangeRuntimeNode test node={node.__dict__}")
         self.value = self.task.eval_code(self.node.value) 
         return prev!=self.value
         
@@ -943,6 +947,8 @@ class MastAsyncTask(Agent, Promise):
 
     def exec_code(self, code, vars, gbls):
         try:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), code)
             if vars is not None:
                 allowed = vars | self.get_symbols()
             else:                

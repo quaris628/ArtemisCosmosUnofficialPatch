@@ -63,6 +63,8 @@ class OnChangeRuntimeNode(MastRuntimeNode):
         self.is_running = False
         self.node_label = self.task.active_label
         if not node.is_end:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), f"eval_code on_change enter file {node.file_num} line {node.line_num}: {node.line}")
             self.value = task.eval_code(node.value)
             # Triggers handle things themselves
             if not isinstance(self.value, Trigger):  
@@ -81,6 +83,8 @@ class OnChangeRuntimeNode(MastRuntimeNode):
     def test(self):
         prev = self.value
         self.is_running = False
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code on_change test file {self.node.file_num} line {self.node.line_num}: {self.node.line}")
         self.value = self.task.eval_code(self.node.value) 
         return prev!=self.value
     

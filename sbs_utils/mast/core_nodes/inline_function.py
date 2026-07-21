@@ -30,6 +30,8 @@ class FuncCommandRuntimeNode(MastRuntimeNode):
         
     def enter(self, mast, task:MastAsyncTask, node:FuncCommand):
         self.is_await = node.is_await
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code inline_function enter {node.file_num} line {node.line_num}: {node.line}")
         value = task.eval_code(node.code)
         self.promise = None
         if isinstance(value, Promise):
@@ -49,6 +51,8 @@ class FuncCommandRuntimeNode(MastRuntimeNode):
             else:
                 return PollResults.OK_RUN_AGAIN
 
+        from data.missions.common.q_logger import qlog, qlog_level_debug
+        qlog(qlog_level_debug(), f"eval_code inline_function poll {node.file_num} line {node.line_num}: {node.line}")
         value = task.eval_code(node.code)
         if value:
             return PollResults.OK_ADVANCE_TRUE

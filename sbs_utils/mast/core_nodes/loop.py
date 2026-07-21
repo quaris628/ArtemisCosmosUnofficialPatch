@@ -116,6 +116,8 @@ class LoopStartRuntimeNode(MastRuntimeNode):
                 task.set_value(node.name, -1, Scope.TEMP)
                 task.set_value(node.name+"__iter", True, Scope.TEMP)
             else:
+                from data.missions.common.q_logger import qlog, qlog_level_debug
+                qlog(qlog_level_debug(), f"eval_code loop start enter {node.file_num} line {node.line_num}: {node.line}")
                 value = task.eval_code(node.code)
                 try:
                     _iter = iter(value)
@@ -132,6 +134,8 @@ class LoopStartRuntimeNode(MastRuntimeNode):
             current += 1
             task.set_value(node.name, current, Scope.TEMP)
             if node.code:
+                from data.missions.common.q_logger import qlog, qlog_level_debug
+                qlog(qlog_level_debug(), f"eval_code loop start poll {node.file_num} line {node.line_num}: {node.line}")
                 value = task.eval_code(node.code)
                 if value == False:
                     inline_label = f"{task.active_label}:{node.name}"
@@ -181,6 +185,8 @@ class LoopBreakRuntimeNode(MastRuntimeNode):
 
     def poll(self, mast, task, node:LoopBreak):
         if node.if_code:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), f"eval_code loop break {node.file_num} line {node.line_num}: {node.line}")
             value = task.eval_code(node.if_code)
             if not value:
                 return PollResults.OK_ADVANCE_TRUE

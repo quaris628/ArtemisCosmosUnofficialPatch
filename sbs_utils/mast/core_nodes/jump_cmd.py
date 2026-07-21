@@ -33,6 +33,8 @@ if TYPE_CHECKING:
 class JumpRuntimeNode(MastRuntimeNode):
     def poll(self, mast:'Mast', task:'MastAsyncTask', node:Jump):
         if node.if_code:
+            from data.missions.common.q_logger import qlog, qlog_level_debug
+            qlog(qlog_level_debug(), f"eval_code jump if {node.file_num} line {node.line_num}: {node.line}")
             value = task.eval_code(node.if_code)
             if not value:
                 return PollResults.OK_ADVANCE_TRUE
