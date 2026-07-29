@@ -84,7 +84,7 @@
     torp_name = _torp_types[torp_type].strip()
 
 
-    set_inventory_value(CRAFT_ID, "briefing", f"Deliver {torp_name} to {sel_o.name}^Take the {amount} {torp_name} and delivery them to {sel_o.name}.")
+    set_inventory_value(CRAFT_ID, "briefing", f"Deliver {torp_name} to {sel_o.name}^Take the {amount} {torp_name} and deliver them to {sel_o.name}.")
     mission_objective = f"Deliver {torp_name} to {sel_o.name}"
     set_inventory_value(CRAFT_ID, "current_objective", f"Deliver {torp_name} to {sel_o.name}")
     mission_objective = f"delivered {amount} {torp_name} to {sel_o.name}"
@@ -149,7 +149,7 @@
 
     life_form_name = random.choice(life_forms)
 
-    set_inventory_value(CRAFT_ID, "briefing", f"Deliver {life_form_name} to {sel_o.name}^Take the {life_form_name} and delivery them to {sel_o.name}.")
+    set_inventory_value(CRAFT_ID, "briefing", f"Deliver {life_form_name} to {sel_o.name}^Take the {life_form_name} and deliver them to {sel_o.name}.")
     mission_objective =  f"Deliver {life_form_name} to {sel_o.name}"
     set_inventory_value(CRAFT_ID, "current_objective", f"Deliver {life_form_name} to {sel_o.name}")
 
