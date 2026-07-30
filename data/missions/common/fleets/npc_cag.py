@@ -94,13 +94,14 @@ class NpcCAG(Agent):
 #                        target_ref = to_object(target_id)
 
 
-                inactive = self.get_link_set("inactive_fighter_list")
+                inactive = list(e.get_link_set("inactive_fighter_list"))
                 if len(inactive) > 0:
                     for f in inactive:
                         self.add_link("active_fighter_list", f)
-                        self.remove_link("inactive_fighter_list", f)
+                        e.remove_link("inactive_fighter_list", f)
                         craft = to_object(f)
                         sbs.retrieve_from_standby_list(craft.engine_object)
+                        craft.pos = Vec3(start_pos.x, start_pos.y, start_pos.z)
                         add_role(f, carrier_side)
                         set_timer(f, "bingo", seconds=120)
                         target(f, target_id)
@@ -135,8 +136,10 @@ class NpcCAG(Agent):
         for fighter_id in fighter_set:
             craft = to_object(fighter_id)            
             if craft is None:
+                self.remove_link("active_fighter_list", fighter_id)
                 continue
             if not object_exists(craft):
+                self.remove_link("active_fighter_list", fighter_id)
                 continue
 
 
@@ -172,8 +175,8 @@ class NpcCAG(Agent):
                 remove_role(fighter_id, "raider")
 
                 set_timer(carrier, "fighter_refit",seconds=60)
-                carrier.remove_link("active_fighter_list", fighter_id)
-                carrier.add_link( "inactive_fighter_list", fighter_id)
+                self.remove_link("active_fighter_list", fighter_id)
+                carrier.add_link("inactive_fighter_list", fighter_id)
                 # unlink(e, "my_carrier", to_id(carrier))
                 sbs.push_to_standby_list(craft.engine_object)
                 # sbs.delete_object(fighter_id)
