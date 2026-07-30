@@ -108,7 +108,7 @@ class NpcCAG(Agent):
                 else:
                     for g in range(fighter_count):
                         # launch an npc fighter
-                        nam = f"{e.name} {str(random.randint(0,99)).zfill(2)}"
+                        nam = f"{e.name} {str(g + 1).zfill(2)}"
                         spawn_data = npc_spawn(start_pos.x, start_pos.y, start_pos.z, nam, f"{carrier_side}, fighter", fighter_key, "behav_npcship")
                         spawn_id = to_id(spawn_data)
                         # link them to me
