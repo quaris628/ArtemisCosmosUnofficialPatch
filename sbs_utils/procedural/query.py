@@ -124,10 +124,16 @@ def to_object(other: Agent | CloseData | int):
     """    
     py_object = other
     if isinstance(other, Agent):
+        if Agent.get(other.id) is None:
+            return None
         py_object = other
     elif isinstance(other, CloseData):
+        if Agent.get(other.id) is None:
+            return None
         py_object = other.py_object
     elif isinstance(other, SpawnData):
+        if Agent.get(other.id) is None:
+            return None
         py_object = other.py_object
     elif other==0:
         return None
