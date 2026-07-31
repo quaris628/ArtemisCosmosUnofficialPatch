@@ -133,7 +133,9 @@ def to_object(other: Agent | CloseData | int):
         return None
     else:
         # should return space object or grid object
-        py_object = Agent.get(other)
+        return Agent.get(other)
+    
+    py_object._check_for_use_after_free()
     return py_object
 
 
@@ -259,6 +261,7 @@ def get_engine_data_set(id_or_obj):
         data_set: The data set for the object.
     """
     if isinstance(id_or_obj, SpawnData):
+        id_or_obj._check_for_use_after_free()
         return id_or_obj.blob
     object = to_object(id_or_obj)
     if object is not None:
