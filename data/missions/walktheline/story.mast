@@ -203,7 +203,7 @@ Properties:
         player = to_object(player_id)
         continue if player is None
         if has_role(player_id, "__player__"):
-            docking_set_docking_logic(player_id, phoenix_id, docking_dock_with_friendly_station)
+            docking_set_docking_logic(player_id, role("station"), docking_dock_with_friendly_station)
         link(player_id, "extra_scan_source", phoenix_id)
 
 
