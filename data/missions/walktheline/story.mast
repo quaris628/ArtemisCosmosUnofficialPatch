@@ -161,7 +161,6 @@ Properties:
     friendly_value = terrain_to_value(FRIENDLY_SELECT)
     upgrade_value = terrain_to_value(UPGRADE_SELECT)
 
-    upgrade_value = 0
     num_upgrade = 0
     if upgrade_value==1:
         num_upgrade = random.randint(1,3)
@@ -220,7 +219,6 @@ Properties:
     terrain_spawn_nebula_scatter(cluster_spawn_points,500)
 
     # create candy  ----------------------------------------------------------------------------------------------------
-    num_upgrade = 5
     spawn_points = scatter.box(num_upgrade,  next_pos.x, next_pos.y, next_pos.z, 10000,1000,10000, centered=True)
     upgrade_list = ["carapaction_coil", "infusion_pcoils", "tauron_focuser", "secret_codecase", "hidens_powercell", "vigoranium_nodule", "cetrocite_crystal", "lateral_array", "haplix_overcharger"]
 
