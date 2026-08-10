@@ -252,7 +252,7 @@ Properties:
 
 
 # create black holes
-    if random.randrange(0,100) > 66:
+    if lethal_value > 0 and random.randrange(0,100) > 66:
         bhPos = next_pos.rand_offset(2000,3000, ring=True)
         terrain_spawn_black_hole(*bhPos.xyz, gravity_radius= 1500, gravity_strength=1.0, turbulence_strength= 1.0, collision_damage=200)
 
