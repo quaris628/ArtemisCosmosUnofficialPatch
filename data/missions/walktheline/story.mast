@@ -60,7 +60,15 @@ Properties:
     Upgrades: 'gui_drop_down("$text: {UPGRADE_SELECT};list: none, few, some, lots, max", var= "UPGRADE_SELECT")'
     Time Limit: 'gui_input("desc: Minutes;", var="GAME_TIME_LIMIT", listbox_container=gui_get_variable("map_options_listbox"))'
 ```
-
+    
+    if seed_value != 0:
+        random.seed(seed_value)
+        print(f"Seed Value: {seed_value}")
+    else:
+        seed_value = random.randint(1,99999)
+        random.seed(seed_value)
+        print(f"Random Seed Value: {seed_value}")
+    
 # create new station and enemies function----------------------------------------------------------------------------------------------------
     task_schedule(create_new_station)
 
@@ -173,16 +181,7 @@ Properties:
 
     if upgrade_value==4:
         num_upgrade = random.randint(10,15)
-
-    if seed_value != 0:
-        random.seed(seed_value)
-        print(f"Seed Value: {seed_value}")
-    else:
-        seed_value = random.randint(1,99999)
-        random.seed(seed_value)
-        print(f"Random Seed Value: {seed_value}")
-
-
+    
     #make name
     nName = f"Border Outpost {num_stations_spawned+1}"
 
