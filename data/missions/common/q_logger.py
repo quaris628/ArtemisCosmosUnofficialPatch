@@ -163,8 +163,13 @@ def _qlog_is_log_file_old(filepath):
     except:
         qlog(qlog_level_warn(), f"Could not extract log creation timestamp from file '{filepath}'. It will not get deleted automatically. Consider deleting it manually, or move it to a different directory if it's not a log file.")
         return False
-    # 60s * 60m * 24h = 86400s in one day
-    return creation_time < time() - 86400
+    
+    if filepath.endswith(f"{_QLOG_HARD_CRASH_STACK_TRACE_FILENAME_SUFFIX}.txt"):
+        # 60s * 60m * 24h * 7 = 604800s in one week
+        return creation_time < time() - 604800
+    else:
+        # 60s * 60m * 24h = 86400s in one day
+        return creation_time < time() - 86400
 
 def _qlog_extract_creation_time_from_log_file(filepath):
     with open(filepath, "r") as f:
