@@ -210,10 +210,22 @@ class Agent():
 
     @classmethod
     def _remove(cls, id):
-        Agent.all.pop(id, None) #Allow remove if not added
-        ## TODO: Remove from inventory, and links
+        if id not in Agent.all:
+            return
+        
+        # Clear roles
         Agent.roles.remove_every_collection(id)
-
+        
+        ## TODO: Remove from inventory, and links
+        
+        # Clear from to_object() lookups
+        Agent.all.pop(id, None)
+        
+        # Clear grid objects contained within
+        if is_space_object_id(id):
+            for grid_object_id in grid_objects(id):
+                Agent._remove(grid_object_id)
+    
     ########## ROLES ########################
     def add_role(self, role: str):
         """ Add a role to the space object
@@ -600,3 +612,41 @@ def clear_shared():
     Agent.SHARED = Agent()
     Agent.SHARED.id = Agent.SHARED_ID
     Agent.SHARED.add()
+
+# Copied from sbs_utils/procedural/grid.py
+# (Can't import b/c circular dependency)
+from sbs_utils.helpers import FrameContext
+def grid_objects(so_id) -> set[int]:
+    """Get a set of agent ids of the grid objects on the specified ship
+
+    Args:
+        so_id (Agent | int): agent id or object
+
+    Returns:
+        set[int]: a set of agent ids
+    """
+    gos = set()
+    #hm = FrameContext.context.sbs.get_hull_map(to_id(so_id))
+    hm = FrameContext.context.sbs.get_hull_map(so_id)
+    if hm is None:
+        return gos
+    count = hm.get_grid_object_count()
+    for i in range(count):
+        go = hm.get_grid_object_by_index(i)
+        gos.add(go.unique_ID)
+    return gos
+
+# Copied from sbs_utils/procedural/query.py
+# (Can't import b/c circular dependency)
+def is_space_object_id(id):
+    """
+    Checks if the agent is a space object id
+    Args:
+        id (Agent | int): Agent id or object
+    Returns:
+        bool: True if it is a space object
+    """
+    #id = to_id(id)
+    if id is None:
+        return False
+    return (id & 0x4000000000000000)!=0
