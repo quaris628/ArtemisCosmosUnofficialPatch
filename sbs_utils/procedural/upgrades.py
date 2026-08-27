@@ -17,6 +17,13 @@ from sbs_utils.procedural.modifiers import modifier_remove, modifier_add
 
 class Upgrade(Agent):
     def __init__(self, agent_id, label, data):
+        # Notably, this constructor doesn't call super().__init()
+        # which means it doesn't initialize the links, inventory,
+        # _data_set, _engine_object, or _alive properties.
+        # Seems like a bug... but I'll leave it alone until I
+        # see/understand what the symptoms of this are.
+        # - Quaris
+        self._alive = True
         self.agent_id = agent_id
         self.label = label #Label could have metadata
         self.data = data
