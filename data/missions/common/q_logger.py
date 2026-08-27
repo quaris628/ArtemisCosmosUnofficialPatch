@@ -175,5 +175,12 @@ def _qlog_extract_creation_time_from_log_file(filepath):
     with open(filepath, "r") as f:
         return float(f.readline())
 
+_LAST_MAST_LINE = None
 def _qlog_mast_line(mast_line):
+    global _LAST_MAST_LINE
+    _LAST_MAST_LINE = mast_line
     qlog(qlog_level_debug(), mast_line)
+
+def _qlog_get_last_mast_line():
+    global _LAST_MAST_LINE
+    return _LAST_MAST_LINE
