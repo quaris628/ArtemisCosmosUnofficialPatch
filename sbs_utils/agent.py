@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from traceback import format_stack
+
 task_ids = 0x0080000000000000
 def get_task_id():
     global task_ids
@@ -142,6 +144,7 @@ class Agent():
         self.inventory = Stuff(True)
         self._data_set = None
         self._engine_object = None
+        self._alive = True
 
 
     def __getitem__(self, index):
@@ -212,11 +215,14 @@ class Agent():
     def _remove(cls, id):
         if id not in Agent.all:
             return
+        agent_object = Agent.all[id]
         
         # Clear roles
         Agent.roles.remove_every_collection(id)
         
         ## TODO: Remove from inventory, and links
+        
+        agent_object._alive = False
         
         # Clear from to_object() lookups
         Agent.all.pop(id, None)
@@ -597,7 +603,11 @@ class Agent():
     #     # Needs to be implemented by Grid and Space Object
     #     return None
     
-
+    def _check_for_use_after_free(self):
+        if self._alive:
+            return
+        from data.missions.common.q_logger import qlog, qlog_level_error, _qlog_get_last_mast_line
+        qlog(qlog_level_error(), f"sbs_utils/agent.py use-after-free agent={self.__dict__} last_mast_line={_qlog_get_last_mast_line()} stack={format_stack()[:-1]}")
 
 Agent.SHARED = Agent()
 Agent.SHARED_ID = get_story_id()
