@@ -47,11 +47,17 @@
                 ang1 -= 2   
                 sblob.set("beamBarrelAngle", ang1, 1)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         elif ang1 == 62:
             for i in range(10):
                 ang1 += 2
                 sblob.set("beamBarrelAngle", ang1, 1)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         ->END
 
 ======= rotate_beam_arc2 ======
@@ -64,11 +70,17 @@
                 ang2 += 2   
                 sblob.set("beamBarrelAngle", ang2, 3)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         elif ang2 == 298:
             for i in range(10):
                 ang2 -= 2
                 sblob.set("beamBarrelAngle", ang2, 3)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         ->END
 
 ======= refocus_primary_beam ======
@@ -83,6 +95,9 @@
                 sblob.set("beamRange", b_range, 1)
                 sblob.set("beamArcWidth", b_width, 1)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         elif b_range == 2800:
             for i in range(10):
                 b_range -= 80   
@@ -90,6 +105,9 @@
                 sblob.set("beamRange", b_range, 1)
                 sblob.set("beamArcWidth", b_width, 1)
                 await delay_app(1)
+                sblob = to_blob(COMMS_ORIGIN_ID)
+                if sblob is None:
+                    break
         ->END
 
 ===== comms_marker_rally_dc =======
