@@ -21,6 +21,7 @@ class GridObject(Agent):
 
     @property
     def is_grid_object(self):
+        super()._check_for_use_after_free()
         return True
 
 
@@ -30,6 +31,7 @@ class GridObject(Agent):
         :return: simulation space object
         :rtype: simulation space object
         """
+        super()._check_for_use_after_free()
         SBS = FrameContext.context.sbs
         #hullMap: 'sbs.hullmap'
         hullMap = SBS.get_hull_map(self.host_id)
@@ -41,6 +43,7 @@ class GridObject(Agent):
         :param name: The object name
         :type str: The object name
         """
+        super()._check_for_use_after_free()
         # go : sbs.grid_object
         go = self.grid_object()
         if go is None:
@@ -56,6 +59,7 @@ class GridObject(Agent):
         :param name: The object name
         :type str: The object name
         """
+        super()._check_for_use_after_free()
         go = self.grid_object()
         if go is None:
             return ""
@@ -70,6 +74,7 @@ class GridObject(Agent):
         :param name: The object name
         :type str: The object name
         """
+        super()._check_for_use_after_free()
         go = self.grid_object()
         if go is None:
             return ""
@@ -79,40 +84,48 @@ class GridObject(Agent):
     @property
     def host(self: GridObject) -> int:
         """the host id of the grid object"""
+        super()._check_for_use_after_free()
         return self.host_id
 
     @property
     def name(self: GridObject) -> str:
         """str, cached version of name"""
+        super()._check_for_use_after_free()
         return self._name
     
     @name.setter
     def name(self: GridObject, name):
         """str, cached version of name"""
+        super()._check_for_use_after_free()
         return self.set_name(name)
     
     
     @property
     def tag(self: GridObject) -> str:
         """str, cached version of tag"""
+        super()._check_for_use_after_free()
         return self._tag
     
     @property
     def go_type(self: GridObject) -> str:
         """str, cached version of type"""
+        super()._check_for_use_after_free()
         return self._go_type
 
     @property
     def comms_id(self: GridObject) -> str:
         """str, cached version of comms_id"""
+        super()._check_for_use_after_free()
         return self._comms_id
     
     @comms_id.setter
     def comms_id(self: GridObject, comms_id):
         """str, cached version of name"""
+        super()._check_for_use_after_free()
         self._comms_id = comms_id
 
     def update_blob(self,  speed=None, icon_index=None, icon_scale=None, color=None):
+        super()._check_for_use_after_free()
         go = self.grid_object()
         if go is None:
             return
@@ -138,10 +151,12 @@ class GridObject(Agent):
         :return: The simulation space object
         :rtype: The simulation space_object
         """
+        super()._check_for_use_after_free()
         return self.grid_object()
     
     
     def spawn(self, host_id, name, tag, x, y, icon_index, color,  go_type=None):
+        super()._check_for_use_after_free()
         self.host_id = host_id
         SBS = FrameContext.context.sbs
         hullMap = SBS.get_hull_map(self.host_id)

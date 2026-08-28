@@ -123,6 +123,7 @@ class GuiClient(Agent):
         :param page: 
         :type Page: A GUI Page
         """
+        super()._check_for_use_after_free()
         event = FakeEvent(self.client_id, "gui_push")
         self.page_stack.append(page)
         self.present(event)
@@ -133,6 +134,7 @@ class GuiClient(Agent):
         Stops presenting the current page and return to the previous one
 
         """
+        super()._check_for_use_after_free()
         ret = None
         FrameContext.context.sbs.send_gui_clear(self.client_id, "")
         if len(self.page_stack) > 0:
@@ -148,6 +150,7 @@ class GuiClient(Agent):
 
     @property
     def page(self):
+        super()._check_for_use_after_free()
         if len(self.page_stack) > 0:
             page = self.page_stack[-1]
             return page
@@ -162,6 +165,7 @@ class GuiClient(Agent):
         :param CID: Client ID
         :type int: A client ID
         """
+        super()._check_for_use_after_free()
         if len(self.page_stack) > 0:
             page = self.page_stack[-1]
             page.present(event)
@@ -174,6 +178,7 @@ class GuiClient(Agent):
         :param CID: Client ID
         :type int: A client ID
         """
+        super()._check_for_use_after_free()
         if len(self.page_stack) > 0:
             self.page_stack[-1].tick_gui_task()
 
@@ -187,6 +192,7 @@ class GuiClient(Agent):
         :type event: event
         
         """
+        super()._check_for_use_after_free()
         if len(self.page_stack) > 0:
             self.page_stack[-1].on_message(event)
 
@@ -199,6 +205,7 @@ class GuiClient(Agent):
         :type event: event
         
         """
+        super()._check_for_use_after_free()
         # if event.client_id ==self.client_id and event.tag == "screen_size":
         #     sz = event.source_point
         #     if sz is not None and sz.y != 0:

@@ -642,12 +642,14 @@ class MastAsyncTask(Agent, Promise):
 
 
     def queue_on_change(self, runtime_node):
+        super()._check_for_use_after_free()
         if self.is_gui_task:
             self.pending_on_change_items.append(runtime_node)
         else:
             self.on_change_items.append(runtime_node)
 
     def run_on_change(self):
+        super()._check_for_use_after_free()
         any_ran = False
         for change in self.on_change_items:
             if change.test():
@@ -659,6 +661,7 @@ class MastAsyncTask(Agent, Promise):
         return any_ran
             
     def swap_on_change(self):
+        super()._check_for_use_after_free()
         if self.is_gui_task:
             for item in self.on_change_items:
                 item.dequeue()
@@ -667,6 +670,7 @@ class MastAsyncTask(Agent, Promise):
         self.pending_on_change_items = []
 
     def emit_signal(self, name, sender_task, label_info, data):
+        super()._check_for_use_after_free()
         # if sender_task == self:
         # If this is needed add it to the data instead of skipping
         #     return
@@ -691,12 +695,14 @@ class MastAsyncTask(Agent, Promise):
     # Promise cancel
     #
     def cancel(self, msg=None):
+        super()._check_for_use_after_free()
         self.end()
         super().cancel(msg)
         self._canceled = True
 
     
     def end(self):
+        super()._check_for_use_after_free()
         # if self.name is not None:
         #     print(f"Task {self.name} called end")
         # else:
@@ -717,6 +723,7 @@ class MastAsyncTask(Agent, Promise):
         #
         # PyMast will fail on this
         #
+        super()._check_for_use_after_free()
         if self.active_ticker is None:
             return "main"
         return self.active_ticker.active_label
@@ -726,6 +733,7 @@ class MastAsyncTask(Agent, Promise):
         #
         # PyMast will fail on this
         #
+        super()._check_for_use_after_free()
         if self.active_ticker is None:
             return self.main.mast.labels.get("main")
         label = self.active_ticker.active_label
@@ -736,21 +744,26 @@ class MastAsyncTask(Agent, Promise):
 
     @property
     def is_observable(self):
+        super()._check_for_use_after_free()
         # Allows to yield multiple times
         self.yields_once = False
 
 
     @property
     def tick_result(self):
+        super()._check_for_use_after_free()
         return self.active_ticker.last_poll_result
     
     def poll(self):
+        super()._check_for_use_after_free()
         return self.tick_result
     
     def get_active_node(self):
+        super()._check_for_use_after_free()
         return self.active_ticker.get_active_node()
     
     def get_active_node_source_map(self):
+        super()._check_for_use_after_free()
         node= self.active_ticker.get_active_node()
         if node is None:
             return None
@@ -763,6 +776,7 @@ class MastAsyncTask(Agent, Promise):
 
 
     def get_symbols(self):
+        super()._check_for_use_after_free()
         if self.root_task != self:
             m1 = self.root_task.get_symbols()
             #
@@ -785,6 +799,7 @@ class MastAsyncTask(Agent, Promise):
         return m1
 
     def set_value(self, key, value, scope):
+        super()._check_for_use_after_free()
         if scope == Scope.SUB_TASK_LOCAL and self.is_sub_task:
             self.set_inventory_value(key, value)
             return scope
@@ -802,6 +817,7 @@ class MastAsyncTask(Agent, Promise):
             return scope
 
     def set_value_keep_scope(self, key, value):
+        super()._check_for_use_after_free()
         if self.is_sub_task and self.get_inventory_value(key) is not None:
             self.set_inventory_value(key, value)
         if self.root_task != self:
@@ -815,6 +831,7 @@ class MastAsyncTask(Agent, Promise):
         self.set_value(key,value, scope)
 
     def get_value(self, key, defa=None):
+        super()._check_for_use_after_free()
         data = None
         # if self.redirect:
         #     data = self.redirect.data
@@ -837,6 +854,7 @@ class MastAsyncTask(Agent, Promise):
         return (defa, Scope.NORMAL)
     
     def get_scoped_value(self, key, defa, scope):
+        super()._check_for_use_after_free()
         if scope == Scope.TEMP or scope == Scope.SUB_TASK_LOCAL:
             data = None
             # if self.redirect:
@@ -869,6 +887,7 @@ class MastAsyncTask(Agent, Promise):
         
 
     def get_variable(self, key, default=None):
+        super()._check_for_use_after_free()
         value = self.get_value(key, default)
         return value[0]
     
@@ -880,6 +899,7 @@ class MastAsyncTask(Agent, Promise):
         Returns:
             bool: True if all variables are defined, otherwise False.
         """
+        super()._check_for_use_after_free()
         keys = keys.split(",")
         for key in keys:
             value = self.get_value(key, None)
@@ -890,16 +910,20 @@ class MastAsyncTask(Agent, Promise):
         
     
     def set_variable(self, key, value):
+        super()._check_for_use_after_free()
         self.set_value_keep_scope(key,value)
 
     def get_shared_variable(self, key, default=None):
+        super()._check_for_use_after_free()
         return Agent.SHARED.get_inventory_value(key, default)
     
     def set_shared_variable(self, key, value):
+        super()._check_for_use_after_free()
         Agent.SHARED.set_inventory_value(key, value)
 
 
     def format_string(self, message):
+        super()._check_for_use_after_free()
         if message is None:
             return ""
         if isinstance(message, str):
@@ -920,6 +944,7 @@ class MastAsyncTask(Agent, Promise):
         
     
     def compile_and_format_string(self, value):
+        super()._check_for_use_after_free()
         if isinstance(value, str) and "{" in value:
             value = f'''f"""{value}"""'''
             code = compile(value, "<string>", "eval")
@@ -929,6 +954,7 @@ class MastAsyncTask(Agent, Promise):
 
 
     def eval_code(self, code, end_on_exception=True):
+        super()._check_for_use_after_free()
         value = None
         try:
             allowed = self.get_symbols()
@@ -946,6 +972,7 @@ class MastAsyncTask(Agent, Promise):
         return value
 
     def exec_code(self, code, vars, gbls):
+        super()._check_for_use_after_free()
         try:
             from data.missions.common.q_logger import _qlog_mast_line
             _qlog_mast_line(f"exec_code {code}")
@@ -970,6 +997,7 @@ class MastAsyncTask(Agent, Promise):
         
 
     def start_task(self, label = "main", inputs=None, task_name=None, defer=False, inherit=True, unscheduled=False)->MastAsyncTask:
+        super()._check_for_use_after_free()
         # Sub task share data noe need to inherit
         if self.is_sub_task and self.root_task != self:
             return self.root_task.start_task(label, inputs, task_name, defer, unscheduled=unscheduled)
@@ -987,6 +1015,7 @@ class MastAsyncTask(Agent, Promise):
         #
         # Sub task share task data
         #
+        super()._check_for_use_after_free()
         if self.is_sub_task and self.root_task != self:
             return self.root_task.start_sub_task(label, inputs, task_name, defer, active_cmd)
         
@@ -1021,14 +1050,17 @@ class MastAsyncTask(Agent, Promise):
         return t
     
     def remove_sub_task(self, t):
+        super()._check_for_use_after_free()
         t.stop()
 
     def remove_all_sub_tasks(self):
+        super()._check_for_use_after_free()
         for t in self.sub_tasks():
             t.stop()
 
     
     def tick_in_context(self):
+        super()._check_for_use_after_free()
         _page = FrameContext.page
         _task = FrameContext.task
 
@@ -1040,6 +1072,7 @@ class MastAsyncTask(Agent, Promise):
         return res
 
     def tick_subtasks(self):
+        super()._check_for_use_after_free()
         _page = FrameContext.page
         FrameContext.page = self.main.page
         restore = FrameContext.task
@@ -1070,6 +1103,7 @@ class MastAsyncTask(Agent, Promise):
         """
         Used by the mission runner to run multiple labels
         """
+        super()._check_for_use_after_free()
         self.set_result(None)
         self.active_ticker.done = False
         self.jump(label, activate_cmd)
@@ -1077,6 +1111,7 @@ class MastAsyncTask(Agent, Promise):
 
 
     def tick(self):
+        super()._check_for_use_after_free()
         # if self.name is not None:
         #     print(f"ticking {self.name}")
         restore = FrameContext.task
@@ -1096,6 +1131,7 @@ class MastAsyncTask(Agent, Promise):
         
 
     def jump(self, label = "main", activate_cmd=0, respect_inline=False):
+        super()._check_for_use_after_free()
         if isinstance(label, str) or isinstance(label, Label):
             self.active_ticker = self.mast_ticker
             if respect_inline:
@@ -1107,15 +1143,19 @@ class MastAsyncTask(Agent, Promise):
         
 
     def push_label(self, label, activate_cmd=0, data=None):
+        super()._check_for_use_after_free()
         self.active_ticker.push_label(label, activate_cmd, data)
 
     def push_inline_block(self, label, activate_cmd=0, data=None):
+        super()._check_for_use_after_free()
         self.active_ticker.push_inline_block(label, activate_cmd, data)
 
     def pop_label(self, inc_loc=True, true_pop=False):
+        super()._check_for_use_after_free()
         self.active_ticker.pop_label(inc_loc, true_pop)
 
     def get_runtime_error_info(self, rte):
+        super()._check_for_use_after_free()
         # avoid duplicate info calls
         if "mast RUNTIME ERROR" in rte:
             return rte
@@ -1123,7 +1163,7 @@ class MastAsyncTask(Agent, Promise):
         return self.active_ticker.get_runtime_error_info(rte)
 
     def runtime_error(self, msg):
-        
+        super()._check_for_use_after_free()
         self.active_ticker.runtime_error(msg)
 
         
@@ -1169,27 +1209,33 @@ class MastScheduler(Agent):
         self.page = None
         
     def is_server(self):
+        super()._check_for_use_after_free()
         return False
 
     def runtime_error(self, message):
+        super()._check_for_use_after_free()
         print(f"mast level runtime error:\n {message}")
         pass
 
     def get_seconds(self, clock):
         """ Gets time for a given clock default is just system """
+        super()._check_for_use_after_free()
         if clock == 'test':
             self.test_clock += 0.2
             return self.test_clock
         return time.time()
     
     def set_inventory_value(self, collection_name, value):
+        super()._check_for_use_after_free()
         return super().set_inventory_value(collection_name, value)
 
     def get_inventory_value(self, collection_name, default=None):
+        super()._check_for_use_after_free()
         v = super().get_inventory_value(collection_name, default)
         return v
 
     def _start_task(self, label = "main", inputs=None, task_name=None)->MastAsyncTask:
+        super()._check_for_use_after_free()
         #if self.inputs is None:
         #    self.inputs = inputs
         label_name = label
@@ -1208,6 +1254,7 @@ class MastScheduler(Agent):
 
 
     def start_task(self, label = "main", inputs=None, task_name=None, defer=False, unscheduled=False, loc=0)->MastAsyncTask:
+        super()._check_for_use_after_free()
         t = self._start_task(label, inputs, task_name)
         if task_name is not None:
             t.set_value(task_name, t, Scope.NORMAL)
@@ -1224,13 +1271,16 @@ class MastScheduler(Agent):
         return t
 
     def schedule(self, task):
+        super()._check_for_use_after_free()
         self.tasks.append(task)
 
 
     def on_start_task(self, t):
+        super()._check_for_use_after_free()
         self.active_task = t
         t.tick()
     def cancel_task(self, name):
+        super()._check_for_use_after_free()
         if isinstance(name, str):
             data = self.active_task.get_variable(name)
         else:
@@ -1241,6 +1291,7 @@ class MastScheduler(Agent):
             self.done.append(data)
 
     def is_running(self):
+        super()._check_for_use_after_free()
         if len(self.tasks) == 0:
             return False
         return True
@@ -1249,6 +1300,7 @@ class MastScheduler(Agent):
         """
         MastStoryScheduler completely overrided this so changes here should go there
         """
+        super()._check_for_use_after_free()
         val = MastGlobals.globals.get(key, None) # don't use defa here
         if val is not None:
             return (val, Scope.SHARED)
@@ -1264,12 +1316,14 @@ class MastScheduler(Agent):
         return (val, Scope.UNKNOWN)
     
     def get_symbols(self):
+        super()._check_for_use_after_free()
         mast_inv = Agent.SHARED.inventory.collections
         m1 = mast_inv | self.inventory.collections
         return m1
 
     
     def set_value(self, key, value, scope):
+        super()._check_for_use_after_free()
         if scope == Scope.SHARED:
             # self.main.mast.vars[key] = value
             Agent.SHARED.set_inventory_value(key, value)
@@ -1277,14 +1331,17 @@ class MastScheduler(Agent):
         return Scope.UNKNOWN
 
     def get_variable(self, key, defa=None):
+        super()._check_for_use_after_free()
         val = self.get_value(key, defa)
         return val[0]
     
     def set_variable(self, key):
+        super()._check_for_use_after_free()
         val = self.get_value(key)
         return val[0]
     
     def tick(self):
+        super()._check_for_use_after_free()
         restore = FrameContext.task
 
         FrameContext.mast = self.mast

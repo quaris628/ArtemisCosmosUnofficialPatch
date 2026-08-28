@@ -33,9 +33,11 @@ class TickTask(Agent):
         """ Stop a tasks
         The task is removed
         """
+        super()._check_for_use_after_free()
         TickDispatcher.completed.add(self)
 
     def _update(self):
+        super()._check_for_use_after_free()
         if (FrameContext.context.sim.time_tick_counter - self.start)/TickDispatcher.tps >= self.delay:
             # one could not supply a callback
             if self.cb is not None:
@@ -59,6 +61,7 @@ class TickTask(Agent):
     def done(self)->bool:
         """ returns if this is the task will not run in the future
         """
+        super()._check_for_use_after_free()
         return self.count <= 0
 
 
