@@ -163,6 +163,7 @@ class Objective(Agent):
         Returns:
             bool: True if the objective is complete.
         """
+        super()._check_for_use_after_free()
         return self._done
     
     @property
@@ -172,6 +173,7 @@ class Objective(Agent):
         Returns:
             PollResults: The result.
         """
+        super()._check_for_use_after_free()
         return self._result
     
     @result.setter
@@ -180,6 +182,7 @@ class Objective(Agent):
         Set the result of the objective. If the objective is done, then does nothing (to prevent overwriting the result of a completed objective).
         If the result is not `PollResults.OK_IDLE`, then sets the value of the objective's `done` field to True.
         """
+        super()._check_for_use_after_free()
         # Don't overwrite when done
         if self._done:
             return
@@ -192,6 +195,7 @@ class Objective(Agent):
         """
         Clear this objective from its agent and undesignates it as an objective.
         """
+        super()._check_for_use_after_free()
         self.remove_role("OBJECTIVE")
         unlink(self.agent, "OBJECTIVE", self.id)
         self.remove_role("OBJECTIVE_RUN")
@@ -203,6 +207,7 @@ class Objective(Agent):
         """
         Run the objective label.
         """
+        super()._check_for_use_after_free()
         if self.done:
             return
         if not self._started:
@@ -226,6 +231,7 @@ class Objective(Agent):
         Args:
             result (PollResults): The result of the objective label.
         """
+        super()._check_for_use_after_free()
         leave = self.label.labels.get("leave", None)
         self.result = result
         if leave is not None:
@@ -240,6 +246,7 @@ class Objective(Agent):
         Returns:
             PollResults: The result of the sublabel task.
         """
+        super()._check_for_use_after_free()
         agent_object = Agent.get(self.agent)
         if agent_object is None:
             return PollResults.FAIL_END

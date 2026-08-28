@@ -44,22 +44,27 @@ class SpaceObject(Agent):
     
     @property
     def is_player(self) -> bool:
+        super()._check_for_use_after_free()
         return self.tick_type & TickType.PLAYER
 
     @property
     def is_npc(self) -> bool:
+        super()._check_for_use_after_free()
         return self.tick_type & TickType.ACTIVE
 
     @property
     def is_terrain(self) -> bool:
+        super()._check_for_use_after_free()
         return self.tick_type & TickType.PASSIVE
 
     @property
     def is_active(self) -> bool:
+        super()._check_for_use_after_free()
         return self.tick_type & TickType.ACTIVE
 
     @property
     def is_passive(self) -> bool:
+        super()._check_for_use_after_free()
         return self.tick_type & TickType.PASSIVE
 
 
@@ -71,6 +76,7 @@ class SpaceObject(Agent):
             SpaceObject: The simulation space object
         """
 
+        super()._check_for_use_after_free()
         return FrameContext.context.sim.get_space_object(self.id)
 
     def get_engine_object(self) -> SpaceObject:
@@ -80,12 +86,14 @@ class SpaceObject(Agent):
         Returns:
             SpaceObject: The simulation space_object
         """
+        super()._check_for_use_after_free()
         return FrameContext.context.sim.get_space_object(self.id)
 
     def delete_object(self):
         """
         Delete this SpaceObject.
         """
+        super()._check_for_use_after_free()
         FrameContext.context.sbs.delete_object(self.id)
         self.destroyed()
 
@@ -106,6 +114,7 @@ class SpaceObject(Agent):
         Returns:
             Navpoint | None: The navpoint added, or None if debug mode is not active.
         """
+        super()._check_for_use_after_free()
         if SpaceObject.debug:
             return FrameContext.context.sim.add_navpoint(x, y, z, name, color)
         return None
@@ -116,11 +125,13 @@ class SpaceObject(Agent):
         Args
             name (str): The name of the navpoint to delete.
         """
+        super()._check_for_use_after_free()
         if SpaceObject.debug:
             return FrameContext.context.sim.delete_navpoint_by_name(name)
         return None
 
     def log(s: str) -> None:
+        super()._check_for_use_after_free()
         if SpaceObject.debug:
             print(s)
 
@@ -131,6 +142,7 @@ class SpaceObject(Agent):
         Returns:
             SpaceObject: The simulation space object.
         """
+        super()._check_for_use_after_free()
         return self._engine_object
         # return FrameContext.context.sim.get_space_object(self.id)
 
@@ -141,6 +153,7 @@ class SpaceObject(Agent):
         Returns:
             str: The side.
         """
+        super()._check_for_use_after_free()
         if side != self._side:
             self.remove_role(self._side)
             self.add_role(side)
@@ -158,6 +171,7 @@ class SpaceObject(Agent):
         Returns:
             str: The name of the object.
         """
+        super()._check_for_use_after_free()
         so = self.space_object()
         self._name = name
         self.update_comms_id()
@@ -174,6 +188,7 @@ class SpaceObject(Agent):
         Args:
             ship_key (str): The ship key.
         """
+        super()._check_for_use_after_free()
         if ship_key != self._ship_data_key:
             so = self.space_object()
             if so is not None:
@@ -187,6 +202,7 @@ class SpaceObject(Agent):
         Args:
             ship_data_key (str): The ship key.
         """
+        super()._check_for_use_after_free()
         if ship_data_key != self._ship_data_key:
             so = self.space_object()
             if so is not None:
@@ -205,7 +221,7 @@ class SpaceObject(Agent):
         Returns:
             str: The comms ID.
         """
-
+        super()._check_for_use_after_free()
         if (self.side_display != ""):
             self._comms_id = f"{self.name} ({self.side_display})"
         else:
@@ -218,6 +234,7 @@ class SpaceObject(Agent):
         Returns:
             str: The name.
         """
+        super()._check_for_use_after_free()
         return self._name
 
     @name.setter
@@ -227,6 +244,7 @@ class SpaceObject(Agent):
         Args:
             value (str): The name to apply to the space object.
         """
+        super()._check_for_use_after_free()
         self.set_name(value)
 
     @property
@@ -236,6 +254,7 @@ class SpaceObject(Agent):
         Returns:
             str: The side.
         """
+        super()._check_for_use_after_free()
         return self._side
     
     @side.setter
@@ -245,6 +264,7 @@ class SpaceObject(Agent):
         Args:
             value (str): The side to apply to the space object.
         """
+        super()._check_for_use_after_free()
         self.set_side(value)
 
     @property
@@ -254,6 +274,7 @@ class SpaceObject(Agent):
         Returns:
             str: The side
         """
+        super()._check_for_use_after_free()
         test = self.data_set.get("hull_side", 0)
         if test is not None and isinstance(test, str):
             return test
@@ -266,6 +287,7 @@ class SpaceObject(Agent):
         Args:
             value (str): The side.
         """
+        super()._check_for_use_after_free()
         self.data_set.set("hull_side", value, 0)
 
 
@@ -276,6 +298,7 @@ class SpaceObject(Agent):
         Returns:
             str: The comms ID.
         """
+        super()._check_for_use_after_free()
         return self._comms_id
     
     @property
@@ -287,6 +310,7 @@ class SpaceObject(Agent):
         Returns:
             str: The ship key.
         """
+        super()._check_for_use_after_free()
         return self._ship_data_key
 
     @art_id.setter
@@ -298,6 +322,7 @@ class SpaceObject(Agent):
         Args:
             ship_data_key (str): The ship key.
         """
+        super()._check_for_use_after_free()
         self.set_ship_data_key(ship_data_key)
 
     @property
@@ -307,6 +332,7 @@ class SpaceObject(Agent):
         Returns:
             str: The ship key.
         """
+        super()._check_for_use_after_free()
         return self._ship_data_key
     
     @ship_data_key.setter
@@ -316,14 +342,17 @@ class SpaceObject(Agent):
         Args:
             ship_data_key (str): The ship key.
         """
+        super()._check_for_use_after_free()
         self.set_ship_data_key(ship_data_key)
 
     @property
     def race(self):
+        super()._check_for_use_after_free()
         return self.origin
     
     @property
     def origin(self):
+        super()._check_for_use_after_free()
         test = self.data_set.get("hull_origin", 0)
         if test is None:
             return "no origin"
@@ -331,14 +360,17 @@ class SpaceObject(Agent):
     
     @origin.setter
     def origin(self: SpaceObject, value: str) -> None:
+        super()._check_for_use_after_free()
         self.data_set.set("hull_origin", value, 0)
 
     @property
     def crew(self):
+        super()._check_for_use_after_free()
         return self.get_inventory_value("__CREW__", self.origin)
     
     @crew.setter
     def crew(self: SpaceObject, value: str) -> None:
+        super()._check_for_use_after_free()
         self.set_inventory_value("__CREW__", value)
 
 
@@ -349,6 +381,7 @@ class SpaceObject(Agent):
         Returns:   
             Vec3: The position.
         """
+        super()._check_for_use_after_free()
         return Vec3(self._engine_object.pos)
 
     @pos.setter
@@ -358,6 +391,7 @@ class SpaceObject(Agent):
         Args:
             *args (tuple): A variable-length argument list. This should be a single Vec3, or up to three floats, representing the position of the object.
         """
+        super()._check_for_use_after_free()
         v = Vec3(*args)
         FrameContext.context.sim.reposition_space_object(self._engine_object, v.x, v.y, v.z)
 
