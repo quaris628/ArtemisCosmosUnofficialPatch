@@ -47,6 +47,7 @@ class Modifier(Agent):
 
     def __eq__(self, other):
         """Are the Modifier objects equal?"""
+        super()._check_for_use_after_free()
         if self.target != other.target:
             return False
         if self.key != other.key:
@@ -61,6 +62,7 @@ class Modifier(Agent):
     
     def expired(self):
         """Is the modifier expired?"""
+        super()._check_for_use_after_free()
         if self.timer is None:
             return False
         #print("checking timer expiration")
@@ -68,17 +70,20 @@ class Modifier(Agent):
     
     def get_time_remaining(self):
         """Get the time remaining on the modifier's timer. Returns None if the modifier has no timer."""
+        super()._check_for_use_after_free()
         if self.timer is None:
             return None
         return get_time_remaining(self.target, self.timer)
 
     def format_time_remaining(self):
         """Get the time remaining on the modifier's timer formatted as a string. Returns None if the modifier has no timer."""
+        super()._check_for_use_after_free()
         if self.timer is None:
             return None
         return format_time_remaining(self.target, self.timer)
     
     def __str__(self):        
+        super()._check_for_use_after_free()
         return f"Modifier(target={self.target}, key={self.key}, value={self.value}, source={self.source}, mod_type={self.mod_type}, timer={self.timer})"
 
 

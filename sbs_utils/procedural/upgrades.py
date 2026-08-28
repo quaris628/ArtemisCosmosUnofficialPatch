@@ -37,25 +37,30 @@ class Upgrade(Agent):
 
     @property
     def done(self):
+        super()._check_for_use_after_free()
         if self.task is None:
             return False
         return self.task.done
     
     @property
     def result(self):
+        super()._check_for_use_after_free()
         if self.task is None:
             return None
         return self.task.result()
     
     def discard(self):
+        super()._check_for_use_after_free()
         unlink(self.agent_id, "__UPGRADE__", self.id)
         self.remove()
 
     @property
     def is_active(self):
+        super()._check_for_use_after_free()
         pass
     
     def activate(self):
+        super()._check_for_use_after_free()
         UPGRADE_AGENT = to_object(self.agent_id)
         self.deactivate() # Shouldn't be active, but just n case
         if UPGRADE_AGENT is None:
@@ -75,6 +80,7 @@ class Upgrade(Agent):
         # I think as long as they exists the upgrade is active
 
     def deactivate(self):
+        super()._check_for_use_after_free()
         # Remove all modifiers
         for m in self.modifiers:
             modifier_remove(self.agent_id, m.key, m.source)

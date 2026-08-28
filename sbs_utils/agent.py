@@ -148,6 +148,7 @@ class Agent():
 
 
     def __getitem__(self, index):
+        self._check_for_use_after_free()
         if isinstance(index, str):
             v = self.get_inventory_value(index)
             return v
@@ -156,34 +157,42 @@ class Agent():
 
     @property
     def is_player(self):
+        self._check_for_use_after_free()
         return False
 
     @property
     def is_npc(self):
+        self._check_for_use_after_free()
         return False
 
     @property
     def is_terrain(self):
+        self._check_for_use_after_free()
         return False
 
     @property
     def is_active(self):
+        self._check_for_use_after_free()
         return False
 
     @property
     def is_passive(self):
+        self._check_for_use_after_free()
         return False
     
     @property
     def is_grid_object(self):
+        self._check_for_use_after_free()
         return False
     
     @property
     def data_set(self):
+        self._check_for_use_after_free()
         return self._data_set
     
     @property
     def engine_object(self):
+        self._check_for_use_after_free()
         return self._engine_object
 
 
@@ -197,9 +206,11 @@ class Agent():
         Agent.has_links = Stuff()
 
     def destroyed(self):
+        self._check_for_use_after_free()
         self.remove()
 
     def get_id(self):
+        self._check_for_use_after_free()
         return self.id
 
     @classmethod
@@ -239,12 +250,14 @@ class Agent():
         :param role: The role to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         if role is None:
             return
         role = role.strip().lower()
         self.roles.add_to_collection(role, self.id)
 
     def remove_role(self, role: str):
+        self._check_for_use_after_free()
         """ Remove a role from the space object
 
         :param role: The role to add e.g. spy, pirate etc.
@@ -254,6 +267,7 @@ class Agent():
         self.roles.remove_from_collection(role, self.id)
 
     def has_role(self, role):
+        self._check_for_use_after_free()
         """ check if the object has a role
 
         :param role: The role to add e.g. spy, pirate etc.
@@ -265,6 +279,7 @@ class Agent():
         return self.roles.collection_has(role, self.id)
 
     def get_roles(self):
+        self._check_for_use_after_free()
         return self.roles.get_collections_in(self.id)
 
     @classmethod
@@ -294,6 +309,7 @@ class Agent():
         :param role: The role/link name to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         id = self.resolve_id(other)
         link_name = link_name.strip().lower()
         self.links.add_to_collection(link_name,id)
@@ -305,6 +321,7 @@ class Agent():
         :param link_name: The link to add e.g. spy, pirate etc.
         :type id: id
         """
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         self.links.dedicated_collection(link_name, self.resolve_id(other))
         if other is not None:
@@ -316,6 +333,7 @@ class Agent():
         :param role: The role to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         id = Agent.resolve_id(other)
         link_name = link_name.strip().lower()
         self.links.remove_from_collection(link_name,id)
@@ -332,6 +350,7 @@ class Agent():
         :param role: The role to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         self.links.remove_collection(link_name)
         self.has_links.remove_from_collection(link_name, self.id)
@@ -347,20 +366,24 @@ class Agent():
         Returns:
             bool: True if the link exists.
         """
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         id = self.resolve_id(other)
         return self.links.collection_has(link_name,id)
 
     def _remove_every_link(self, other: Agent | CloseData | int):
+        self._check_for_use_after_free()
         id = self.resolve_id(other)
         for role in self.links:
             self._remove_link(role, id)
 
     def get_in_links(self, other: Agent | CloseData | int):
+        self._check_for_use_after_free()
         id = self.resolve_id(other)
         return self.links.get_collections_in(id)
         
     def get_link_objects(self, link_name):
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         the_set =  self.links.collection_set(link_name)
         if the_set:
@@ -381,6 +404,7 @@ class Agent():
         :return: The id of t he linked object
         :rtype: id
         """
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         the_set =  self.links.collection_set(link_name)
         if len(the_set)==1:
@@ -389,14 +413,17 @@ class Agent():
         return None
 
     def get_dedicated_link_object(self, link_name):
+        self._check_for_use_after_free()
         return self.resolve_py_object(self.get_dedicated_link(link_name))
         
 
     def get_link_set(self, link_name):
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         return self.links.collection_set(link_name)
 
     def get_link_list(self, link_name):
+        self._check_for_use_after_free()
         link_name = link_name.strip().lower()
         return self.links.collection_list(link_name)
 
@@ -441,6 +468,7 @@ class Agent():
 
     @property
     def INV(self):
+        self._check_for_use_after_free()
         return self.inventory.collections
 
     ############### INVENTORY (Links to data) ############
@@ -450,6 +478,7 @@ class Agent():
         :param role: The role/link name to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         self.inventory.add_to_collection(collection_name,data)
         self._has_inventory.add_to_collection(collection_name, self.id)
@@ -460,6 +489,7 @@ class Agent():
         :param role: The role to add e.g. spy, pirate etc.
         :type id: str
         """
+        self._check_for_use_after_free()
         self.inventory.remove_from_collection(collection_name,data)
         # Remove any empty from has links
         collections = collection_name.split(",")
@@ -470,6 +500,7 @@ class Agent():
                 self._has_inventory.remove_from_collection(collection, self.id)
 
     def has_any_inventory(self, collection_name: str | list[str]):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         return self._has_inventory.collection_has(collection_name,self.id)
 
@@ -481,16 +512,20 @@ class Agent():
         :return: If the object has the role
         :rtype: bool
         """
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         return self.inventory.collection_has(collection_name,data)
 
     def _remove_every_inventory(self, data: object):
+        self._check_for_use_after_free()
         self.inventory.remove_every_collection(data)
 
     def get_inventory_in(self, data: object):
+        self._check_for_use_after_free()
         return self.inventory.get_collections_in(data)
         
     def get_inventory_objects(self, collection_name):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         the_set =  self.inventory.collection_set(collection_name)
         if the_set:
@@ -499,18 +534,22 @@ class Agent():
         return []
 
     def get_inventory_set(self, collection_name):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         return self.inventory.collection_set(collection_name)
     
     def get_inventory_list(self, collection_name):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         return self.inventory.collection_list(collection_name)
 
     def get_inventory_value(self, collection_name, default=None):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         return self.inventory.collections.get(collection_name, default)
 
     def set_inventory_value(self, collection_name, value):
+        self._check_for_use_after_free()
         collection_name = collection_name.strip()
         self.inventory.collections[collection_name]=value
         if value is not None:
@@ -530,13 +569,16 @@ class Agent():
     
     # Task overrides this to respect scope
     def get_variable(self, key, default=None):
+        self._check_for_use_after_free()
         return self.get_inventory_value(key, default)
     # Task overrides this to respect scope
     def set_variable(self, key, value):
+        self._check_for_use_after_free()
         self.get_inventory_value(key, value)
     
     # Task overrides this to respect scope
     def set_variable(self, key, value):
+        self._check_for_use_after_free()
         return self.set_inventory_value(key, value)
     
     ###########################################################
@@ -560,16 +602,19 @@ class Agent():
         return o
 
     def py_class():
+        self._check_for_use_after_free()
         return __class__
 
     def add(self):
         """ Add the object to the system, called by spawn normally
         """
+        self._check_for_use_after_free()
         self._add(self.id, self)
 
     def remove(self):
         """ remove the object to the system, called by destroyed normally
         """
+        self._check_for_use_after_free()
         self._remove(self.id)
 
     # def update_engine_data(self, data):
