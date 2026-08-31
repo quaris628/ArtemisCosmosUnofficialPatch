@@ -285,6 +285,9 @@ def to_blob(id_or_obj):
     Returns:
         data_set | None: Returns the data or None if it does not exist
     """    
+    if isinstance(id_or_obj, SpawnData):
+        from data.missions.common.q_logger import qlog, qlog_level_warn, _qlog_get_last_mast_line
+        qlog(qlog_level_warn(), f"sbs_utils/query.py to_blob called for a SpawnData object SpawnData.id={id_or_obj.id} SpawnData.engine_object={id_or_obj.engine_object} SpawnData.blob={id_or_obj.blob} SpawnData.py_object={None if id_or_obj.py_object is None else id_or_obj.py_object.__dict__} last_mast_line={_qlog_get_last_mast_line()} stack={format_stack()[:-1]}")
     return get_engine_data_set(id_or_obj)
 
 def to_data_set(id_or_obj):
