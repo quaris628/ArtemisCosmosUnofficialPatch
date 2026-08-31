@@ -152,8 +152,9 @@ brain:
     scale = rally_theme_data.scale
 
     idle_marker = grid_spawn(ship_id, marker_tag, marker_tag, point[0],point[1], icon, dc_color, "#,rally_point") 
-    _blob = to_blob(idle_marker)
-    _blob.set("icon_scale", scale, 0)
+    _blob = to_blob(idle_marker.id)
+    if _blob is not None:
+        _blob.set("icon_scale", scale, 0)
     
     set_inventory_value(_id, "idle_marker", to_id(idle_marker))
 
