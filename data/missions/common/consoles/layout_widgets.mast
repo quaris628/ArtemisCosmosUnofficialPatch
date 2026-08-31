@@ -153,6 +153,7 @@ shared COMMS_PROTOTYPE  = SETTINGS.get("COMMS_PROTOTYPE", False)
 
 
 //gui/normal_engi
+    qlog(qlog_level_info(), "//gui/normal_engi", client_id=client_id, player_ship_id=sbs.get_ship_of_client(client_id))
     default tab = 1
     # Ship Data, 
     gui_section(style="area:0,45px,min(55,900px),50-50px;")
