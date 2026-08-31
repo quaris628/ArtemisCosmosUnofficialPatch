@@ -169,7 +169,11 @@ hangar_get_craft_data("terran")
             stats = hangar_get_stats(client_id, fighter)
             gui_update("stats-1", "$text: {stats[0]}")
             gui_update("stats-2", "$text: {stats[1]}")
-
+        else:
+            gui_update("briefing-text", "$text:No fighters;")
+            gui_update("stats-1", "$text:;")
+            gui_update("stats-2", "$text:;")
+            gui_update("refit-text", "$text: select ship")
 
     
     on change dock_picker.get_value():
