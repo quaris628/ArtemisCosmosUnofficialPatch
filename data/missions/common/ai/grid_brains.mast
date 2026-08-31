@@ -155,6 +155,8 @@ brain:
     _blob = to_blob(idle_marker.id)
     if _blob is not None:
         _blob.set("icon_scale", scale, 0)
+    else:
+        qlog(qlog_level_warn(), f"grid_brains.mast prefab_lifeform_damcons to_blob(idle_marker) returned None", player_ship_id=ship_id, grid_object_id=idle_marker.id)
     
     set_inventory_value(_id, "idle_marker", to_id(idle_marker))
 
