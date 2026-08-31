@@ -414,6 +414,8 @@ if CAN_CHANGE_CONSOLE:
     # Retrieve the item by string (because might have navigator here via tab)
     console = gui_get_console_type(CONSOLE_SELECT)
     if console is not None:
+        if console.label == "engineering":
+            qlog(qlog_level_info(), "jumping to engineering console gui", client_id=client_id, player_ship_id=sbs.get_ship_of_client(client_id))
         jump(console.label)
     else:
         """ Invalid Console defined and selected"""
